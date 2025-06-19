@@ -1,7 +1,7 @@
 {
-  "name": "blocks-strapi-next-example",
+  "name": "alshatiby",
   "version": "1.0.0",
-  "description": "Example of using Strapi with Next.js 15",
+  "description": "Alshatiby Project",
   "type": "module",
   "scripts": {
     "admin": "yarn dev --prefix ../admin/",
