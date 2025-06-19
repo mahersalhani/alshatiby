@@ -14,7 +14,19 @@ To get started with the project, follow these steps:
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone <repository-url>
    cd alshatiby
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   yarn install
+   ```
+
+3. Setup Admin and Server environments:
+   ```bash
+   yarn setup
    ```
