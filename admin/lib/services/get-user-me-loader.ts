@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import api from "../axios";
 import { getAuthToken } from "./get-token";
-import { redirect } from "next/navigation";
+import { redirect } from "@/components/navigation";
 
 export async function auth() {
   const authToken = await getAuthToken();
@@ -39,7 +39,8 @@ const config = {
 
 export async function signOut() {
   "use server";
+  console.log("signOut called");
   const cookieStore = await cookies();
-  cookieStore.set("jwt", "", { ...config, maxAge: 0 });
-  redirect("/auth/login");
+  cookieStore.set("auth_token", "", { ...config, maxAge: 0 });
+  redirect({ href: "/auth/login", locale: "ar" }); // TODO handle locale dynamically
 }
