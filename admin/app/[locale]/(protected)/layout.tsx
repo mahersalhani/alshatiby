@@ -4,8 +4,8 @@ import DashCodeSidebar from "@/components/partials/sidebar";
 import DashCodeFooter from "@/components/partials/footer";
 import ThemeCustomize from "@/components/partials/customizer";
 import DashCodeHeader from "@/components/partials/header";
-import { auth } from "@/lib/auth";
 import { redirect } from "@/components/navigation";
+import { auth } from "@/lib/services/get-user-me-loader";
 const layout = async ({
   children,
   params,
@@ -13,12 +13,10 @@ const layout = async ({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) => {
-  const session = await auth();
+  const { user } = await auth();
   const { locale } = await params;
 
-  if (!session) {
-    redirect({ href: "/auth/login", locale });
-  }
+  if (!user) redirect({ href: "/auth/login", locale });
 
   return (
     <LayoutProvider>

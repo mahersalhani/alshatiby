@@ -1,10 +1,25 @@
+import { redirect } from "@/components/navigation";
+import { auth } from "@/lib/services";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashcode Next Js",
-  description: "Dashcode is a popular dashboard template.",
+  title: "Admin Login",
+  description: "Login to your admin panel",
 };
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = async ({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) => {
+  const { user } = await auth();
+  const { locale } = await params;
+
+  console.log("user", user);
+
+  if (user) redirect({ href: "/", locale });
+
   return <>{children}</>;
 };
 
