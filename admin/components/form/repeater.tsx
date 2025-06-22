@@ -3,6 +3,7 @@ import React from "react";
 import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@/components/ui/icon";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Link } from '@/i18n/routing';
 

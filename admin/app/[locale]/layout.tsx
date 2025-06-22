@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./theme.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import MountedProvider from "@/providers/mounted.provider";
 import { Toaster } from "@/components/ui/toaster";
@@ -11,8 +12,7 @@ import { getLangDir } from "rtl-detect";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import DirectionProvider from "@/providers/direction-provider";
-import { AuthProvider } from "@/context/auth-context";
-import { auth } from "@/lib/services/get-user-me-loader";
+import AuthProvider from "@/providers/auth.provider";
 
 export const metadata: Metadata = {
   title: "Dashcode admin Template",
@@ -21,7 +21,6 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  // params: { locale },
   params,
 }: Readonly<{
   children: React.ReactNode;
@@ -31,19 +30,12 @@ export default async function RootLayout({
 
   const messages = await getMessages();
   const direction = getLangDir(locale);
-  const { user, session } = await auth();
-
   return (
     <html lang={locale} dir={direction}>
-      <body className={`${inter.className} dashcode-app `}>
+      <body className={`${inter.className} dashcode-app`}>
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <AuthProvider user={user} session={session}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
+          <AuthProvider>
+            <ThemeProvider attribute="class" defaultTheme="light">
               <MountedProvider>
                 <DirectionProvider direction={direction}>
                   {children}

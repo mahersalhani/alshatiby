@@ -23,7 +23,7 @@ const EarningBlock = ({
   percentage = "+08%",
   series = [70, 30],
   chartType = "donut",
-  height = 150,
+  height = 200,
   labels = ["Success", "Return"],
   colors = ["#ffbf99", "#5cffff"],
   className = "",
@@ -86,20 +86,25 @@ const EarningBlock = ({
   return (
     <Card className={cn("", className)}>
       <CardContent className="py-3 px-4">
-      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+        <div className="flex flex-col gap-2 md:flex-row items-center">
           <div className="flex-1">
-            <div className="text-sm md:text-base text-default-600 mb-1.5">{title}</div>
-            <div className="text-lg md:text-xl text-default-900 font-medium mb-1.5">
+            <div className="text-sm text-default-600  mb-1.5">{title}</div>
+            <div className="text-lg text-default-900  font-medium mb-1.5">
               {total}
             </div>
-            <div className="font-normal text-xs md:text-sm text-default-600 whitespace-nowrap">
+            <div className="font-normal text-xs text-default-600 whitespace-nowrap">
               <span className="text-primary me-1">{percentage}</span>
               {t("statistics_graph_desc")}
             </div>
           </div>
-
-          <div className="flex-none w-full md:w-[120px]">
-            <Chart options={options} series={series} type={chartType} height={height} width={"100%"} />
+          <div className="flex-none">
+            <Chart
+              options={options}
+              series={series}
+              type={chartType}
+              height={height}
+              width={"100%"}
+            />
           </div>
         </div>
       </CardContent>

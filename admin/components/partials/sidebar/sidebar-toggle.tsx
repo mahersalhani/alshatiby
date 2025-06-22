@@ -19,11 +19,13 @@ export function SidebarToggle() {
     }
     if (config.sidebar === 'two-column') {
         return (
+
             <Button
                 onClick={() => setConfig((prevConfig) => ({ ...prevConfig, subMenu: !prevConfig.subMenu }))}
                 className="rounded-md h-auto p-0 hover:bg-transparent hover:text-default-800 text-default-500 "
                 variant="ghost"
-                size="icon" >
+                size="icon"
+            >
                 {config.subMenu ? (
                     <motion.div
                         key={config.subMenu ? 'collapsed' : 'expanded'}

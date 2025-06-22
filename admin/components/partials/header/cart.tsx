@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import {
     Sheet,
+    SheetClose,
     SheetContent,
     SheetDescription,
     SheetFooter,
@@ -44,7 +45,7 @@ export function Cart() {
     return (
         <Sheet >
             <SheetTrigger asChild>
-                <button type="button" className="relative focus:ring-none focus:outline-hidden md:h-8 md:w-8 md:bg-secondary  text-secondary-foreground   rounded-full  flex flex-col items-center justify-center cursor-pointer">
+                <button type="button" className="relative focus:ring-none focus:outline-none md:h-8 md:w-8 md:bg-secondary  text-secondary-foreground   rounded-full  flex flex-col items-center justify-center">
                     <Icon icon="heroicons:shopping-cart" className="h-5 w-5" />
                     <Badge className=" w-4 h-4 p-0 text-[8px] rounded-full  font-semibold  items-center justify-center absolute left-[calc(100%-12px)] bottom-[calc(100%-10px)] " color="destructive">
                         0
@@ -61,9 +62,9 @@ export function Cart() {
                 {
                     cartProducts.length > 0 ? (
                         <ScrollArea className="h-full">
-                            <div className=" h-full divide-y divide-border">
+                            <div className=" h-full divide-y divide-default-200 space-y-3">
                                 {cartProducts.map((product, i) => (
-                                    <div className="flex gap-4 px-4 py-3 first:pt-0 last: " key={i}>
+                                    <div className="flex gap-4 px-4 pt-3 first:pt-0 " key={i}>
                                         <div className="flex-none mt-0.5">
                                             <div className="md:w-20 md:h-20 w-14 h-14 bg-default-200 dark:bg-default-600  rounded">
                                                 <Image
@@ -86,7 +87,7 @@ export function Cart() {
                                                 <ProductCounterButton />
                                                 <Button
                                                     size="icon"
-                                                    className="h-8 w-8 rounded-full   bg-default-300/80 text-default-800 hover:bg-destructive hover:text-destructive-foreground hover:ring-transparent hover:ring-0">
+                                                    className="h-8 w-8 rounded-full   bg-default-200 text-default-800 hover:bg-destructive hover:text-destructive-foreground hover:ring-transparent hover:ring-0">
                                                     <Icon icon="heroicons:trash" className="w-4 h-4" />
                                                 </Button>
                                             </div>

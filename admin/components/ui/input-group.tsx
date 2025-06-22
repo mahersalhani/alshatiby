@@ -30,7 +30,7 @@ const InputGroupButton = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "first:*:rounded-r-none last:*:rounded-l-none focus:border-default dark:focus:border-default-500",
+      "[&>*]:first:rounded-r-none [&>*]:last:rounded-l-none focus:border-default dark:focus:border-default-500",
       className
     )}
     {...props}

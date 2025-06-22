@@ -15,7 +15,7 @@ const DashboardDropdown = () => {
       <DropdownMenuTrigger asChild>
         <Button
           size="icon"
-          className="w-6 h-6  bg-transparent border border-default-300  hover:bg-transparent ring-offset-transparent hover:ring-0 hover:ring-transparent cursor-pointer"
+          className="w-6 h-6  bg-transparent border border-default-300  hover:bg-transparent ring-offset-transparent hover:ring-0 hover:ring-transparent "
         >
           <MoreHorizontal className="w-4 h-4 text-default-600" />
         </Button>

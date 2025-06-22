@@ -25,7 +25,7 @@ export default function DateRangePicker({ className }: { className?: string }) {
                     <Button
 
                         className={cn(" font-normal", {
-                            "  bg-background hover:bg-background hover:ring-background text-default-600 cursor-pointer": mode !== "dark",
+                            "  bg-background hover:bg-background hover:ring-background text-default-600": mode !== "dark",
                         })}
                     >
                         <CalendarIcon className="ltr:mr-2 rtl:ml-2 h-4 w-4" />

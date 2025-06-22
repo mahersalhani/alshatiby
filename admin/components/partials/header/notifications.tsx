@@ -21,7 +21,7 @@ const Notifications = () => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button type="button" className="relative  hidden focus:ring-none focus:outline-hidden md:h-8 md:w-8 md:bg-secondary   text-secondary-foreground    rounded-full  md:flex flex-col items-center justify-center cursor-pointer">
+                <button type="button" className="relative  hidden focus:ring-none focus:outline-none md:h-8 md:w-8 md:bg-secondary   text-secondary-foreground    rounded-full  md:flex flex-col items-center justify-center">
                     <Icon icon="heroicons-outline:bell" className="animate-tada h-5 w-5" />
                     <Badge className=" w-4 h-4 p-0 text-[8px] rounded-full  font-semibold  items-center justify-center absolute left-[calc(100%-12px)] bottom-[calc(100%-10px)]" color="destructive">
                         2
@@ -30,8 +30,12 @@ const Notifications = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 align="end"
-                className=" z-999 mx-4 lg:w-[320px] p-0">
-                <DropdownMenuLabel>
+                className=" z-[999] mx-4 lg:w-[320px] p-0"
+            >
+                <DropdownMenuLabel
+
+
+                >
                     <div className="flex justify-between px-4 py-3 border-b border-default-100 ">
                         <div className="text-sm text-default-800  font-medium ">
                             Notifications
@@ -48,7 +52,8 @@ const Notifications = () => {
                         {notifications.map((item: Notification, index: number) => (
                             <DropdownMenuItem
                                 key={`inbox-${index}`}
-                                className="flex gap-9 py-2 px-4 cursor-pointer group">
+                                className="flex gap-9 py-2 px-4 cursor-pointer group "
+                            >
                                 <div className="flex items-start gap-2 flex-1">
                                     <div className="flex-none">
                                         <Avatar className="h-8 w-8 ">

@@ -19,8 +19,8 @@ const ProductCounterButton = ({ className }: { className?: string }) => {
         }
     }
     return (
-        <div className={cn('flex-1 h-8 md:max-w-[112px] max-w-[95px] flex border dark:bg-default-300  delay-150 ease-in-out  divide-x-[1px] rtl:divide-x-reverse text-sm font-normal divide-border  rounded', className)}>
-            <button className="md:px-3 px-2 disabled:cursor-not-allowed cursor-pointer" onClick={handleDecreaseQuantity}
+        <div className={cn('flex-1 h-8 md:max-w-[112px] max-w-[95px] flex border   delay-150 ease-in-out  divide-x-[1px] rtl:divide-x-reverse text-sm font-normal divide-border  rounded', className)}>
+            <button className="md:px-3 px-2 disabled:cursor-not-allowed" onClick={handleDecreaseQuantity}
                 disabled={count === 0}
             >
                 <Icon icon="eva:minus-fill" className="text-default-700" />
@@ -31,7 +31,7 @@ const ProductCounterButton = ({ className }: { className?: string }) => {
             <button
                 disabled={count === 10}
                 onClick={handleIncreaseQuantity}
-                className="md:px-3 px-2 disabled:cursor-not-allowed cursor-pointer">
+                className="md:px-3 px-2 disabled:cursor-not-allowed">
                 <Icon icon="eva:plus-fill" className="text-default-700" />
             </button>
         </div>

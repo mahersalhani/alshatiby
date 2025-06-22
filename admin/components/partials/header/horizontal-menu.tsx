@@ -1,5 +1,6 @@
 'use client'
 import React from "react";
+import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { Link, usePathname } from "@/components/navigation";
 import { useConfig } from '@/hooks/use-config'
@@ -8,9 +9,14 @@ import { getHorizontalMenuList } from "@/lib/menus";
 import { Icon } from "@/components/ui/icon";
 import {
   Menubar,
+  MenubarCheckboxItem,
   MenubarContent,
   MenubarItem,
   MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarShortcut,
   MenubarSub,
   MenubarSubContent,
   MenubarSubTrigger,
@@ -35,9 +41,9 @@ export default function HorizontalMenu() {
   return (
     <div>
       <Menubar className=" py-2.5 h-auto flex-wrap bg-card">
-        {menuList?.map(({ menus }, index) => (
+        {menuList?.map(({ groupLabel, menus }, index) => (
           <React.Fragment key={index}>
-            {menus.map(({ href, label, icon, submenus }, index) =>
+            {menus.map(({ href, label, icon, active, id, submenus }, index) =>
               submenus.length === 0 ? (
                 <MenubarMenu key={index}>
                   <MenubarTrigger asChild>
@@ -105,6 +111,8 @@ export default function HorizontalMenu() {
                           </React.Fragment>
                         )
                     )}
+
+
                   </MenubarContent>
                 </MenubarMenu>
               )

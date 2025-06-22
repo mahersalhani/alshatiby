@@ -8,6 +8,7 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
 
+
         <div className={cn('flex  min-h-svh w-full flex-col bg-default-100 dark:bg-background ', {
             'bg-transparent': config.skin === 'bordered',
             'xl:px-20': config.layout === 'semi-box',

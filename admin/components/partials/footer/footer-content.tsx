@@ -5,6 +5,7 @@ import { useConfig } from '@/hooks/use-config'
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from '@/hooks/use-media-query'
 
+
 const FooterContent = ({ children }: { children: React.ReactNode }) => {
     const [config] = useConfig()
     const isMobile = useMediaQuery("(min-width: 768px)")

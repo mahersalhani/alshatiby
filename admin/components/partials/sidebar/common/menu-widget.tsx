@@ -19,7 +19,7 @@ const MenuWidget = () => {
                     </div>
                 </div>
                 <div className="mt-6">
-                    <Button size="sm" fullWidth className=' bg-white text-default-50 hover:bg-background/90 dark:hover:text-default cursor-pointer'>
+                    <Button size="sm" fullWidth className=' bg-white text-default-50 hover:bg-background/90'>
                         Upgrade
                     </Button>
                 </div>

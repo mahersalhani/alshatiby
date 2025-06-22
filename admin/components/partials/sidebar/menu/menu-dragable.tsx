@@ -3,7 +3,7 @@
 import React from 'react'
 import Logo from '@/components/logo';
 import SidebarHoverToggle from '@/components/partials/sidebar/sidebar-hover-toggle';
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, LogOut } from "lucide-react";
 import { usePathname } from "@/components/navigation";
 
 import { cn } from "@/lib/utils";
@@ -37,15 +37,21 @@ import {
     type UniqueIdentifier,
     useSensors,
 } from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
+    restrictToVerticalAxis,
+    restrictToHorizontalAxis,
+} from "@dnd-kit/modifiers";
+import {
+    useSortable,
     arrayMove,
     SortableContext,
     verticalListSortingStrategy,
+    horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation'
 import { getLangDir } from 'rtl-detect';
+import { CSS } from "@dnd-kit/utilities";
 
 export function MenuDragAble() {
     const t = useTranslations("Menu")
@@ -112,7 +118,7 @@ export function MenuDragAble() {
                 <SidebarHoverToggle />
             </div>
 
-            <ScrollArea className="[&>div>div[style]]:block!" dir={direction}>
+            <ScrollArea className="[&>div>div[style]]:!block" dir={direction}>
                 <div className={cn(' space-y-3 mt-6 ', {
                     'px-4': !collapsed,
                     'text-center': collapsed
@@ -163,7 +169,10 @@ export function MenuDragAble() {
                                                             <Tooltip delayDuration={100}>
                                                                 <TooltipTrigger asChild>
 
-                                                                <MenuItem label={label} icon={icon} href={href} active={active} id={id} collapsed={collapsed} />
+                                                                    <div>
+
+                                                                        <MenuItem label={label} icon={icon} href={href} active={active} id={id} collapsed={collapsed} />
+                                                                    </div>
                                                                 </TooltipTrigger>
                                                                 {collapsed && (
                                                                     <TooltipContent side="right">
@@ -189,11 +198,7 @@ export function MenuDragAble() {
                                     </SortableContext>
                                 </li>
                             ))}
-                            {!collapsed && (
-                                <li className="w-full grow flex items-end">
-                                    <MenuWidget />
-                                </li>
-                            )}
+
                         </ul>
                     </nav>
                 </DndContext>

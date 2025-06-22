@@ -188,7 +188,7 @@ export const columns: ColumnDef<TeamTableProps>[] = [
                  className="w-8 h-8 text-default-700 bg-transparent hover:bg-transparent ring-offset-transparent hover:ring-transparent"
               >
                 <span className="sr-only">Open menu</span>
-                <MoreVertical className="h-4 w-4 cursor-pointer" />
+                <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="p-0" align="end">

@@ -70,7 +70,7 @@ export function MenuClassic({ }) {
 
 
 
-            <ScrollArea className="[&>div>div[style]]:block!" dir={direction}>
+            <ScrollArea className="[&>div>div[style]]:!block" dir={direction}>
                 {isDesktop && (
                     <div className={cn(' space-y-3 mt-6 ', {
                         'px-4': !collapsed || hovered,
@@ -144,11 +144,7 @@ export function MenuClassic({ }) {
 
                             </li>
                         ))}
-                        {!collapsed && (
-                            <li className="w-full grow flex items-end">
-                                <MenuWidget />
-                            </li>
-                        )}
+
                     </ul>
                 </nav>
 

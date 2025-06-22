@@ -22,7 +22,7 @@ const MessageListItem = ({ message }: MessageListItemProps) => {
             <AvatarImage src={image} alt="mesage title" />
             <AvatarFallback />
           </Avatar>
-          <span className={cn("absolute top-1 end-0 w-2 h-2 bg-secondary rounded-full ring-3 ring-default-200",
+          <span className={cn("absolute top-1 end-0 w-2 h-2 bg-secondary rounded-full ring ring-default-200",
             { "bg-success": active }
           )}></span>
         </div>

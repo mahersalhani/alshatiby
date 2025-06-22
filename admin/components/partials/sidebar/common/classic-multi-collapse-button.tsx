@@ -1,31 +1,41 @@
 "use client";
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import { Link, usePathname } from "@/components/navigation";
 import { useState } from "react";
-import { ChevronDown} from "lucide-react";
+import { ChevronDown, Dot, LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger
 } from "@/components/ui/collapsible";
 
+import { Icon } from "@/components/ui/icon";
 import { SubChildren } from '@/lib/menus';
 import { useMobileMenuConfig } from '@/hooks/use-mobile-menu';
+
+
+
 
 interface CollapseMenuButtonProps {
     icon?: string;
     label: string;
     active: boolean;
     submenus: SubChildren[]
+
+
 }
 
 export function MultiCollapseMenuButton({
+    icon,
     label,
     active,
     submenus,
+
+
 
 }: CollapseMenuButtonProps) {
     const pathname = usePathname();
@@ -54,9 +64,9 @@ export function MultiCollapseMenuButton({
                             <div className="flex items-center">
                                 <span
                                     className={cn(
-                                        "h-1.5 w-1.5 me-3 rounded-full  transition-all duration-150 ring-1 ring-secondary-foreground",
+                                        "h-1.5 w-1.5 me-3 rounded-full  transition-all duration-150 ring-1     ring-default-600 ",
                                         {
-                                            "ring-4 bg-default ring-default/30": active,
+                                            "ring-4 bg-default ring-opacity-30 ring-default": active,
 
                                         }
                                     )}
@@ -101,9 +111,9 @@ export function MultiCollapseMenuButton({
                         <Link href={href}>
                             <span
                                 className={cn(
-                                    "h-1 w-1 me-3 rounded-full bg-default transition-all duration-150  ",
+                                    "h-1 w-1 me-3 rounded-full  transition-all duration-150 ring-0   bg-default-300 dark:bg-secondary  dark:ring-menu-arrow-active  ring-default-300 ",
                                     {
-                                        "ring-4 bg-secondary ring-default/30": active,
+                                        "ring-4 bg-default ring-opacity-30 ring-default": active,
 
                                     }
                                 )}

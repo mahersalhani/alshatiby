@@ -31,7 +31,7 @@ const avatarVariant = cva(
       variant: {
         default: "",
         outline: "border border-default text-default bg-transparent hover:bg-default hover:text-default-foreground hover:ring-0 hover:ring-transparent",
-        soft: "text-default-foreground/10 hover:text-primary-foreground",
+        soft: "bg-opacity-10 text-default-foreground hover:bg-opacity-100 hover:text-primary-foreground",
         ghost: "bg-transparent text-default hover:bg-transparent-10 hover:ring-0 hover:ring-transparent",
       },
       size: {
@@ -126,7 +126,7 @@ const avatarVariant = cva(
       {
         variant: "ghost",
         color: "secondary",
-        class: "text-secondary-foreground bg-secondary/80",
+        class: "text-secondary bg-secondary/10",
       },
       {
         variant: "ghost",

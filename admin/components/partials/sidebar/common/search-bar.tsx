@@ -4,6 +4,7 @@ import { useConfig } from '@/hooks/use-config'
 import React from 'react'
 import {
     InputGroup,
+    InputGroupButton,
     InputGroupText,
 } from "@/components/ui/input-group";
 import { Search } from 'lucide-react';

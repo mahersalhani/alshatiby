@@ -20,18 +20,18 @@ const selectVariants = cva(
     variants: {
       color: {
         default:
-          "border-default-200 text-default-500 focus:outline-hidden focus:border-default-500/50 disabled:bg-default-200  placeholder:text-accent-foreground/50 [&>svg]:stroke-default-600",
+          "border-default-200 text-default-500 focus:outline-none focus:border-default-500/50 disabled:bg-default-200  placeholder:text-accent-foreground/50 [&>svg]:stroke-default-600",
         primary:
-          "border-primary text-primary focus:outline-hidden focus:border-primary/70 disabled:bg-primary/30 disabled:placeholder:text-primary  placeholder:text-primary/70 [&>svg]:stroke-primary",
+          "border-primary text-primary focus:outline-none focus:border-primary/70 disabled:bg-primary/30 disabled:placeholder:text-primary  placeholder:text-primary/70 [&>svg]:stroke-primary",
         secondary:
-          "border-secondary text-secondary focus:outline-hidden focus:border-secondary/70 disabled:bg-primary/30 disabled:placeholder:text-primary  placeholder:text-primary/70 [&>svg]:stroke-primary",
-        info: "border-info/50 text-info focus:outline-hidden focus:border-info/70 disabled:bg-info/30 disabled:placeholder:text-info  placeholder:text-info/70",
+          "border-secondary text-secondary focus:outline-none focus:border-secondary/70 disabled:bg-primary/30 disabled:placeholder:text-primary  placeholder:text-primary/70 [&>svg]:stroke-primary",
+        info: "border-info/50 text-info focus:outline-none focus:border-info/70 disabled:bg-info/30 disabled:placeholder:text-info  placeholder:text-info/70",
         warning:
-          "border-warning/50 text-warning focus:outline-hidden focus:border-warning/70 disabled:bg-warning/30 disabled:placeholder:text-info  placeholder:text-warning/70",
+          "border-warning/50 text-warning focus:outline-none focus:border-warning/70 disabled:bg-warning/30 disabled:placeholder:text-info  placeholder:text-warning/70",
         success:
-          "border-success/50 text-success focus:outline-hidden focus:border-success/70 disabled:bg-success/30 disabled:placeholder:text-info  placeholder:text-success/70",
+          "border-success/50 text-success focus:outline-none focus:border-success/70 disabled:bg-success/30 disabled:placeholder:text-info  placeholder:text-success/70",
         destructive:
-          "border-destructive/50 text-destructive focus:outline-hidden focus:border-destructive/70 disabled:bg-destructive/30 disabled:placeholder:text-destructive  placeholder:text-destructive/70",
+          "border-destructive/50 text-destructive focus:outline-none focus:border-destructive/70 disabled:bg-destructive/30 disabled:placeholder:text-destructive  placeholder:text-destructive/70",
       },
 
       size: {
@@ -170,12 +170,12 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 ps-4 pe-2 text-sm outline-hidden focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 ps-4 pe-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     {...props}
   >
-    <span className="absolute end-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
         <Check className="h-4 w-4" />
       </SelectPrimitive.ItemIndicator>

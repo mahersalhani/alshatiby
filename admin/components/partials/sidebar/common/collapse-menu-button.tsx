@@ -2,10 +2,11 @@
 import React, { CSSProperties } from 'react'
 import { Link, usePathname } from "@/components/navigation";
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Dot, LucideIcon } from "lucide-react";
 import { GripVertical } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 import {
@@ -39,6 +40,10 @@ import { Submenu } from "@/lib/menus"
 
 import {
     useSortable,
+    arrayMove,
+    SortableContext,
+    verticalListSortingStrategy,
+    horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useConfig } from '@/hooks/use-config';
@@ -74,6 +79,7 @@ export function CollapseMenuButton({
     const [config] = useConfig();
     const [hoverConfig] = useMenuHoverConfig();
     const { hovered } = hoverConfig;
+    const sidebarTheme = config.sidebarTheme !== 'light' ? `dark theme-${config.sidebarTheme}` : `theme-${config.sidebarTheme}`
     const isDesktop = useMediaQuery("(min-width: 1280px)");
     const { transform, transition, setNodeRef, isDragging, attributes, listeners } = useSortable({
         id: id,
@@ -110,13 +116,11 @@ export function CollapseMenuButton({
                         variant={active ? "default" : "ghost"}
                         fullWidth
                         color={active ? 'default' : 'secondary'}
-                        className={cn(
-                                  "hover:ring-transparent hover:ring-offset-0 flex-col h-auto py-1.5 px-3.5 capitalize font-semibold ring-offset-sidebar",
-                                  {
-                                    "bg-secondary text-default hover:bg-secondary":
-                                      active && config.sidebarColor !== "light",
-                                  }
-                                )}
+                        className={cn('flex-col h-auto py-1.5 px-3.5 capitalize font-semibold ring-offset-sidebar', {
+                            'data-[state=open]:bg-secondary': !active
+                        })}
+
+
                     >
 
                         <Icon icon={icon} className={cn('h-6 w-6 mb-1 ')} />
@@ -161,18 +165,23 @@ export function CollapseMenuButton({
     return !collapsed || hovered ? (
         <Collapsible
             open={isCollapsed}
-            onOpenChange={setIsCollapsed} >
+            onOpenChange={setIsCollapsed}
+
+
+        >
             <CollapsibleTrigger
                 className=""
-                asChild >
+                asChild
+            >
                 <div className='peer flex items-center group [&[data-state=open]>button>div>div>svg]:rotate-180' >
+
                     <Button
                         style={style}
                         ref={setNodeRef}
                         variant={active ? "default" : "ghost"}
                         color='secondary'
-                        className={cn('justify-start capitalize group  h-auto py-3 md:px-3 px-3   ring-offset-sidebar group-data-[state=open]:bg-secondary hover:ring-transparent', {
-                            'md:hover:ps-8': config.sidebar === 'draggable' && isDesktop
+                        className={cn('justify-start capitalize group  h-auto py-3 md:px-3 px-3   ring-offset-sidebar group-data-[state=open]:bg-secondary ', {
+                            'hover:md:ps-8': config.sidebar === 'draggable' && isDesktop
                         })}
                         fullWidth
                     >
@@ -182,7 +191,7 @@ export function CollapseMenuButton({
                                 {config.sidebar === 'draggable' && isDesktop && (
                                     <GripVertical
 
-                                        {...attributes} {...listeners} className={cn('inset-t-0 absolute me-1 h-5 w-5 ltr:-translate-x-6 rtl:translate-x-6 invisible opacity-0 group-hover:opacity-100 transition-all group-hover:visible group-hover:ltr:-translate-x-5 group-hover:rtl:translate-x-5 ', {
+                                        {...attributes} {...listeners} className={cn('inset-t-0 absolute me-1 h-5 w-5 ltr:-translate-x-6 rtl:translate-x-6 invisible opacity-0 group-hover:opacity-100 transition-all group-hover:visible ltr:group-hover:-translate-x-5 rtl:group-hover:translate-x-5 ', {
 
                                         })} />
                                 )}
@@ -238,9 +247,9 @@ export function CollapseMenuButton({
 
                                 <span
                                     className={cn(
-                                        "h-1.5 w-1.5 me-3 rounded-full  transition-all duration-150 ring-1 ring-secondary-foreground ",
+                                        "h-1.5 w-1.5 me-3 rounded-full  transition-all duration-150 ring-1    ring-default-600 ",
                                         {
-                                            "ring-4 bg-default ring-default/30": active,
+                                            "ring-4 bg-default ring-opacity-30 ring-default": active,
 
                                         }
                                     )}
@@ -296,7 +305,7 @@ export function CollapseMenuButton({
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
-            <DropdownMenuContent side="right" sideOffset={20} align="start" className={` border-sidebar space-y-1.5`} >
+            <DropdownMenuContent side="right" sideOffset={20} align="start" className={` border-sidebar space-y-1.5 ${sidebarTheme}`} >
                 <DropdownMenuLabel className="max-w-[190px] truncate">
                     {label}
                 </DropdownMenuLabel>

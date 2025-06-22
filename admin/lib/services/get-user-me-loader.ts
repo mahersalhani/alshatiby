@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
-import api from "../axios";
 import { getAuthToken } from "./get-token";
 import { redirect } from "@/components/navigation";
+import api from "../axios";
 
 export async function auth() {
   const authToken = await getAuthToken();

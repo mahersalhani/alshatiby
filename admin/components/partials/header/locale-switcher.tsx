@@ -1,7 +1,10 @@
 'use client';
 
 import { useLocale } from 'next-intl';
+import { useParams } from 'next/navigation';
+import { locales } from '@/config';
 import { usePathname, useRouter } from '@/i18n/routing';
+
 import { useTransition } from 'react';
 import {
     Select,
@@ -16,6 +19,7 @@ export default function LocalSwitcher() {
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
     const pathname = usePathname();
+    const params = useParams();
     const localActive = useLocale();
 
     const onSelectChange = (nextLocale: string) => {
@@ -26,13 +30,13 @@ export default function LocalSwitcher() {
     };
     return (
         <Select onValueChange={onSelectChange} defaultValue={localActive}>
-            <SelectTrigger className='w-[94px] border-none read-only:bg-transparent cursor-pointer'>
+            <SelectTrigger className='w-[94px] border-none read-only:bg-transparent'>
                 <SelectValue placeholder="Select a language" />
             </SelectTrigger>
             <SelectContent >
                 <SelectItem
                     value="en"
-                    className='border-none cursor-pointer'
+                    className='border-none'
                 >
                     <div className='flex items-center gap-1'>
                         <Image
@@ -45,7 +49,7 @@ export default function LocalSwitcher() {
                         <span className='font-medium text-sm text-default-600 dark:text-default-700'>En</span>
                     </div>
                 </SelectItem>
-                <SelectItem className='cursor-pointer' value="ar">
+                <SelectItem value="ar">
                     <div className='flex items-center gap-1'>
                         <Image
                             src="/images/all-img/flag-2.png"

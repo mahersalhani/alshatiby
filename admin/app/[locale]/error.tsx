@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Error components must be Client Components
 
 
 import { Button } from "@/components/ui/button";

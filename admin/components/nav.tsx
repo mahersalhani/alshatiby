@@ -26,7 +26,7 @@ const Nav = ({ links, dotStyle = false }: navProps) => {
               className={cn(
                 "h-2 w-2 me-2 rounded-full  transition-all duration-150 ring-0   bg-default ring-default ring-opacity-30",
                 {
-                  "ring-4 ring-default/30 bg-default": active,
+                  "ring-4": active,
                   "bg-destructive ring-destructive": title === 'team' || title==="promotions",
                   "bg-success ring-success": title === 'low' || title==="social",
                   "bg-warning ring-warning": title === 'medium',

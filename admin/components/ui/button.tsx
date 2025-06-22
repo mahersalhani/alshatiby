@@ -6,7 +6,7 @@ import { color, shadow, rounded } from "@/lib/type"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center px-4 md:px-6 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300 hover:ring-2 hover:ring-offset-2 ring-offset-background transition-all focus-visible:outline-hidden focus-visible:hidden focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer",
+  "inline-flex items-center justify-center px-4 md:px-6 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300 hover:ring-2 hover:ring-offset-2 ring-offset-background transition-all focus-visible:outline-none focus-visible:hidden focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       color: {
@@ -26,7 +26,7 @@ const buttonVariants = cva(
         shadow: "shadow-md"
       },
       shadow: {
-        sm: "shadow-sm",
+        sm: "shadow",
         md: "shadow-md",
         lg: "shadow-lg",
         xl: "shadow-xl",

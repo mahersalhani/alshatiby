@@ -8,7 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { color } from "@/lib/type"
 
 const checkboxVariants = cva(
-  "peer  group shrink-0 ring-offset-background dark:ring-offset-card  bg-default-300/70 transition-all duration-300 data-[state=checked]:outline-hidden data-[state=checked]:ring-2 data-[state=checked]:ring-ring data-[state=checked]:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  rounded h-4 w-4 [&_svg]:stroke-default-foreground [&_svg]:h-3.5 [&_svg]:w-3.5 cursor-pointer",
+  "peer  group shrink-0 ring-offset-background dark:ring-offset-card  bg-default-300/70 transition-all duration-300 data-[state=checked]:outline-none data-[state=checked]:ring-2 data-[state=checked]:ring-ring data-[state=checked]:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  rounded h-4 w-4 [&_svg]:stroke-default-foreground [&_svg]:h-3.5 [&_svg]:w-3.5",
   {
     variants: {
       color: {
