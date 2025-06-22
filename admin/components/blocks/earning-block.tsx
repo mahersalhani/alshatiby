@@ -1,12 +1,15 @@
-"use client"
-import dynamic from "next/dynamic";
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+'use client';
+import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
+import dynamic from 'next/dynamic';
+
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+
 import { Card, CardContent } from '@/components/ui/card';
-import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
+import { cn } from '@/lib/utils';
+
 interface EarningBlockProps {
-  title?: string,
+  title?: string;
   className?: string;
   colors?: string[];
   series?: number[];
@@ -18,15 +21,15 @@ interface EarningBlockProps {
 }
 
 const EarningBlock = ({
-  title = "Earnings",
-  total = "$0",
-  percentage = "+08%",
+  title = 'Earnings',
+  total = '$0',
+  percentage = '+08%',
   series = [70, 30],
-  chartType = "donut",
+  chartType = 'donut',
   height = 200,
-  labels = ["Success", "Return"],
-  colors = ["#ffbf99", "#5cffff"],
-  className = "",
+  labels = ['Success', 'Return'],
+  colors = ['#ffbf99', '#5cffff'],
+  className = '',
 }: EarningBlockProps) => {
   const { theme: mode } = useTheme();
   const options: any = {
@@ -35,76 +38,68 @@ const EarningBlock = ({
       enabled: false,
     },
     tooltip: {
-      theme: mode === "dark" ? "dark" : "light",
+      theme: mode === 'dark' ? 'dark' : 'light',
     },
     colors: [...colors],
     legend: {
-      position: "bottom",
-      fontSize: "12px",
-      fontFamily: "Outfit",
+      position: 'bottom',
+      fontSize: '12px',
+      fontFamily: 'Outfit',
       fontWeight: 400,
       labels: {
-        colors: mode === "dark" ? "#cbd5e1" : "#0f172a",
-    }
+        colors: mode === 'dark' ? '#cbd5e1' : '#0f172a',
+      },
     },
 
     plotOptions: {
       pie: {
         donut: {
-          size: "70%",
+          size: '70%',
           labels: {
             show: true,
             name: {
               show: false,
-              fontSize: "14px",
-              fontWeight: "bold",
-              fontFamily: "Inter",
+              fontSize: '14px',
+              fontWeight: 'bold',
+              fontFamily: 'Inter',
             },
             value: {
               show: true,
-              fontSize: "16px",
-              fontFamily: "Outfit",
-              color: mode === "dark" ? "#cbd5e1" : "#0f172a",
+              fontSize: '16px',
+              fontFamily: 'Outfit',
+              color: mode === 'dark' ? '#cbd5e1' : '#0f172a',
               formatter(val: string) {
                 return `${parseInt(val)}%`;
               },
             },
             total: {
               show: true,
-              fontSize: "10px",
-              label: "",
+              fontSize: '10px',
+              label: '',
               formatter() {
-                return "70";
-              }
-            }
-          }
-        }
-      }
-    }
+                return '70';
+              },
+            },
+          },
+        },
+      },
+    },
   };
-    const t = useTranslations("EcommerceDashboard");
+  const t = useTranslations('EcommerceDashboard');
   return (
-    <Card className={cn("", className)}>
+    <Card className={cn('', className)}>
       <CardContent className="py-3 px-4">
         <div className="flex flex-col gap-2 md:flex-row items-center">
           <div className="flex-1">
             <div className="text-sm text-default-600  mb-1.5">{title}</div>
-            <div className="text-lg text-default-900  font-medium mb-1.5">
-              {total}
-            </div>
+            <div className="text-lg text-default-900  font-medium mb-1.5">{total}</div>
             <div className="font-normal text-xs text-default-600 whitespace-nowrap">
               <span className="text-primary me-1">{percentage}</span>
-              {t("statistics_graph_desc")}
+              {t('statistics_graph_desc')}
             </div>
           </div>
           <div className="flex-none">
-            <Chart
-              options={options}
-              series={series}
-              type={chartType}
-              height={height}
-              width={"100%"}
-            />
+            <Chart options={options} series={series} type={chartType} height={height} width={'100%'} />
           </div>
         </div>
       </CardContent>

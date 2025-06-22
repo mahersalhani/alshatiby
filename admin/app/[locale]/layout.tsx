@@ -12,7 +12,8 @@ import { getLangDir } from "rtl-detect";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import DirectionProvider from "@/providers/direction-provider";
-import AuthProvider from "@/providers/auth.provider";
+import { AuthProvider } from "@/context/auth-context";
+import { auth } from "@/lib/services";
 
 export const metadata: Metadata = {
   title: "Dashcode admin Template",
@@ -30,11 +31,13 @@ export default async function RootLayout({
 
   const messages = await getMessages();
   const direction = getLangDir(locale);
+  const { user, session } = await auth();
+
   return (
     <html lang={locale} dir={direction}>
       <body className={`${inter.className} dashcode-app`}>
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <AuthProvider>
+          <AuthProvider user={user} session={session}>
             <ThemeProvider attribute="class" defaultTheme="light">
               <MountedProvider>
                 <DirectionProvider direction={direction}>

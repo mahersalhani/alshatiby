@@ -1,15 +1,15 @@
+import { MoreHorizontal } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { MoreHorizontal } from "lucide-react";
-import { useTranslations } from "next-intl";
+} from '@/components/ui/dropdown-menu';
 const DashboardDropdown = () => {
-    const t = useTranslations("AnalyticsDashboard");
+  const t = useTranslations('AnalyticsDashboard');
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,13 +22,13 @@ const DashboardDropdown = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[140px] p-0">
         <DropdownMenuItem className="py-2 rounded-none border-b border-default-200  text-default-900 focus:bg-default-400 focus:text-default-100 dark:focus:text-default-900">
-          {t("last_28_days")}
+          {t('last_28_days')}
         </DropdownMenuItem>
         <DropdownMenuItem className="py-2 rounded-none border-b border-default-200  text-default-900 focus:bg-default-400 focus:text-default-100 dark:focus:text-default-900">
-          {t("last_months")}
+          {t('last_months')}
         </DropdownMenuItem>
         <DropdownMenuItem className="py-2 rounded-none  text-default-900 focus:bg-default-400 focus:text-default-100 dark:focus:text-default-900">
-          {t("last_year")}
+          {t('last_year')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

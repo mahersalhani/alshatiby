@@ -1,22 +1,25 @@
-import LayoutProvider from "@/providers/layout.provider";
-import LayoutContentProvider from "@/providers/content.provider";
-import DashCodeSidebar from '@/components/partials/sidebar'
-import DashCodeFooter from '@/components/partials/footer'
-import DashCodeHeader from '@/components/partials/header'
-const layout = async ({ children }: { children: React.ReactNode }) => {
+import { redirect } from '@/components/navigation';
+import DashCodeFooter from '@/components/partials/footer';
+import DashCodeHeader from '@/components/partials/header';
+import DashCodeSidebar from '@/components/partials/sidebar';
+import { auth } from '@/lib/services';
+import LayoutContentProvider from '@/providers/content.provider';
+import LayoutProvider from '@/providers/layout.provider';
 
-    return (
-        <LayoutProvider >
-            <DashCodeHeader />
-            <DashCodeSidebar />
-            <LayoutContentProvider>
-                {children}
-            </LayoutContentProvider>
-            <DashCodeFooter />
-        </LayoutProvider>
-    )
+const layout = async ({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) => {
+  const { user } = await auth();
+  const { locale } = await params;
 
+  if (!user) redirect({ href: '/auth/login', locale });
 
+  return (
+    <LayoutProvider>
+      <DashCodeHeader />
+      <DashCodeSidebar />
+      <LayoutContentProvider>{children}</LayoutContentProvider>
+      <DashCodeFooter />
+    </LayoutProvider>
+  );
 };
 
 export default layout;
