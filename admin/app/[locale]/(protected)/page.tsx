@@ -1,9 +1,10 @@
-import React from 'react'
+import { redirect } from '@/components/navigation';
 
-const page = () => {
-    return (
-        <h1 className=' text-2xl'> Your Content goes here... </h1>
-    )
-}
+const page = async ({ params }: { params: Promise<{ locale: string }> }) => {
+  return redirect({
+    href: `/dashboard`,
+    locale: (await params).locale,
+  });
+};
 
-export default page
+export default page;

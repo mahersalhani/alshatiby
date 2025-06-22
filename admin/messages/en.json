@@ -124,6 +124,7 @@
   },
   "Menu": {
     "dashboard": "Dashboard",
+    "students": "Students",
     "analytics": "Analytics",
     "banking": "Banking",
     "crm": "Crm",

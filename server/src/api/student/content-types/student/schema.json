@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "students",
+  "info": {
+    "singularName": "student",
+    "pluralName": "students",
+    "displayName": "Student"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nationality": {
+      "type": "string"
+    },
+    "countryOfResidence": {
+      "type": "string"
+    },
+    "gender": {
+      "type": "string"
+    },
+    "dateOfBirth": {
+      "type": "date"
+    },
+    "contactNumber": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "text"
+    },
+    "joinedAt": {
+      "type": "date"
+    }
+  }
+}

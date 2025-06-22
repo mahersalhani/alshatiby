@@ -6,6 +6,10 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 import { getLangDir } from 'rtl-detect';
 
+import { CollapseMenuButton } from '../common/collapse-menu-button';
+import MenuItem from '../common/menu-item';
+import MenuLabel from '../common/menu-label';
+
 import Logo from '@/components/logo';
 import { usePathname } from '@/components/navigation';
 import SearchBar from '@/components/partials/sidebar/common/search-bar';
@@ -17,10 +21,6 @@ import { useMediaQuery } from '@/hooks/use-media-query';
 import { useMenuHoverConfig } from '@/hooks/use-menu-hover';
 import { getMenuList } from '@/lib/menus';
 import { cn } from '@/lib/utils';
-
-import { CollapseMenuButton } from '../common/collapse-menu-button';
-import MenuItem from '../common/menu-item';
-import MenuLabel from '../common/menu-label';
 
 export function MenuClassic({}) {
   // translate
