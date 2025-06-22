@@ -17,7 +17,6 @@
   "dependencies": {
     "@types/node": "^22.5.2",
     "concurrently": "^8.2.2",
-    "pg": "^8.16.2",
     "typescript": "^5.0.0",
     "wait-on": "^8.0.1"
   },
