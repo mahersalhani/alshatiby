@@ -13,8 +13,6 @@ const config = {
 
 export const loginUser = async (data: any) => {
   try {
-    console.log('loginUser:', process.env.NEXT_PUBLIC_BACKEND_URL);
-
     const user = await api.post('/auth/local', {
       identifier: data.email,
       password: data.password,
@@ -28,8 +26,6 @@ export const loginUser = async (data: any) => {
 
       return userData;
     }
-
-    console.log('Login failed:', process.env.NEXT_PUBLIC_BACKEND_URL);
 
     throw new Error('Invalid credentials');
   } catch (error) {

@@ -1,5 +1,6 @@
-import { BACKEND_URL } from "@/constants/env";
-import axios from "axios";
+import axios from 'axios';
+
+import { BACKEND_URL } from '@/constants/env';
 
 const api = axios.create({
   baseURL: BACKEND_URL,
