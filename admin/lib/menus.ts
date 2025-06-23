@@ -48,7 +48,15 @@ export function getMenuList(pathname: string, t: any): Group[] {
           label: t('students'),
           active: pathname.includes('/students'),
           icon: 'heroicons-outline:users',
-          submenus: [],
+          submenus: [
+            {
+              icon: 'heroicons-outline:user-group',
+              href: '/students/create',
+              label: t('create_student'),
+              active: pathname.includes('/students/create'),
+              children: [],
+            },
+          ],
         },
       ],
     },

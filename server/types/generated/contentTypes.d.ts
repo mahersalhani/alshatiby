@@ -401,12 +401,13 @@ export interface ApiProgramProgram extends Struct.CollectionTypeSchema {
 export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
   collectionName: 'students';
   info: {
+    description: '';
     displayName: 'Student';
     pluralName: 'students';
     singularName: 'student';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     contactNumber: Schema.Attribute.String;

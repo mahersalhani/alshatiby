@@ -124,6 +124,7 @@
   },
   "Menu": {
     "students": "الطلاب",
+    "create_student": "إنشاء طالب",
     "dashboard": "لوحة التحكم",
     "analytics": "تحليلات",
     "banking": "بنكية",
