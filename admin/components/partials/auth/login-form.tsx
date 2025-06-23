@@ -14,6 +14,7 @@ import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link } from '@/i18n/routing';
+import api from '@/lib/axios';
 import { cn } from '@/lib/utils';
 
 const schema = z.object({
@@ -61,6 +62,11 @@ const LoginForm = () => {
       } catch (err: any) {
         console.error('Login error:', err);
         console.log('Login failed:', process.env.NEXT_PUBLIC_BACKEND_URL);
+
+        const user = await api.post('/auth/local', {
+          identifier: data.email,
+          password: data.password,
+        });
 
         toast.error(err.message);
       }
