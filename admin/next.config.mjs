@@ -28,13 +28,6 @@ const nextConfig = {
       },
     ],
   },
-  redirects: async () => [
-    {
-      source: '/',
-      destination: '/dashboard',
-      permanent: true,
-    },
-  ],
 };
 
 export default withNextIntl(nextConfig);
