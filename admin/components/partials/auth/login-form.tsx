@@ -60,6 +60,8 @@ const LoginForm = () => {
         }
       } catch (err: any) {
         console.error('Login error:', err);
+        console.log('Login failed:', process.env.NEXT_PUBLIC_BACKEND_URL);
+
         toast.error(err.message);
       }
     });
