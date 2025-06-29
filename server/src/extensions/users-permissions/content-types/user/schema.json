@@ -63,11 +63,10 @@
       "unique": false,
       "required": false
     },
-    "firstName": {
-      "type": "string"
-    },
-    "lastName": {
-      "type": "string"
+    "employee": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::employee.employee"
     }
   }
 }

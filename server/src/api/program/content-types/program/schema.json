@@ -16,6 +16,12 @@
     },
     "isActive": {
       "type": "boolean"
+    },
+    "employees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::employee.employee",
+      "mappedBy": "programs"
     }
   }
 }

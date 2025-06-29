@@ -123,8 +123,12 @@
     "todos": "مهام"
   },
   "Menu": {
+    "employees": "الموظفون",
+    "create_employee": "إنشاء موظف",
+    "employee_list": "قائمة الموظفين",
     "students": "الطلاب",
     "create_student": "إنشاء طالب",
+    "student_list": "قائمة الطلاب",
     "dashboard": "لوحة التحكم",
     "analytics": "تحليلات",
     "banking": "بنكية",
@@ -275,5 +279,25 @@
     "version": "النسخة",
     "changelog": "سجل التغيير",
     "versionHistory": "تاريخ النسخة"
+  },
+  "Form": {
+    "add_new_employee": "أضف موظفًا جديدًا",
+    "create_new_employee_record": "قم بانشاء موظف جديد",
+    "save_employee": "حفظ الموظف",
+    "employee_information": "معلومات الموظف",
+    "first_name": "الاسم الأول",
+    "last_name": "الاسم الاخير",
+    "email": "البريد الالكتروني",
+    "role": "دور",
+    "teacher": "معلم",
+    "supervisor": "مشرف",
+    "phone_number": "رقم الهاتف",
+    "select_role": "اختر دور",
+    "roles": "الادوار",
+    "password": "كلمة السر",
+    "first_name_required": "الاسم الأول مطلوب",
+    "last_name_required": "الاسم الاخير مطلوب",
+    "invalid_email_address": "عنوان البريد الإلكتروني غير صالح",
+    "password_required": "يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل"
   }
 }
