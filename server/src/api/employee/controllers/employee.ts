@@ -3,65 +3,37 @@
  */
 
 import { factories } from "@strapi/strapi";
-import bcrypt from "bcryptjs";
 
 export default factories.createCoreController(
   "api::employee.employee",
   ({ strapi }) => ({
+    async getAuthenticatedRole() {
+      const userRoleService = strapi.plugins["users-permissions"].services.role;
+      const roles = await userRoleService.find("Authenticated");
+      return roles?.find((role) => role.type === "authenticated");
+    },
+
     async create(ctx) {
-      const { body } = ctx.request;
-      // console.log("Creating employee with body:", body);
-      // // const { data, meta } = await strapi.service('api::employee.employee').create(body);
-      // // ctx.created({ data, meta });
-      console.log("Creating employee with body:", body);
+      const { email, username, password, ...employeeData } = ctx.request.body;
 
-      const employeeData = await strapi
-        .service("api::employee.employee")
-        .create({
-          data: {
-            firstName: body.firstName,
-            lastName: body.lastName,
-            // email: body.email,
-            phoneNumber: body.phoneNumber,
-            role: body.role,
-            // password: body.password,
-          },
-        });
+      const authenticatedRole = await this.getAuthenticatedRole();
 
-      const hashedPassword = await bcrypt.hash(body.password, 10);
-      console.log("Hashed password:", hashedPassword);
+      const employee = await strapi.service("api::employee.employee").create({
+        data: employeeData,
+      });
+      await strapi.documents("plugin::users-permissions.user").create({
+        data: {
+          username: email,
+          email: email,
+          password,
+          employee: employee.id,
+          confirmed: true,
+          role: authenticatedRole,
+          provider: "local",
+        },
+      });
 
-      // const newUser = await strapi.db
-      //   .query("plugin::users-permissions.user")
-      //   .create({
-      //     data: {
-      //       username: body.email,
-      //       email: body.email,
-      //       password: hashedPassword,
-      //       confirmed: true,
-      //       role: "Authenticated", // assign correct role ID
-      //       employee: employeeData.id,
-      //       provider: "local",
-      //       created_by_id: ctx.state.user?.id || 1,
-      //       updated_by_id: ctx.state.user?.id || 1,
-      //     },
-      //   });
-      const userData = await strapi
-        .documents("plugin::users-permissions.user")
-        .create({
-          data: {
-            username: body.email,
-            email: body.email,
-            password: body.password,
-            employee: employeeData.id,
-            confirmed: true,
-            role: "Authenticated",
-          },
-        });
-
-      console.log("Employee created:", employeeData, userData);
-
-      return { success: true };
+      return employee;
     },
   })
 );

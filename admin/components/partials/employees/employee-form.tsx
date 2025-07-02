@@ -2,10 +2,13 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { createEmployee } from '@/action/employee';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -22,8 +25,8 @@ import {
 import { cn } from '@/lib/utils';
 
 enum Role {
-  SUPERVISOR = 'supervisor',
-  TEACHER = 'teacher',
+  SUPERVISOR = 'SUPERVISOR',
+  TEACHER = 'TEACHER',
 }
 
 const schema = z.object({
@@ -45,6 +48,8 @@ const EmployeeForm = () => {
   const [isPending, startTransition] = useTransition();
   const t = useTranslations('Form');
 
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -64,21 +69,13 @@ const EmployeeForm = () => {
 
   const onSubmit = (data: z.infer<typeof schema>) => {
     startTransition(async () => {
-      console.log('Form submitted:', data);
-      // try {
-      //   const response = await loginUser(data);
-
-      //   if (!!response.error) {
-      //     toast('Event has been created', {
-      //       description: 'Sunday, December 03, 2023 at 9:00 AM',
-      //     });
-      //   } else {
-      //     router.push('/');
-      //     toast.success('Successfully logged in');
-      //   }
-      // } catch (err: any) {
-      //   toast.error(err.message);
-      // }
+      try {
+        await createEmployee(data);
+        toast.success(t('employee_created_successfully'));
+        router.push('/employees');
+      } catch (err: any) {
+        toast.error(err.message);
+      }
     });
   };
 

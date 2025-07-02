@@ -1,10 +1,19 @@
 import axios from 'axios';
 
+import { getJwt } from './jwt';
+
 import { BACKEND_URL } from '@/constants/env';
 
 const api = axios.create({
   baseURL: BACKEND_URL,
   withCredentials: true,
 });
+
+export const configureAxios = async () => {
+  try {
+    const jwt = await getJwt();
+    api.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+  } catch (error) {}
+};
 
 export default api;

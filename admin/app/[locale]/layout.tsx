@@ -1,23 +1,27 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import "./theme.css";
-import { ThemeProvider } from "@/providers/theme-provider";
-import MountedProvider from "@/providers/mounted.provider";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as SonnerToaster } from "@/components/ui/sonner";
-const inter = Inter({ subsets: ["latin"] });
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { getLangDir } from 'rtl-detect';
+import './globals.css';
+import './theme.css';
+
+import { Toaster as SonnerToaster } from '@/components/ui/sonner';
+import { Toaster } from '@/components/ui/toaster';
+import MountedProvider from '@/providers/mounted.provider';
+import { ThemeProvider } from '@/providers/theme-provider';
+const inter = Inter({ subsets: ['latin'] });
 // language
-import { getLangDir } from "rtl-detect";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
-import DirectionProvider from "@/providers/direction-provider";
-import { AuthProvider } from "@/context/auth-context";
-import { auth } from "@/lib/services";
+
+import { AuthProvider } from '@/context/auth-context';
+import { configureAxios } from '@/lib/axios';
+import { auth } from '@/lib/services';
+import DirectionProvider from '@/providers/direction-provider';
 
 export const metadata: Metadata = {
-  title: "Dashcode admin Template",
-  description: "created by codeshaper",
+  title: 'Dashcode admin Template',
+  description: 'created by codeshaper',
 };
 
 export default async function RootLayout({
@@ -32,6 +36,7 @@ export default async function RootLayout({
   const messages = await getMessages();
   const direction = getLangDir(locale);
   const { user, session } = await auth();
+  configureAxios();
 
   return (
     <html lang={locale} dir={direction}>
@@ -40,9 +45,7 @@ export default async function RootLayout({
           <AuthProvider user={user} session={session}>
             <ThemeProvider attribute="class" defaultTheme="light">
               <MountedProvider>
-                <DirectionProvider direction={direction}>
-                  {children}
-                </DirectionProvider>
+                <DirectionProvider direction={direction}>{children}</DirectionProvider>
               </MountedProvider>
               <Toaster />
               <SonnerToaster />
