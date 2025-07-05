@@ -8,7 +8,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { createEmployee } from '@/action/employee';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -22,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import api from '@/lib/axios';
 import { cn } from '@/lib/utils';
 
 enum Role {
@@ -70,7 +70,7 @@ const EmployeeForm = () => {
   const onSubmit = (data: z.infer<typeof schema>) => {
     startTransition(async () => {
       try {
-        await createEmployee(data);
+        await api.post('/admin/employee', data);
         toast.success(t('employee_created_successfully'));
         router.push('/employees');
       } catch (err: any) {

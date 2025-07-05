@@ -2,6 +2,12 @@
  * student router
  */
 
-import { factories } from '@strapi/strapi';
-
-export default factories.createCoreRouter('api::student.student');
+export default {
+  routes: [
+    {
+      method: "POST",
+      path: "/admin/student",
+      handler: "student.create",
+    },
+  ],
+};
