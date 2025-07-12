@@ -7,7 +7,5 @@ export const getJwt = async () => {
 
   if (!jwt) throw new Error('JWT not found');
 
-  console.log('JWT:', jwt); // Debugging line to check the JWT value
-
   return jwt;
 };

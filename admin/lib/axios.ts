@@ -16,4 +16,6 @@ export const configureAxios = async () => {
   } catch (error) {}
 };
 
+configureAxios();
+
 export default api;

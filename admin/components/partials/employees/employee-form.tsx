@@ -3,13 +3,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { createEmployee } from '@/action/employee';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -21,7 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import api from '@/lib/axios';
 import { cn } from '@/lib/utils';
 
 enum Role {
@@ -47,7 +48,15 @@ const schema = z.object({
 const EmployeeForm = () => {
   const [isPending, startTransition] = useTransition();
   const t = useTranslations('Form');
+  const [passwordType, setPasswordType] = useState('password');
 
+  const togglePasswordType = () => {
+    if (passwordType === 'text') {
+      setPasswordType('password');
+    } else if (passwordType === 'password') {
+      setPasswordType('text');
+    }
+  };
   const router = useRouter();
 
   const {
@@ -70,7 +79,8 @@ const EmployeeForm = () => {
   const onSubmit = (data: z.infer<typeof schema>) => {
     startTransition(async () => {
       try {
-        await api.post('/admin/employee', data);
+        // await api.post('/admin/employee', data);
+        await createEmployee(data);
         toast.success(t('employee_created_successfully'));
         router.push('/employees');
       } catch (err: any) {
@@ -99,6 +109,7 @@ const EmployeeForm = () => {
                     {t('first_name')} *
                   </Label>
                   <Input
+                    size="lg"
                     disabled={isPending}
                     {...register('firstName')}
                     type="text"
@@ -113,6 +124,7 @@ const EmployeeForm = () => {
                     {t('last_name')} *
                   </Label>
                   <Input
+                    size="lg"
                     disabled={isPending}
                     {...register('lastName')}
                     type="text"
@@ -127,6 +139,7 @@ const EmployeeForm = () => {
                     {t('email')} *
                   </Label>
                   <Input
+                    size="lg"
                     disabled={isPending}
                     {...register('email')}
                     type="email"
@@ -141,6 +154,7 @@ const EmployeeForm = () => {
                     {t('phone_number')}
                   </Label>
                   <Input
+                    size="lg"
                     disabled={isPending}
                     {...register('phoneNumber')}
                     type="tel"
@@ -164,7 +178,7 @@ const EmployeeForm = () => {
                           field.onChange(value as Role);
                         }}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger size="lg">
                           <SelectValue placeholder={t('select_role')} />
                         </SelectTrigger>
                         <SelectContent>
@@ -179,19 +193,34 @@ const EmployeeForm = () => {
                   />
                 </div>
                 <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="password" className=" font-medium text-default-600">
+                  <Label htmlFor="password" className="mb-2 font-medium text-default-600">
                     {t('password')} *
                   </Label>
-                  <Input
-                    disabled={isPending}
-                    {...register('password')}
-                    type="password"
-                    id="password"
-                    className={cn('', {
-                      'border-destructive ': errors.password,
-                    })}
-                    autoComplete={'new-password'}
-                  />
+                  <div className="relative">
+                    <Input
+                      size="lg"
+                      disabled={isPending}
+                      {...register('password')}
+                      type={passwordType}
+                      id="password"
+                      placeholder=" "
+                      autoComplete={'new-password'}
+                      className={cn('peer', {
+                        'border-destructive ': errors.password,
+                      })}
+                    />
+
+                    <div
+                      className="absolute top-1/2 -translate-y-1/2 ltr:right-4 rtl:left-4 cursor-pointer"
+                      onClick={togglePasswordType}
+                    >
+                      {passwordType === 'password' ? (
+                        <Icon icon="heroicons:eye" className="w-5 h-5 text-default-400" />
+                      ) : (
+                        <Icon icon="heroicons:eye-slash" className="w-5 h-5 text-default-400" />
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 {Object.keys(errors).length > 0 && (
