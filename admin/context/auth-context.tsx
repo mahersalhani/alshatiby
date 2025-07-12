@@ -1,7 +1,10 @@
 'use client';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { createContext, useContext } from 'react';
+
+import { queryClient } from '@/lib/query-client';
 
 interface State {
   isAuthenticated: boolean;
@@ -37,7 +40,11 @@ export function AuthProvider(props: AuthProviderProps) {
     isAuthenticated: !!user,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    </QueryClientProvider>
+  );
 }
 
 export const useAuth = (): State => {

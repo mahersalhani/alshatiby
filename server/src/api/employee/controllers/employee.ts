@@ -16,6 +16,16 @@ export default factories.createCoreController(
     async create(ctx) {
       const { email, username, password, ...employeeData } = ctx.request.body;
 
+      // check if email is used
+      const [existingUser] = await strapi
+        .documents("plugin::users-permissions.user")
+        .findMany({
+          filters: { email },
+          limit: 1,
+        });
+
+      if (existingUser) return ctx.badRequest("Email is already in use");
+
       const authenticatedRole = await this.getAuthenticatedRole();
 
       const employee = await strapi.service("api::employee.employee").create({
@@ -34,6 +44,23 @@ export default factories.createCoreController(
       });
 
       return employee;
+    },
+    async find(ctx) {
+      const { query } = ctx;
+      const { filters, pagination, sort } = query as any;
+
+      const data = await strapi.service("api::employee.employee").find({
+        filters,
+        pagination,
+        sort,
+        populate: {
+          user: {
+            fields: ["email"],
+          },
+        },
+      });
+
+      return data;
     },
   })
 );

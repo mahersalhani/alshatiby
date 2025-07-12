@@ -294,5 +294,13 @@
     "last_name_required": "Last name is required",
     "invalid_email_address": "Invalid email address",
     "password_required": "Password must be at least 6 characters long"
+  },
+  "common": {
+    "teacher": "teacher",
+    "supervisor": "supervisor",
+    "actions": "Actions",
+    "full_name": "the name",
+    "role": "Role",
+    "phone_number": "phone number"
   }
 }
