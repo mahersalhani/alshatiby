@@ -1,13 +1,7 @@
 'use client';
 
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
+import { DatabaseBackup, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import * as React from 'react';
 
@@ -22,31 +16,39 @@ import { useQueryState } from '@/hooks/use-query-state';
 const ExampleOne = () => {
   const t = useTranslations();
   const { query, setQuery } = useQueryState();
-  const { data, isLoading } = useEmployeeQuery();
+  const pageIndex = query?.pagination?.page - 1 || 0;
+  const pageSize = query?.pagination?.pageSize || 20;
+
+  const { data, isLoading } = useEmployeeQuery(query);
 
   const columns = React.useMemo(() => getColumns(t), [t]);
 
   const table = useReactTable({
     data: data?.results || [],
     columns,
+    manualPagination: true,
+    autoResetPageIndex: false,
+    autoResetAll: false,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onPaginationChange: (updater) => {
-      const nextPagination = typeof updater === 'function' ? updater(data?.pagination) : updater;
+    onPaginationChange: (updater: any) => {
+      const nextState = updater({
+        pageIndex: pageIndex,
+        pageSize: pageSize,
+      });
+
       setQuery({
         pagination: {
-          pageSize: nextPagination.pageSize || 10,
-          page: nextPagination.pageIndex + 1,
+          page: nextState.pageIndex + 1,
+          pageSize: nextState.pageSize,
         },
       });
     },
     pageCount: data?.pagination?.pageCount || -1,
     state: {
       pagination: {
-        pageIndex: Number(query?.pagination?.page) - 1 || 0,
-        pageSize: Number(query?.pagination?.pageSize) || 10,
+        pageIndex,
+        pageSize,
       },
     },
   });
@@ -54,14 +56,16 @@ const ExampleOne = () => {
   return (
     <div className="w-full">
       <div className="flex items-center py-4 px-5">
-        <div className="flex-1 text-xl font-medium text-default-900">Order Records</div>
+        <div className="flex-1 text-xl font-medium text-default-900">{t('employee.list_title')}</div>
         <div className="flex-none">
           <Input
-            placeholder="Filter Status..."
-            // value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
-            // onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            //   table.getColumn('status')?.setFilterValue(event.target.value)
-            // }
+            placeholder={t('common.search')}
+            value={query?.search || ''}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setQuery({
+                search: event.target.value,
+              })
+            }
             className="max-w-sm "
           />
         </div>
@@ -93,13 +97,19 @@ const ExampleOne = () => {
           ) : isLoading ? (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                Loading...
+                <div className="my-10">
+                  <Loader2 className="mx-auto h-16 w-16 text-muted-foreground animate-spin" />
+                  <div className="mt-2 text-lg text-muted-foreground font-bold">{t('common.loading')}</div>
+                </div>
               </TableCell>
             </TableRow>
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                <div className="my-10">
+                  <DatabaseBackup className="mx-auto h-16 w-16 text-muted-foreground" />
+                  <div className="mt-2 text-lg text-muted-foreground font-bold">{t('common.no_results')}</div>
+                </div>
               </TableCell>
             </TableRow>
           )}

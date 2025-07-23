@@ -12,7 +12,6 @@ export const configureAxios = async () => {
   try {
     const jwt = await getJwt();
     api.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
-    console.log('Axios configured with JWT:', jwt);
   } catch (error) {}
 };
 

@@ -301,9 +301,15 @@
     "actions": "Actions",
     "full_name": "the name",
     "role": "Role",
-    "phone_number": "phone number"
+    "phone_number": "phone number",
+    "search": "Search ...",
+    "no_results": "There is no data",
+    "loading": "Loading is underway"
   },
   "error": {
     "email_already_in_use": "Email is already in use"
+  },
+  "employee": {
+    "list_title": "Employees"
   }
 }

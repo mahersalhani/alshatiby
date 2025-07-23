@@ -307,9 +307,15 @@
     "teacher": "معلم",
     "supervisor": "مشرف",
     "actions": "الإجراءات",
-    "phone_number": "رقم الهاتف"
+    "phone_number": "رقم الهاتف",
+    "search": "ابحث ...",
+    "no_results": "لا يوجد بيانات",
+    "loading": "جاري التحميل"
   },
   "error": {
     "email_already_in_use": "البريد الإلكتروني مستخدم بالفعل"
+  },
+  "employee": {
+    "list_title": "الموظفون"
   }
 }
