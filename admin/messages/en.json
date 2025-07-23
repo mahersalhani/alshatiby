@@ -302,5 +302,8 @@
     "full_name": "the name",
     "role": "Role",
     "phone_number": "phone number"
+  },
+  "error": {
+    "email_already_in_use": "Email is already in use"
   }
 }

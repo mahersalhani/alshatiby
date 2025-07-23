@@ -1,8 +1,6 @@
 'use client';
 
 import {
-  ColumnFiltersState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -23,44 +21,32 @@ import { useQueryState } from '@/hooks/use-query-state';
 
 const ExampleOne = () => {
   const t = useTranslations();
-  const { setQuery } = useQueryState({
-    pagination: {
-      page: 1,
-      pageSize: 1,
-    },
-  });
+  const { query, setQuery } = useQueryState();
   const { data, isLoading } = useEmployeeQuery();
 
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-
-  const columns = React.useMemo(() => getColumns(t), []);
+  const columns = React.useMemo(() => getColumns(t), [t]);
 
   const table = useReactTable({
     data: data?.results || [],
     columns,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (updater) => {
       const nextPagination = typeof updater === 'function' ? updater(data?.pagination) : updater;
       setQuery({
         pagination: {
-          page: (nextPagination.pageIndex || 0) + 1,
-          pageSize: nextPagination.pageSize,
+          pageSize: nextPagination.pageSize || 10,
+          page: nextPagination.pageIndex + 1,
         },
       });
     },
     pageCount: data?.pagination?.pageCount || -1,
     state: {
-      columnFilters,
-      columnVisibility,
       pagination: {
-        pageIndex: data?.pagination?.page - 1 || 0,
-        pageSize: data?.pagination?.pageSize || 10,
+        pageIndex: Number(query?.pagination?.page) - 1 || 0,
+        pageSize: Number(query?.pagination?.pageSize) || 10,
       },
     },
   });

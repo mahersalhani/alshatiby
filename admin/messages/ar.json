@@ -308,5 +308,8 @@
     "supervisor": "مشرف",
     "actions": "الإجراءات",
     "phone_number": "رقم الهاتف"
+  },
+  "error": {
+    "email_already_in_use": "البريد الإلكتروني مستخدم بالفعل"
   }
 }

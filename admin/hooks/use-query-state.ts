@@ -12,6 +12,16 @@ interface UseQueryStateOptions {
   clearQuery?: boolean;
 }
 
+type Updater<T> = (prev: T) => T;
+
+type DeepUpdater<T> = {
+  [K in keyof T]?: T[K] extends object
+    ? T[K] extends Array<any>
+      ? T[K] | Updater<T[K]>
+      : DeepUpdater<T[K]> | Updater<T[K]>
+    : T[K] | Updater<T[K]>;
+};
+
 // === Global Store ===
 let globalQuery: QueryValue = typeof window !== 'undefined' ? qs.parse(window.location.search.slice(1)) : {};
 const listeners = new Set<(q: QueryValue) => void>();
@@ -42,10 +52,30 @@ export function useQueryState(initialQuery: QueryValue = {}, options?: UseQueryS
     [method]
   );
 
+  function resolveUpdate<T>(prev: T, update: DeepUpdater<T>): T {
+    if (typeof update === 'function') {
+      return (update as Updater<T>)(prev);
+    }
+
+    if (update && typeof update === 'object' && !Array.isArray(update)) {
+      const result: Partial<T> = { ...prev };
+
+      for (const key in update) {
+        const prevValue = prev?.[key];
+        const updateValue = update[key];
+
+        result[key] = resolveUpdate(prevValue, updateValue as any);
+      }
+
+      return result as T;
+    }
+
+    return update as T;
+  }
+
   const setQueryState = useCallback(
-    (updater: Partial<QueryValue> | ((prev: QueryValue) => Partial<QueryValue>), methodOverride?: UpdateMethod) => {
-      const nextQuery =
-        typeof updater === 'function' ? { ...globalQuery, ...updater(globalQuery) } : { ...globalQuery, ...updater };
+    (updater: DeepUpdater<QueryValue> | ((prev: QueryValue) => QueryValue), methodOverride?: UpdateMethod) => {
+      const nextQuery = typeof updater === 'function' ? updater(globalQuery) : resolveUpdate(globalQuery, updater);
 
       globalQuery = nextQuery;
       currentQueryRef.current = nextQuery;
