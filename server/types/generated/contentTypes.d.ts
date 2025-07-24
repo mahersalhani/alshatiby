@@ -442,35 +442,46 @@ export interface ApiProgramProgram extends Struct.CollectionTypeSchema {
 export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
   collectionName: 'students';
   info: {
-    description: '';
     displayName: 'Student';
     pluralName: 'students';
     singularName: 'student';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   attributes: {
+    amount: Schema.Attribute.Decimal;
     contactNumber: Schema.Attribute.String;
     countryOfResidence: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    currencyType: Schema.Attribute.Enumeration<['TRY', 'USD']>;
     dateOfBirth: Schema.Attribute.Date;
-    gender: Schema.Attribute.String;
-    joinedAt: Schema.Attribute.Date;
+    dateOfJoining: Schema.Attribute.DateTime;
+    gender: Schema.Attribute.Enumeration<['male', 'female']>;
+    generalNotes: Schema.Attribute.RichText;
+    isGrant: Schema.Attribute.Boolean;
+    lastPaymentDate: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::student.student'
     > &
       Schema.Attribute.Private;
+    name: Schema.Attribute.String;
     nationality: Schema.Attribute.String;
-    notes: Schema.Attribute.Text;
+    programType: Schema.Attribute.Enumeration<['Hifz', 'Dabt', 'Ijazah']>;
     publishedAt: Schema.Attribute.DateTime;
+    session: Schema.Attribute.Enumeration<['first']>;
+    subscriptionType: Schema.Attribute.Enumeration<
+      ['monthly', 'bi-monthly', 'yearly']
+    >;
+    teacherName: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    workingDays: Schema.Attribute.String;
   };
 }
 

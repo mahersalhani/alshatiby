@@ -4,14 +4,16 @@
   "info": {
     "singularName": "student",
     "pluralName": "students",
-    "displayName": "Student",
-    "description": ""
+    "displayName": "Student"
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
+    "name": {
+      "type": "string"
+    },
     "nationality": {
       "type": "string"
     },
@@ -19,7 +21,11 @@
       "type": "string"
     },
     "gender": {
-      "type": "string"
+      "type": "enumeration",
+      "enum": [
+        "male",
+        "female"
+      ]
     },
     "dateOfBirth": {
       "type": "date"
@@ -27,11 +33,55 @@
     "contactNumber": {
       "type": "string"
     },
-    "notes": {
-      "type": "text"
+    "generalNotes": {
+      "type": "richtext"
     },
-    "joinedAt": {
-      "type": "date"
+    "dateOfJoining": {
+      "type": "datetime"
+    },
+    "workingDays": {
+      "type": "string"
+    },
+    "teacherName": {
+      "type": "string"
+    },
+    "programType": {
+      "type": "enumeration",
+      "enum": [
+        "Hifz",
+        "Dabt",
+        "Ijazah"
+      ]
+    },
+    "session": {
+      "type": "enumeration",
+      "enum": [
+        "first"
+      ]
+    },
+    "subscriptionType": {
+      "type": "enumeration",
+      "enum": [
+        "monthly",
+        "bi-monthly",
+        "yearly"
+      ]
+    },
+    "isGrant": {
+      "type": "boolean"
+    },
+    "lastPaymentDate": {
+      "type": "datetime"
+    },
+    "currencyType": {
+      "type": "enumeration",
+      "enum": [
+        "TRY",
+        "USD"
+      ]
+    },
+    "amount": {
+      "type": "decimal"
     }
   }
 }
