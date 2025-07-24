@@ -6,19 +6,6 @@ import { SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getFullName } from '@/lib/utils';
 
-//         {
-//             "id": 9,
-//             "documentId": "zb1qaxwlgrwwfdounyyv0dgk",
-//             "firstName": "ماهر",
-//             "createdAt": "2025-07-01T22:49:53.825Z",
-//             "updatedAt": "2025-07-01T22:49:53.825Z",
-//             "publishedAt": "2025-07-01T22:49:53.822Z",
-//             "locale": null,
-//             "lastName": "صالحاني",
-//             "role": "TEACHER",
-//             "phoneNumber": ""
-//         },
-
 export const getColumns = (t: (key: string) => string): ColumnDef<any>[] => [
   {
     accessorKey: 'fullName',

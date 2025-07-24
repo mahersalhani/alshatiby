@@ -2,13 +2,12 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { createEmployee } from '@/action/employee';
+import { useRouter } from '@/components/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
@@ -23,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import api from '@/lib/axios';
 import { cn } from '@/lib/utils';
 
 enum Role {
@@ -47,7 +47,8 @@ const schema = z.object({
 });
 const EmployeeForm = () => {
   const [isPending, startTransition] = useTransition();
-  const t = useTranslations('Form');
+  const t = useTranslations();
+
   const [passwordType, setPasswordType] = useState('password');
 
   const togglePasswordType = () => {
@@ -79,12 +80,11 @@ const EmployeeForm = () => {
   const onSubmit = (data: z.infer<typeof schema>) => {
     startTransition(async () => {
       try {
-        // await api.post('/admin/employee', data);
-        await createEmployee(data);
-        toast.success(t('employee_created_successfully'));
+        await api.post('/admin/employee', data);
+        toast.success(t('Form.employee_created_successfully'));
         router.push('/employees');
       } catch (err: any) {
-        toast.error(err.message);
+        toast.error(t(err.response?.data?.error?.message) || err.message);
       }
     });
   };
@@ -92,8 +92,8 @@ const EmployeeForm = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">{t('add_new_employee')}</h1>
-        <p className="text-muted-foreground">{t('create_new_employee_record')}</p>
+        <h1 className="text-3xl font-bold">{t('Form.add_new_employee')}</h1>
+        <p className="text-muted-foreground">{t('Form.create_new_employee_record')}</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -101,12 +101,12 @@ const EmployeeForm = () => {
           <div className="col-span-12 space-y-4">
             <Card>
               <CardHeader className="border-b border-solid border-default-200 mb-6">
-                <CardTitle>{t('employee_information')}</CardTitle>
+                <CardTitle>{t('Form.employee_information')}</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-12 gap-4">
                 <div className="space-y-2 col-span-12 sm:col-span-6">
                   <Label htmlFor="firstName" className=" font-medium text-default-600">
-                    {t('first_name')} *
+                    {t('Form.first_name')} *
                   </Label>
                   <Input
                     size="lg"
@@ -123,7 +123,7 @@ const EmployeeForm = () => {
                 
                 <div className="space-y-2 col-span-12 sm:col-span-6">
                   <Label htmlFor="lastName" className=" font-medium text-default-600">
-                    {t('last_name')} *
+                    {t('Form.last_name')} *
                   </Label>
                   <Input
                     size="lg"
@@ -138,7 +138,7 @@ const EmployeeForm = () => {
                 </div>
                 <div className="space-y-2 col-span-12 sm:col-span-6">
                   <Label htmlFor="email" className=" font-medium text-default-600">
-                    {t('email')} *
+                    {t('Form.email')} *
                   </Label>
                   <Input
                     size="lg"
@@ -153,7 +153,7 @@ const EmployeeForm = () => {
                 </div>
                 <div className="space-y-2 col-span-12 sm:col-span-6">
                   <Label htmlFor="phoneNumber" className=" font-medium text-default-600">
-                    {t('phone_number')}
+                    {t('Form.phone_number')}
                   </Label>
                   <Input
                     size="lg"
@@ -168,7 +168,7 @@ const EmployeeForm = () => {
                 </div>
                 <div className="space-y-2 col-span-12 sm:col-span-6">
                   <Label htmlFor="role" className=" font-medium text-default-600">
-                    {t('role')} *
+                    {t('Form.role')} *
                   </Label>
                   <Controller
                     control={control}
@@ -181,13 +181,13 @@ const EmployeeForm = () => {
                         }}
                       >
                         <SelectTrigger size="lg">
-                          <SelectValue placeholder={t('select_role')} />
+                          <SelectValue placeholder={t('Form.select_role')} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>{t('roles')}</SelectLabel>
-                            <SelectItem value={Role.SUPERVISOR}>{t('supervisor')}</SelectItem>
-                            <SelectItem value={Role.TEACHER}>{t('teacher')}</SelectItem>
+                            <SelectLabel>{t('Form.roles')}</SelectLabel>
+                            <SelectItem value={Role.SUPERVISOR}>{t('Form.supervisor')}</SelectItem>
+                            <SelectItem value={Role.TEACHER}>{t('Form.teacher')}</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -196,7 +196,7 @@ const EmployeeForm = () => {
                 </div>
                 <div className="space-y-2 col-span-12 sm:col-span-6">
                   <Label htmlFor="password" className="mb-2 font-medium text-default-600">
-                    {t('password')} *
+                    {t('Form.password')} *
                   </Label>
                   <div className="relative">
                     <Input
@@ -239,7 +239,7 @@ const EmployeeForm = () => {
           </div>
 
           <div className="col-span-12 flex justify-end">
-            <Button>{t('save_employee')}</Button>
+            <Button>{t('Form.save_employee')}</Button>
           </div>
         </div>
       </form>

@@ -33,7 +33,7 @@ export async function auth() {
 }
 
 const config = {
-  maxAge: 60 * 60 * 24 * 7, // 1 week
+  maxAge: 60 * 60 * 24 * 7,
   path: '/',
   domain: process.env.HOST ?? 'localhost',
   httpOnly: true,
@@ -42,7 +42,6 @@ const config = {
 
 export async function signOut() {
   'use server';
-  console.log('signOut called');
   const cookieStore = await cookies();
   cookieStore.set('auth_token', '', { ...config, maxAge: 0 });
   redirect({ href: '/auth/login', locale: 'ar' }); // TODO handle locale dynamically

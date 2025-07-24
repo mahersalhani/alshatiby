@@ -24,7 +24,7 @@ export default factories.createCoreController(
           limit: 1,
         });
 
-      if (existingUser) return ctx.badRequest("Email is already in use");
+      if (existingUser) return ctx.badRequest("error.email_already_in_use");
 
       const authenticatedRole = await this.getAuthenticatedRole();
 
