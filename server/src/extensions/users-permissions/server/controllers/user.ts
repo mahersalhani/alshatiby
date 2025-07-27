@@ -15,7 +15,7 @@ export default {
       "plugin::users-permissions.user",
       user.id,
       {
-        populate: ["employee"], // ✅ Include employee relation
+        populate: ["employee"],
       }
     );
 

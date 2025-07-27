@@ -5,26 +5,30 @@ import { SquarePen } from 'lucide-react';
 
 import { Link } from '@/components/navigation';
 import { Button } from '@/components/ui/button';
-import { getFullName } from '@/lib/utils';
 
 export const getColumns = (t: (key: string) => string): ColumnDef<any>[] => [
   {
     accessorKey: 'fullName',
     header: t('common.full_name'),
     cell: ({ row }) => {
-      const { firstName, lastName } = row.original;
-      return <span>{getFullName(firstName, lastName)}</span>;
+      const { name } = row.original;
+      return <span>{name}</span>;
     },
   },
   {
     accessorKey: 'role',
     header: t('common.role'),
-    cell: ({ row }) => <span>{t(`common.${(row.getValue('role') as string)?.toLowerCase()}`)}</span>,
+    cell: ({ row }) => <span>{t(`Form.${(row.getValue('role') as string)?.toLowerCase()}`)}</span>,
   },
   {
     accessorKey: 'phoneNumber',
     header: t('common.phone_number'),
     cell: ({ row }) => <span>{row.getValue('phoneNumber') || '-'}</span>,
+  },
+  {
+    accessorKey: 'email',
+    header: t('common.email'),
+    cell: ({ row }) => <span className="text-sm lowercase">{row.original?.user?.email || '-'}</span>,
   },
   {
     id: 'actions',

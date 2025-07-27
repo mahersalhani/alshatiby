@@ -4,7 +4,8 @@
   "info": {
     "singularName": "program",
     "pluralName": "programs",
-    "displayName": "Program"
+    "displayName": "Program",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -17,11 +18,17 @@
     "isActive": {
       "type": "boolean"
     },
-    "employees": {
+    "classrooms": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::classroom.classroom",
+      "mappedBy": "program"
+    },
+    "supervisors": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::employee.employee",
-      "mappedBy": "programs"
+      "inversedBy": "programs"
     }
   }
 }

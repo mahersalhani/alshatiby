@@ -27,8 +27,9 @@ import api from '@/lib/axios';
 import { cn } from '@/lib/utils';
 
 enum Role {
-  SUPERVISOR = 'SUPERVISOR',
+  PROGRAMS_SUPERVISOR = 'PROGRAMS_SUPERVISOR',
   TEACHER = 'TEACHER',
+  CLASSROOM_SUPERVISOR = 'CLASSROOM_SUPERVISOR',
 }
 
 interface EmployeeFormProps {
@@ -49,7 +50,7 @@ const schema = z.object({
   lastName: z.string().min(1, 'last_name_required'),
   email: z.string().email('invalid_email_address'),
   phoneNumber: z.string().optional(),
-  role: z.enum([Role.SUPERVISOR, Role.TEACHER], {
+  role: z.enum([Role.PROGRAMS_SUPERVISOR, Role.TEACHER, Role.CLASSROOM_SUPERVISOR], {
     errorMap: (issue, _ctx) => {
       if (issue.code === 'invalid_type') {
         return { message: 'role_required' };
@@ -146,7 +147,6 @@ const EmployeeForm = ({ isEdit = false, employeeData }: EmployeeFormProps) => {
                   />
                 </div>
 
-                
                 <div className="space-y-2 col-span-12 sm:col-span-6">
                   <Label htmlFor="lastName" className=" font-medium text-default-600">
                     {t('Form.last_name')} *
@@ -214,8 +214,11 @@ const EmployeeForm = ({ isEdit = false, employeeData }: EmployeeFormProps) => {
                           <SelectContent>
                             <SelectGroup>
                               <SelectLabel>{t('Form.roles')}</SelectLabel>
-                              <SelectItem value={Role.SUPERVISOR}>{t('Form.supervisor')}</SelectItem>
                               <SelectItem value={Role.TEACHER}>{t('Form.teacher')}</SelectItem>
+                              <SelectItem value={Role.PROGRAMS_SUPERVISOR}>{t('Form.programs_supervisor')}</SelectItem>
+                              <SelectItem value={Role.CLASSROOM_SUPERVISOR}>
+                                {t('Form.classroom_supervisor')}
+                              </SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>

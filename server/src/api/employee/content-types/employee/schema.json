@@ -12,33 +12,62 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "firstName": {
+    "name": {
       "type": "string"
     },
-    "lastName": {
+    "gender": {
+      "type": "enumeration",
+      "enum": [
+        "MALE",
+        "FEMALE"
+      ]
+    },
+    "birthday": {
+      "type": "date"
+    },
+    "countryOfResidence": {
+      "type": "string"
+    },
+    "nationality": {
+      "type": "string"
+    },
+    "phoneNumber": {
       "type": "string"
     },
     "role": {
       "type": "enumeration",
       "enum": [
-        "SUPERVISOR",
-        "TEACHER"
+        "TEACHER",
+        "PROGRAMS_SUPERVISOR",
+        "CLASSROOM_SUPERVISOR"
       ]
-    },
-    "phoneNumber": {
-      "type": "string"
-    },
-    "programs": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::program.program",
-      "inversedBy": "employees"
     },
     "user": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "employee"
+    },
+    "programs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::program.program",
+      "mappedBy": "supervisors"
+    },
+    "joinedAt": {
+      "type": "date"
+    },
+    "classrooms": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::classroom.classroom",
+      "mappedBy": "teacher"
+    },
+    "supervisedClasses": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::classroom.classroom",
+      "mappedBy": "supervisors"
     }
   }
 }

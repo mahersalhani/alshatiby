@@ -1,5 +1,7 @@
 import { Core } from "@strapi/strapi";
 
+declare const strapi: Core.Strapi;
+
 const setDefaultPermissions = async (strapi: Core.Strapi) => {
   const authenticatedRole = await strapi.db
     .query("plugin::users-permissions.role")

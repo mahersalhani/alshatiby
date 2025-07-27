@@ -4,10 +4,11 @@
   "info": {
     "singularName": "student",
     "pluralName": "students",
-    "displayName": "Student"
+    "displayName": "Student",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -33,55 +34,35 @@
     "contactNumber": {
       "type": "string"
     },
-    "generalNotes": {
-      "type": "richtext"
-    },
     "dateOfJoining": {
       "type": "datetime"
-    },
-    "workingDays": {
-      "type": "string"
-    },
-    "teacherName": {
-      "type": "string"
-    },
-    "programType": {
-      "type": "enumeration",
-      "enum": [
-        "Hifz",
-        "Dabt",
-        "Ijazah"
-      ]
-    },
-    "session": {
-      "type": "enumeration",
-      "enum": [
-        "first"
-      ]
-    },
-    "subscriptionType": {
-      "type": "enumeration",
-      "enum": [
-        "monthly",
-        "bi-monthly",
-        "yearly"
-      ]
     },
     "isGrant": {
       "type": "boolean"
     },
-    "lastPaymentDate": {
-      "type": "datetime"
+    "classrooms": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::classroom.classroom",
+      "inversedBy": "students"
     },
-    "currencyType": {
-      "type": "enumeration",
-      "enum": [
-        "TRY",
-        "USD"
-      ]
+    "deletedAt": {
+      "type": "date"
     },
-    "amount": {
-      "type": "decimal"
+    "generalNotes": {
+      "type": "text"
+    },
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::payment.payment",
+      "mappedBy": "student"
+    },
+    "attendances": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::attendance.attendance",
+      "mappedBy": "student"
     }
   }
 }

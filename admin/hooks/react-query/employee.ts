@@ -28,11 +28,7 @@ export const useEmployeeQuery = (props?: EmployeeQueryProps) => {
 
   if (props?.search) {
     reqQuery.filters = {
-      $or: [
-        { firstName: { $containsi: props.search } },
-        { lastName: { $containsi: props.search } },
-        { phoneNumber: { $containsi: props.search } },
-      ],
+      $or: [{ name: { $containsi: props.search } }, { phoneNumber: { $containsi: props.search } }],
     };
   }
 
