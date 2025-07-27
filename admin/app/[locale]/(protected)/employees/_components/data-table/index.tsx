@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useEmployeeQuery } from '@/hooks/react-query/employee';
 import { useQueryState } from '@/hooks/use-query-state';
 
-const ExampleOne = () => {
+const EmployeeDataTable = () => {
   const t = useTranslations();
   const { query, setQuery } = useQueryState();
   const pageIndex = query?.pagination?.page - 1 || 0;
@@ -119,4 +119,4 @@ const ExampleOne = () => {
     </div>
   );
 };
-export default ExampleOne;
+export default EmployeeDataTable;

@@ -299,7 +299,11 @@
     "last_name_required": "الاسم الاخير مطلوب",
     "invalid_email_address": "عنوان البريد الإلكتروني غير صالح",
     "password_required": "يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل",
-    "employee_created_successfully": "تم اضافة العميل بنجاح"
+    "employee_created_successfully": "تم اضافة العميل بنجاح",
+    "update_employee": "تعديل الموظف",
+    "you_can_update_employee_info": "يمكنك تحديث معلومات الموظف",
+    "edit_employee": "تعديل بيانات الموظف",
+    "employee_updated_successfully": "تم تحديث الموظف بنجاح"
   },
   "common": {
     "full_name": "الاسم",

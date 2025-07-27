@@ -1,4 +1,4 @@
-import ExampleOne from './_components/data-table';
+import EmployeeDataTable from './_components/data-table';
 
 import SiteBreadcrumb from '@/components/site-breadcrumb';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,7 +10,7 @@ const page = () => {
       <div className="space-y-6">
         <Card>
           <CardContent className="p-0">
-            <ExampleOne />
+            <EmployeeDataTable />
           </CardContent>
         </Card>
       </div>

@@ -62,5 +62,37 @@ export default factories.createCoreController(
 
       return data;
     },
+    async update(ctx) {
+      const { id } = ctx.params;
+      const { email, ...employeeData } = ctx.request.body;
+
+      // check if email is used
+      const [existingUser] = await strapi
+        .documents("plugin::users-permissions.user")
+        .findMany({
+          filters: { email },
+          limit: 1,
+          populate: ["employee"],
+        });
+
+      if (existingUser && existingUser.employee.documentId !== id) {
+        return ctx.badRequest("error.email_already_in_use");
+      }
+
+      const employee = await strapi
+        .service("api::employee.employee")
+        .update(id, {
+          data: employeeData,
+        });
+
+      if (email) {
+        await strapi.documents("plugin::users-permissions.user").update({
+          documentId: employee.documentId,
+          data: { email },
+        });
+      }
+
+      return employee;
+    },
   })
 );

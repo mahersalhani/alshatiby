@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import _ from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -30,6 +31,19 @@ enum Role {
   TEACHER = 'TEACHER',
 }
 
+interface EmployeeFormProps {
+  isEdit?: boolean;
+  employeeData?: {
+    documentId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber?: string;
+    role: Role;
+    password?: null;
+  };
+}
+
 const schema = z.object({
   firstName: z.string().min(1, 'first_name_required'),
   lastName: z.string().min(1, 'last_name_required'),
@@ -43,9 +57,9 @@ const schema = z.object({
       return { message: 'Invalid role' };
     },
   }),
-  password: z.string().min(6, 'password_required'),
+  password: z.string().min(6, 'password_required').optional(),
 });
-const EmployeeForm = () => {
+const EmployeeForm = ({ isEdit = false, employeeData }: EmployeeFormProps) => {
   const [isPending, startTransition] = useTransition();
   const t = useTranslations();
 
@@ -60,6 +74,8 @@ const EmployeeForm = () => {
   };
   const router = useRouter();
 
+  const employeeDataDefault = _.omit(employeeData, ['documentId']);
+
   const {
     register,
     handleSubmit,
@@ -67,7 +83,7 @@ const EmployeeForm = () => {
     control,
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: {
+    defaultValues: employeeDataDefault || {
       firstName: '',
       lastName: '',
       email: '',
@@ -77,11 +93,19 @@ const EmployeeForm = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof schema>) => {
+  const onSubmit = (data: any) => {
     startTransition(async () => {
       try {
-        await api.post('/admin/employee', data);
-        toast.success(t('Form.employee_created_successfully'));
+        if (!isEdit) {
+          await api.post('/admin/employee', data);
+          toast.success(t('Form.employee_created_successfully'));
+        } else {
+          if (!employeeData?.documentId) {
+            return;
+          }
+          await api.put(`/admin/employee/${employeeData.documentId}`, data);
+          toast.success(t('Form.employee_updated_successfully'));
+        }
         router.push('/employees');
       } catch (err: any) {
         toast.error(t(err.response?.data?.error?.message) || err.message);
@@ -92,8 +116,10 @@ const EmployeeForm = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">{t('Form.add_new_employee')}</h1>
-        <p className="text-muted-foreground">{t('Form.create_new_employee_record')}</p>
+        <h1 className="text-3xl font-bold">{isEdit ? t('Form.edit_employee') : t('Form.add_new_employee')}</h1>
+        <p className="text-muted-foreground">
+          {isEdit ? t('Form.you_can_update_employee_info') : t('Form.create_new_employee_record')}
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -164,64 +190,69 @@ const EmployeeForm = () => {
                     })}
                   />
                 </div>
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="role" className=" font-medium text-default-600">
-                    {t('Form.role')} *
-                  </Label>
-                  <Controller
-                    control={control}
-                    name="role"
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        onValueChange={(value) => {
-                          field.onChange(value as Role);
-                        }}
-                      >
-                        <SelectTrigger size="lg">
-                          <SelectValue placeholder={t('Form.select_role')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>{t('Form.roles')}</SelectLabel>
-                            <SelectItem value={Role.SUPERVISOR}>{t('Form.supervisor')}</SelectItem>
-                            <SelectItem value={Role.TEACHER}>{t('Form.teacher')}</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                </div>
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="password" className="mb-2 font-medium text-default-600">
-                    {t('Form.password')} *
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      size="lg"
-                      disabled={isPending}
-                      {...register('password')}
-                      type={passwordType}
-                      id="password"
-                      placeholder=" "
-                      autoComplete={'new-password'}
-                      className={cn('peer', {
-                        'border-destructive ': errors.password,
-                      })}
-                    />
 
-                    <div
-                      className="absolute top-1/2 -translate-y-1/2 ltr:right-4 rtl:left-4 cursor-pointer"
-                      onClick={togglePasswordType}
-                    >
-                      {passwordType === 'password' ? (
-                        <Icon icon="heroicons:eye" className="w-5 h-5 text-default-400" />
-                      ) : (
-                        <Icon icon="heroicons:eye-slash" className="w-5 h-5 text-default-400" />
+                {!isEdit && (
+                  <div className="space-y-2 col-span-12 sm:col-span-6">
+                    <Label htmlFor="role" className=" font-medium text-default-600">
+                      {t('Form.role')} *
+                    </Label>
+                    <Controller
+                      control={control}
+                      name="role"
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          onValueChange={(value) => {
+                            field.onChange(value as Role);
+                          }}
+                        >
+                          <SelectTrigger size="lg">
+                            <SelectValue placeholder={t('Form.select_role')} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>{t('Form.roles')}</SelectLabel>
+                              <SelectItem value={Role.SUPERVISOR}>{t('Form.supervisor')}</SelectItem>
+                              <SelectItem value={Role.TEACHER}>{t('Form.teacher')}</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                       )}
+                    />
+                  </div>
+                )}
+                {!isEdit && (
+                  <div className="space-y-2 col-span-12 sm:col-span-6">
+                    <Label htmlFor="password" className="mb-2 font-medium text-default-600">
+                      {t('Form.password')} *
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        size="lg"
+                        disabled={isPending}
+                        {...register('password')}
+                        type={passwordType}
+                        id="password"
+                        placeholder=" "
+                        autoComplete={'new-password'}
+                        className={cn('peer', {
+                          'border-destructive ': errors.password,
+                        })}
+                      />
+
+                      <div
+                        className="absolute top-1/2 -translate-y-1/2 ltr:right-4 rtl:left-4 cursor-pointer"
+                        onClick={togglePasswordType}
+                      >
+                        {passwordType === 'password' ? (
+                          <Icon icon="heroicons:eye" className="w-5 h-5 text-default-400" />
+                        ) : (
+                          <Icon icon="heroicons:eye-slash" className="w-5 h-5 text-default-400" />
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 {Object.keys(errors).length > 0 && (
                   <ul className="col-span-12 space-y-2 mt-4">
@@ -236,8 +267,8 @@ const EmployeeForm = () => {
             </Card>
           </div>
 
-          <div className="col-span-12 flex justify-end">
-            <Button>{t('Form.save_employee')}</Button>
+          <div className="col-span-12 flex justify-end gap-4">
+            <Button>{isEdit ? t('Form.update_employee') : t('Form.save_employee')}</Button>
           </div>
         </div>
       </form>
