@@ -145,6 +145,8 @@ const EmployeeForm = ({ isEdit = false, employeeData }: EmployeeFormProps) => {
                     })}
                   />
                 </div>
+
+                
                 <div className="space-y-2 col-span-12 sm:col-span-6">
                   <Label htmlFor="lastName" className=" font-medium text-default-600">
                     {t('Form.last_name')} *
