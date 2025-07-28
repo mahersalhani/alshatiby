@@ -1,8 +1,8 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export const hexToRGB = (hex: any, alpha?: number): any => {
@@ -15,4 +15,8 @@ export const hexToRGB = (hex: any, alpha?: number): any => {
   } else {
     return `rgb(${r}, ${g}, ${b})`;
   }
+};
+
+export const getFullName = (firstName: string, lastName?: string): string => {
+  return lastName ? `${firstName} ${lastName}` : firstName;
 };

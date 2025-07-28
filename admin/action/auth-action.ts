@@ -28,7 +28,7 @@ export const loginUser = async (data: any) => {
     }
 
     throw new Error('Invalid credentials');
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error as string);
   }
 };

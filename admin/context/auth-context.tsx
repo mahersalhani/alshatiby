@@ -1,7 +1,10 @@
-"use client";
+'use client';
 
-import type { ReactNode } from "react";
-import { createContext, useContext } from "react";
+import { QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
+import { createContext, useContext } from 'react';
+
+import { queryClient } from '@/lib/query-client';
 
 interface State {
   isAuthenticated: boolean;
@@ -37,13 +40,17 @@ export function AuthProvider(props: AuthProviderProps) {
     isAuthenticated: !!user,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    </QueryClientProvider>
+  );
 }
 
 export const useAuth = (): State => {
   const context = useContext(AuthContext);
 
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
 
   return context;
 };

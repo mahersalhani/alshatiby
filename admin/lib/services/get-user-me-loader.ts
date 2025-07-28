@@ -1,14 +1,17 @@
-import { cookies } from "next/headers";
-import { getAuthToken } from "./get-token";
-import { redirect } from "@/components/navigation";
-import api from "../axios";
+import { cookies } from 'next/headers';
+
+import api from '../axios';
+
+import { getAuthToken } from './get-token';
+
+import { redirect } from '@/components/navigation';
 
 export async function auth() {
   const authToken = await getAuthToken();
   if (!authToken) return { ok: false, user: null, error: null, session: null };
 
   try {
-    const response = await api.get("/users/me", {
+    const response = await api.get('/users/me', {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
@@ -30,17 +33,16 @@ export async function auth() {
 }
 
 const config = {
-  maxAge: 60 * 60 * 24 * 7, // 1 week
-  path: "/",
-  domain: process.env.HOST ?? "localhost",
+  maxAge: 60 * 60 * 24 * 7,
+  path: '/',
+  domain: process.env.HOST ?? 'localhost',
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: process.env.NODE_ENV === 'production',
 };
 
 export async function signOut() {
-  "use server";
-  console.log("signOut called");
+  'use server';
   const cookieStore = await cookies();
-  cookieStore.set("auth_token", "", { ...config, maxAge: 0 });
-  redirect({ href: "/auth/login", locale: "ar" }); // TODO handle locale dynamically
+  cookieStore.set('auth_token', '', { ...config, maxAge: 0 });
+  redirect({ href: '/auth/login', locale: 'ar' }); // TODO handle locale dynamically
 }

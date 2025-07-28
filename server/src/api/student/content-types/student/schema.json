@@ -4,13 +4,17 @@
   "info": {
     "singularName": "student",
     "pluralName": "students",
-    "displayName": "Student"
+    "displayName": "Student",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
+    "name": {
+      "type": "string"
+    },
     "nationality": {
       "type": "string"
     },
@@ -18,7 +22,11 @@
       "type": "string"
     },
     "gender": {
-      "type": "string"
+      "type": "enumeration",
+      "enum": [
+        "male",
+        "female"
+      ]
     },
     "dateOfBirth": {
       "type": "date"
@@ -26,11 +34,35 @@
     "contactNumber": {
       "type": "string"
     },
-    "notes": {
+    "dateOfJoining": {
+      "type": "datetime"
+    },
+    "isGrant": {
+      "type": "boolean"
+    },
+    "classrooms": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::classroom.classroom",
+      "inversedBy": "students"
+    },
+    "deletedAt": {
+      "type": "date"
+    },
+    "generalNotes": {
       "type": "text"
     },
-    "joinedAt": {
-      "type": "date"
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::payment.payment",
+      "mappedBy": "student"
+    },
+    "attendances": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::attendance.attendance",
+      "mappedBy": "student"
     }
   }
 }
