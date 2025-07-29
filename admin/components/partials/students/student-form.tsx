@@ -11,6 +11,7 @@ import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox'; // قد تحتاج لاستيراد Checkbox
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -23,8 +24,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea'; // قد تحتاج لاستيراد Textarea
-import { Checkbox } from '@/components/ui/checkbox'; // قد تحتاج لاستيراد Checkbox
-
 import api from '@/lib/axios';
 import { cn } from '@/lib/utils';
 
@@ -58,85 +57,89 @@ enum CurrencyType {
 
 // 2. تعريف الـ Schema لـ Zod (للتحقق من صحة البيانات)
 // تأكد من أن أسماء الحقول هنا (مثل name, nationality) تتطابق تمامًا مع أسماء الـ API ID في Strapi
-const schema = z.object({
-  name: z.string().min(1, 'student_name_required'),
-  nationality: z.string().min(1, 'nationality_required'),
-  countryOfResidence: z.string().min(1, 'country_of_residence_required'),
-  gender: z.enum(['male', 'female'], {
-    errorMap: (issue, _ctx) => {
-      if (issue.code === 'invalid_type') {
-        return { message: 'gender_required' };
+const schema = z
+  .object({
+    name: z.string().min(1, 'student_name_required'),
+    nationality: z.string().min(1, 'nationality_required'),
+    countryOfResidence: z.string().min(1, 'country_of_residence_required'),
+    gender: z.enum(['male', 'female'], {
+      errorMap: (issue, _ctx) => {
+        if (issue.code === 'invalid_type') {
+          return { message: 'gender_required' };
+        }
+        return { message: 'Invalid gender' };
+      },
+    }),
+    dateOfBirth: z.string().min(1, 'date_of_birth_required'), // يمكن استخدام z.date() إذا كنت تحولها لـ Date object
+    contactNumber: z.string().optional(),
+    generalNotes: z.string().optional(),
+    dateOfJoining: z.string().min(1, 'date_of_joining_required'),
+    workingDays: z.string().optional(), // إذا كان نصًا واحدًا، وإلا استخدم z.array(z.string())
+    teacherName: z.string().optional(),
+    programType: z.enum([ProgramType.HIFZ, ProgramType.DABT, ProgramType.IJAZAH], {
+      errorMap: (issue, _ctx) => {
+        if (issue.code === 'invalid_type') {
+          return { message: 'program_type_required' };
+        }
+        return { message: 'Invalid program type' };
+      },
+    }),
+    session: z.enum([SessionType.FIRST, SessionType.SECOND], {
+      errorMap: (issue, _ctx) => {
+        if (issue.code === 'invalid_type') {
+          return { message: 'session_required' };
+        }
+        return { message: 'Invalid session' };
+      },
+    }),
+    subscriptionType: z.enum(
+      [
+        SubscriptionType.MONTHLY,
+        SubscriptionType.BIMONTHLY,
+        SubscriptionType.THREE_MONTHS,
+        SubscriptionType.SIX_MONTHS,
+        SubscriptionType.YEARLY,
+      ],
+      {
+        errorMap: (issue, _ctx) => {
+          if (issue.code === 'invalid_type') {
+            return { message: 'subscription_type_required' };
+          }
+          return { message: 'Invalid subscription type' };
+        },
       }
-      return { message: 'Invalid gender' };
-    },
-  }),
-  dateOfBirth: z.string().min(1, 'date_of_birth_required'), // يمكن استخدام z.date() إذا كنت تحولها لـ Date object
-  contactNumber: z.string().optional(),
-  generalNotes: z.string().optional(),
-  dateOfJoining: z.string().min(1, 'date_of_joining_required'),
-  workingDays: z.string().optional(), // إذا كان نصًا واحدًا، وإلا استخدم z.array(z.string())
-  teacherName: z.string().optional(),
-  programType: z.enum([ProgramType.HIFZ, ProgramType.DABT, ProgramType.IJAZAH], {
-    errorMap: (issue, _ctx) => {
-      if (issue.code === 'invalid_type') {
-        return { message: 'program_type_required' };
+    ),
+    isGrant: z.boolean(),
+    lastPaymentDate: z.string().optional(), // سيكون مطلوبًا بشكل شرطي في الواجهة الأمامية
+    currencyType: z.enum([CurrencyType.TRY, CurrencyType.USD]).optional(), // سيكون مطلوبًا بشكل شرطي
+    amount: z.union([z.number().min(0, 'amount_must_be_positive'), z.literal('')]).optional(), // يمكن أن يكون رقمًا أو فارغًا
+  })
+  .superRefine((data, ctx) => {
+    // التحقق الشرطي: إذا لم تكن منحة، يجب أن تكون حقول الدفع موجودة
+    if (!data.isGrant) {
+      if (!data.lastPaymentDate) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'last_payment_date_required',
+          path: ['lastPaymentDate'],
+        });
       }
-      return { message: 'Invalid program type' };
-    },
-  }),
-  session: z.enum([SessionType.FIRST, SessionType.SECOND], {
-    errorMap: (issue, _ctx) => {
-      if (issue.code === 'invalid_type') {
-        return { message: 'session_required' };
+      if (!data.currencyType) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'currency_type_required',
+          path: ['currencyType'],
+        });
       }
-      return { message: 'Invalid session' };
-    },
-  }),
-  subscriptionType: z.enum([
-    SubscriptionType.MONTHLY,
-    SubscriptionType.BIMONTHLY,
-    SubscriptionType.THREE_MONTHS,
-    SubscriptionType.SIX_MONTHS,
-    SubscriptionType.YEARLY,
-  ], {
-    errorMap: (issue, _ctx) => {
-      if (issue.code === 'invalid_type') {
-        return { message: 'subscription_type_required' };
+      if (data.amount === undefined || data.amount === null || data.amount === '') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'amount_required',
+          path: ['amount'],
+        });
       }
-      return { message: 'Invalid subscription type' };
-    },
-  }),
-  isGrant: z.boolean(),
-  lastPaymentDate: z.string().optional(), // سيكون مطلوبًا بشكل شرطي في الواجهة الأمامية
-  currencyType: z.enum([CurrencyType.TRY, CurrencyType.USD]).optional(), // سيكون مطلوبًا بشكل شرطي
-  amount: z.union([z.number().min(0, 'amount_must_be_positive'), z.literal('')]).optional(), // يمكن أن يكون رقمًا أو فارغًا
-}).superRefine((data, ctx) => {
-  // التحقق الشرطي: إذا لم تكن منحة، يجب أن تكون حقول الدفع موجودة
-  if (!data.isGrant) {
-    if (!data.lastPaymentDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'last_payment_date_required',
-        path: ['lastPaymentDate'],
-      });
     }
-    if (!data.currencyType) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'currency_type_required',
-        path: ['currencyType'],
-      });
-    }
-    if (data.amount === undefined || data.amount === null || data.amount === '') {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'amount_required',
-        path: ['amount'],
-      });
-    }
-  }
-});
-
+  });
 
 const StudentForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -157,7 +160,7 @@ const StudentForm = () => {
       name: '',
       nationality: '',
       countryOfResidence: '',
-      gender: '',
+      gender: 'female',
       dateOfBirth: '',
       contactNumber: '',
       generalNotes: '',
@@ -185,7 +188,7 @@ const StudentForm = () => {
           data.currencyType = undefined; // أو null
           data.amount = undefined; // أو null
         }
-        
+
         // ****** تأكد من أن هذا الرابط هو endpoint الصحيح لـ Strapi Student API ******
         // عادة ما يكون Strapi على http://localhost:1337
         await api.post('/students', { data }); // Strapi يتوقع البيانات تحت مفتاح 'data'
@@ -241,7 +244,9 @@ const StudentForm = () => {
                     id="nationality"
                     className={cn('', { 'border-destructive ': errors.nationality })}
                   />
-                  {errors.nationality && <p className="text-destructive text-sm mt-1">{t(errors.nationality.message as string)}</p>}
+                  {errors.nationality && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.nationality.message as string)}</p>
+                  )}
                 </div>
 
                 {/* بلد الإقامة */}
@@ -256,7 +261,9 @@ const StudentForm = () => {
                     id="countryOfResidence"
                     className={cn('', { 'border-destructive ': errors.countryOfResidence })}
                   />
-                  {errors.countryOfResidence && <p className="text-destructive text-sm mt-1">{t(errors.countryOfResidence.message as string)}</p>}
+                  {errors.countryOfResidence && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.countryOfResidence.message as string)}</p>
+                  )}
                 </div>
 
                 {/* الجنس */}
@@ -268,11 +275,7 @@ const StudentForm = () => {
                     control={control}
                     name="gender"
                     render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={isPending}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
                         <SelectTrigger className={cn('', { 'border-destructive ': errors.gender })}>
                           <SelectValue placeholder={t('Student.select_gender')} />
                         </SelectTrigger>
@@ -286,7 +289,9 @@ const StudentForm = () => {
                       </Select>
                     )}
                   />
-                  {errors.gender && <p className="text-destructive text-sm mt-1">{t(errors.gender.message as string)}</p>}
+                  {errors.gender && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.gender.message as string)}</p>
+                  )}
                 </div>
 
                 {/* تاريخ الميلاد */}
@@ -301,7 +306,9 @@ const StudentForm = () => {
                     id="dateOfBirth"
                     className={cn('', { 'border-destructive ': errors.dateOfBirth })}
                   />
-                  {errors.dateOfBirth && <p className="text-destructive text-sm mt-1">{t(errors.dateOfBirth.message as string)}</p>}
+                  {errors.dateOfBirth && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.dateOfBirth.message as string)}</p>
+                  )}
                 </div>
 
                 {/* رقم التواصل */}
@@ -316,7 +323,9 @@ const StudentForm = () => {
                     id="contactNumber"
                     className={cn('', { 'border-destructive ': errors.contactNumber })}
                   />
-                  {errors.contactNumber && <p className="text-destructive text-sm mt-1">{t(errors.contactNumber.message as string)}</p>}
+                  {errors.contactNumber && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.contactNumber.message as string)}</p>
+                  )}
                 </div>
 
                 {/* ملاحظات عامة */}
@@ -330,7 +339,9 @@ const StudentForm = () => {
                     id="generalNotes"
                     className={cn('', { 'border-destructive ': errors.generalNotes })}
                   />
-                  {errors.generalNotes && <p className="text-destructive text-sm mt-1">{t(errors.generalNotes.message as string)}</p>}
+                  {errors.generalNotes && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.generalNotes.message as string)}</p>
+                  )}
                 </div>
 
                 {/* تاريخ الانضمام للمقرأة */}
@@ -345,7 +356,9 @@ const StudentForm = () => {
                     id="dateOfJoining"
                     className={cn('', { 'border-destructive ': errors.dateOfJoining })}
                   />
-                  {errors.dateOfJoining && <p className="text-destructive text-sm mt-1">{t(errors.dateOfJoining.message as string)}</p>}
+                  {errors.dateOfJoining && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.dateOfJoining.message as string)}</p>
+                  )}
                 </div>
 
                 {/* أيام الدوام (اختياري) */}
@@ -361,7 +374,9 @@ const StudentForm = () => {
                     placeholder={t('Student.example_working_days')}
                     className={cn('', { 'border-destructive ': errors.workingDays })}
                   />
-                  {errors.workingDays && <p className="text-destructive text-sm mt-1">{t(errors.workingDays.message as string)}</p>}
+                  {errors.workingDays && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.workingDays.message as string)}</p>
+                  )}
                 </div>
 
                 {/* اسم المعلم (اختياري) */}
@@ -376,7 +391,9 @@ const StudentForm = () => {
                     id="teacherName"
                     className={cn('', { 'border-destructive ': errors.teacherName })}
                   />
-                  {errors.teacherName && <p className="text-destructive text-sm mt-1">{t(errors.teacherName.message as string)}</p>}
+                  {errors.teacherName && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.teacherName.message as string)}</p>
+                  )}
                 </div>
 
                 {/* نوع البرنامج */}
@@ -388,11 +405,7 @@ const StudentForm = () => {
                     control={control}
                     name="programType"
                     render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={isPending}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
                         <SelectTrigger className={cn('', { 'border-destructive ': errors.programType })}>
                           <SelectValue placeholder={t('Student.select_program_type')} />
                         </SelectTrigger>
@@ -408,7 +421,9 @@ const StudentForm = () => {
                       </Select>
                     )}
                   />
-                  {errors.programType && <p className="text-destructive text-sm mt-1">{t(errors.programType.message as string)}</p>}
+                  {errors.programType && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.programType.message as string)}</p>
+                  )}
                 </div>
 
                 {/* الحلقة */}
@@ -420,11 +435,7 @@ const StudentForm = () => {
                     control={control}
                     name="session"
                     render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={isPending}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
                         <SelectTrigger className={cn('', { 'border-destructive ': errors.session })}>
                           <SelectValue placeholder={t('Student.select_session')} />
                         </SelectTrigger>
@@ -439,7 +450,9 @@ const StudentForm = () => {
                       </Select>
                     )}
                   />
-                  {errors.session && <p className="text-destructive text-sm mt-1">{t(errors.session.message as string)}</p>}
+                  {errors.session && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.session.message as string)}</p>
+                  )}
                 </div>
 
                 {/* نوع الاشتراك */}
@@ -451,11 +464,7 @@ const StudentForm = () => {
                     control={control}
                     name="subscriptionType"
                     render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={isPending}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
                         <SelectTrigger className={cn('', { 'border-destructive ': errors.subscriptionType })}>
                           <SelectValue placeholder={t('Student.select_subscription_type')} />
                         </SelectTrigger>
@@ -472,7 +481,9 @@ const StudentForm = () => {
                       </Select>
                     )}
                   />
-                  {errors.subscriptionType && <p className="text-destructive text-sm mt-1">{t(errors.subscriptionType.message as string)}</p>}
+                  {errors.subscriptionType && (
+                    <p className="text-destructive text-sm mt-1">{t(errors.subscriptionType.message as string)}</p>
+                  )}
                 </div>
 
                 {/* منحة (Checkbox) */}
@@ -517,7 +528,9 @@ const StudentForm = () => {
                         id="lastPaymentDate"
                         className={cn('', { 'border-destructive ': errors.lastPaymentDate })}
                       />
-                      {errors.lastPaymentDate && <p className="text-destructive text-sm mt-1">{t(errors.lastPaymentDate.message as string)}</p>}
+                      {errors.lastPaymentDate && (
+                        <p className="text-destructive text-sm mt-1">{t(errors.lastPaymentDate.message as string)}</p>
+                      )}
                     </div>
 
                     {/* نوع العملة */}
@@ -529,11 +542,7 @@ const StudentForm = () => {
                         control={control}
                         name="currencyType"
                         render={({ field }) => (
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            disabled={isPending}
-                          >
+                          <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
                             <SelectTrigger className={cn('', { 'border-destructive ': errors.currencyType })}>
                               <SelectValue placeholder={t('Student.select_currency_type')} />
                             </SelectTrigger>
@@ -547,7 +556,9 @@ const StudentForm = () => {
                           </Select>
                         )}
                       />
-                      {errors.currencyType && <p className="text-destructive text-sm mt-1">{t(errors.currencyType.message as string)}</p>}
+                      {errors.currencyType && (
+                        <p className="text-destructive text-sm mt-1">{t(errors.currencyType.message as string)}</p>
+                      )}
                     </div>
 
                     {/* المبلغ */}
@@ -562,7 +573,9 @@ const StudentForm = () => {
                         id="amount"
                         className={cn('', { 'border-destructive ': errors.amount })}
                       />
-                      {errors.amount && <p className="text-destructive text-sm mt-1">{t(errors.amount.message as string)}</p>}
+                      {errors.amount && (
+                        <p className="text-destructive text-sm mt-1">{t(errors.amount.message as string)}</p>
+                      )}
                     </div>
                   </>
                 )}
