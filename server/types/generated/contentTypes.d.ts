@@ -400,6 +400,10 @@ export interface ApiAttendanceAttendance extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     student: Schema.Attribute.Relation<'manyToOne', 'api::student.student'>;
+    studentSchedule: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::student-schedule.student-schedule'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -435,7 +439,10 @@ export interface ApiClassroomClassroom extends Struct.CollectionTypeSchema {
     program: Schema.Attribute.Relation<'manyToOne', 'api::program.program'>;
     publishedAt: Schema.Attribute.DateTime;
     schedules: Schema.Attribute.Relation<'oneToMany', 'api::schedule.schedule'>;
-    students: Schema.Attribute.Relation<'manyToMany', 'api::student.student'>;
+    studentSchedules: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::student-schedule.student-schedule'
+    >;
     supervisors: Schema.Attribute.Relation<
       'manyToMany',
       'api::employee.employee'
@@ -562,6 +569,10 @@ export interface ApiProgramProgram extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    studentSchedules: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::student-schedule.student-schedule'
+    >;
     supervisors: Schema.Attribute.Relation<
       'manyToMany',
       'api::employee.employee'
@@ -617,6 +628,45 @@ export interface ApiScheduleSchedule extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiStudentScheduleStudentSchedule
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'student_schedules';
+  info: {
+    description: '';
+    displayName: 'Student Schedule';
+    pluralName: 'student-schedules';
+    singularName: 'student-schedule';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    attendances: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::attendance.attendance'
+    >;
+    classroom: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::classroom.classroom'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::student-schedule.student-schedule'
+    > &
+      Schema.Attribute.Private;
+    program: Schema.Attribute.Relation<'manyToOne', 'api::program.program'>;
+    publishedAt: Schema.Attribute.DateTime;
+    student: Schema.Attribute.Relation<'manyToOne', 'api::student.student'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
   collectionName: 'students';
   info: {
@@ -632,10 +682,6 @@ export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
     attendances: Schema.Attribute.Relation<
       'oneToMany',
       'api::attendance.attendance'
-    >;
-    classrooms: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::classroom.classroom'
     >;
     contactNumber: Schema.Attribute.String;
     countryOfResidence: Schema.Attribute.String;
@@ -658,6 +704,10 @@ export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
     nationality: Schema.Attribute.String;
     payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     publishedAt: Schema.Attribute.DateTime;
+    studentSchedules: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::student-schedule.student-schedule'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1174,6 +1224,7 @@ declare module '@strapi/strapi' {
       'api::payment.payment': ApiPaymentPayment;
       'api::program.program': ApiProgramProgram;
       'api::schedule.schedule': ApiScheduleSchedule;
+      'api::student-schedule.student-schedule': ApiStudentScheduleStudentSchedule;
       'api::student.student': ApiStudentStudent;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

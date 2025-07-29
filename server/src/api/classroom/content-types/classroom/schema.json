@@ -45,11 +45,11 @@
       "target": "api::employee.employee",
       "inversedBy": "supervisedClasses"
     },
-    "students": {
+    "studentSchedules": {
       "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::student.student",
-      "mappedBy": "classrooms"
+      "relation": "oneToMany",
+      "target": "api::student-schedule.student-schedule",
+      "mappedBy": "classroom"
     }
   }
 }

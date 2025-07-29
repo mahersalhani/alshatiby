@@ -40,12 +40,6 @@
     "isGrant": {
       "type": "boolean"
     },
-    "classrooms": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::classroom.classroom",
-      "inversedBy": "students"
-    },
     "deletedAt": {
       "type": "date"
     },
@@ -62,6 +56,12 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::attendance.attendance",
+      "mappedBy": "student"
+    },
+    "studentSchedules": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::student-schedule.student-schedule",
       "mappedBy": "student"
     }
   }
