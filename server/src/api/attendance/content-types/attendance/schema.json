@@ -34,6 +34,12 @@
         "ABSENT",
         "LATE"
       ]
+    },
+    "studentSchedule": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::student-schedule.student-schedule",
+      "inversedBy": "attendances"
     }
   }
 }

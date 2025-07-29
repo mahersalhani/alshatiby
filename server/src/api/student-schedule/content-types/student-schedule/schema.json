@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "student_schedules",
+  "info": {
+    "singularName": "student-schedule",
+    "pluralName": "student-schedules",
+    "displayName": "Student Schedule",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "student": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::student.student",
+      "inversedBy": "studentSchedules"
+    },
+    "program": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::program.program",
+      "inversedBy": "studentSchedules"
+    },
+    "classroom": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::classroom.classroom",
+      "inversedBy": "studentSchedules"
+    },
+    "attendances": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::attendance.attendance",
+      "mappedBy": "studentSchedule"
+    }
+  }
+}

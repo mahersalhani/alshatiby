@@ -29,6 +29,12 @@
       "relation": "manyToMany",
       "target": "api::employee.employee",
       "inversedBy": "programs"
+    },
+    "studentSchedules": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::student-schedule.student-schedule",
+      "mappedBy": "program"
     }
   }
 }
