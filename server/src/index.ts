@@ -72,6 +72,9 @@ const setDefaultPermissions = async (strapi: Core.Strapi) => {
       permissions: {
         getPermissions: { enabled: true, policy: "" },
       },
+      auth: {
+        register: { enabled: true, policy: "" },
+      },
     },
   };
 
