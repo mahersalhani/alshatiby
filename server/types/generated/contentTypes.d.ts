@@ -454,6 +454,34 @@ export interface ApiClassroomClassroom extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiDashboardDashboard extends Struct.CollectionTypeSchema {
+  collectionName: 'dashboards';
+  info: {
+    displayName: 'dashboard';
+    pluralName: 'dashboards';
+    singularName: 'dashboard';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    isActive: Schema.Attribute.Boolean;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::dashboard.dashboard'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiEmployeeEmployee extends Struct.CollectionTypeSchema {
   collectionName: 'employees';
   info: {
@@ -1202,6 +1230,7 @@ export interface PluginUsersPermissionsUser
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    username: Schema.Attribute.String;
   };
 }
 
@@ -1217,6 +1246,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::attendance.attendance': ApiAttendanceAttendance;
       'api::classroom.classroom': ApiClassroomClassroom;
+      'api::dashboard.dashboard': ApiDashboardDashboard;
       'api::employee.employee': ApiEmployeeEmployee;
       'api::payment.payment': ApiPaymentPayment;
       'api::program.program': ApiProgramProgram;

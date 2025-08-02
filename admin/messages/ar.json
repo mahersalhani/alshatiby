@@ -384,5 +384,52 @@
   },
   "employee": {
     "list_title": "الموظفون"
+  },
+  "classrooms": {
+    "title": "فصولي الدراسية",
+    "subtitle": "إدارة ومتابعة الفصول الدراسية والجداول الزمنية",
+    "student": "طالب",
+    "active": "نشط",
+    "createdAt": "تم الإنشاء",
+    "multipleSchedules": "{count} جداول متاحة",
+    "selectSchedule": "اختيار الجدول الزمني",
+    "selectScheduleDescription": "هذا الفصل يحتوي على عدة جداول زمنية. يرجى اختيار الجدول الذي تريد الدخول إليه:",
+    "stats": {
+      "totalClassrooms": "إجمالي الفصول",
+      "totalStudents": "إجمالي الطلاب",
+      "activeClassrooms": "الفصول النشطة"
+    },
+    "days": {
+      "monday": "الإثنين",
+      "tuesday": "الثلاثاء",
+      "wednesday": "الأربعاء",
+      "thursday": "الخميس",
+      "friday": "الجمعة",
+      "saturday": "السبت",
+      "sunday": "الأحد"
+    },
+    "empty": {
+      "title": "لا توجد فصول دراسية",
+      "description": "لم يتم العثور على أي فصول دراسية مخصصة لك حالياً"
+    },
+    "errorMessage": "يرجى المحاولة مرة أخرى",
+    "enterClass": "دخول الفصل",
+    "backToClassrooms": "العودة للفصول",
+    "programInformation": "معلومات البرنامج",
+    "programName": "اسم البرنامج",
+    "status": "الحالة",
+    "currentSchedule": "الجدول الحالي",
+    "classDay": "يوم الفصل",
+    "classTime": "وقت الفصل",
+    "male": "ذكر",
+    "female": "أنثى",
+    "yearsOld": "سنة",
+    "availableSchedules": "الجداول المتاحة",
+    "inactive": "غير نشط",
+    "no_schedule available": "لا يوجد جدول زمني محدد",
+    "classStatistics": "إحصائيات الفصل",
+    "studentsList": "قائمة الطلاب",
+    "no_student_yet": "لم يتم تسجيل أي طلاب في هذا الفصل بعد",
+    "no_students": "لا يوجد طلاب"
   }
 }

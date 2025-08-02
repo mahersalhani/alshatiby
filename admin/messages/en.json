@@ -386,5 +386,52 @@
   },
   "employee": {
     "list_title": "Employees"
+  },
+  "classrooms": {
+    "title": "My Classrooms",
+    "subtitle": "Manage and monitor classrooms and schedules",
+    "student": "student",
+    "active": "Active",
+    "createdAt": "Created",
+    "multipleSchedules": "{count} schedules available",
+    "selectSchedule": "Select Schedule",
+    "selectScheduleDescription": "This classroom has multiple schedules. Please select which one you want to enter:",
+    "stats": {
+      "totalClassrooms": "Total Classrooms",
+      "totalStudents": "Total Students",
+      "activeClassrooms": "Active Classrooms"
+    },
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "empty": {
+      "title": "No Classrooms Found",
+      "description": "No classrooms are currently assigned to you"
+    },
+    "errorMessage": "Please try again",
+    "enterClass": "Enter Classroom",
+    "backToClassrooms": "Back to Classrooms",
+    "programInformation": "Program Information",
+    "programName": "Program Name",
+    "status": "الحالة",
+    "currentSchedule": "Current Schedule",
+    "classDay": "Class Day",
+    "classTime": "Class Time",
+    "male": "Male",
+    "female": "Female",
+    "yearsOld": "years old",
+    "availableSchedules": "Available Schedules",
+    "inactive": "Inactive",
+    "no_schedule available": "No schedule available",
+    "classStatistics": "Class Statistics",
+    "studentsList": "Students List",
+    "no_student_yet": "No students have been enrolled in this classroom yet",
+    "no_students": "No Students"
   }
 }

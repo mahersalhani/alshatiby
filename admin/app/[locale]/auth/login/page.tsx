@@ -1,9 +1,10 @@
-import { Link } from "@/i18n/routing";
-import LoginForm from "@/components/partials/auth/login-form";
-import Image from "next/image";
-import Social from "@/components/partials/auth/social";
-import Copyright from "@/components/partials/auth/copyright";
-import Logo from "@/components/partials/auth/logo";
+import Image from 'next/image';
+
+import Copyright from '@/components/partials/auth/copyright';
+import LoginForm from '@/components/partials/auth/login-form';
+import Logo from '@/components/partials/auth/logo';
+import Social from '@/components/partials/auth/social';
+import { Link } from '@/i18n/routing';
 
 const Login = async ({ params }: { params: Promise<{ locale: string }> }) => {
   const { locale } = await params;
@@ -19,9 +20,7 @@ const Login = async ({ params }: { params: Promise<{ locale: string }> }) => {
               </Link>
               <h4>
                 Unlock your Project
-                <span className="text-default-800 font-bold ms-2">
-                  performance
-                </span>
+                <span className="text-default-800 font-bold ms-2">performance</span>
               </h4>
             </div>
             <div className="absolute left-0 2xl:bottom-[-160px] bottom-[-130px] h-full w-full z-[-1]">
@@ -45,9 +44,7 @@ const Login = async ({ params }: { params: Promise<{ locale: string }> }) => {
                 </div>
                 <div className="text-center 2xl:mb-10 mb-4">
                   <h4 className="font-medium">Sign in</h4>
-                  <div className="text-default-500 text-base">
-                    Sign in to your account to start using Dashcode
-                  </div>
+                  <div className="text-default-500 text-base">Sign in to your account to start using Dashcode</div>
                 </div>
                 <LoginForm />
                 <div className="relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6">
@@ -59,11 +56,8 @@ const Login = async ({ params }: { params: Promise<{ locale: string }> }) => {
                   <Social locale={locale} />
                 </div>
                 <div className="md:max-w-[345px] mx-auto font-normal text-default-500 mt-12 uppercase text-sm">
-                  Don’t have an account?{" "}
-                  <Link
-                    href="/auth/register"
-                    className="text-default-900  font-medium hover:underline"
-                  >
+                  Don’t have an account?{' '}
+                  <Link href="/auth/register" className="text-default-900  font-medium hover:underline">
                     Sign up
                   </Link>
                 </div>
