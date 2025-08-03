@@ -28,7 +28,13 @@ export const useEmployeeQuery = (props?: EmployeeQueryProps) => {
 
   if (props?.search) {
     reqQuery.filters = {
-      $or: [{ name: { $containsi: props.search } }, { phoneNumber: { $containsi: props.search } }],
+      user: {
+        $or: [
+          { name: { $containsi: props.search } },
+          { phoneNumber: { $containsi: props.search } },
+          { email: { $containsi: props.search } },
+        ],
+      },
     };
   }
 
@@ -38,7 +44,7 @@ export const useEmployeeQuery = (props?: EmployeeQueryProps) => {
 
   return useQuery({
     queryKey: ['employees', reqQuery],
-    queryFn: () => api.get(`/admin/employee?${queryString}`).then((res) => res.data),
+    queryFn: () => api.get(`/dashboard/employee?${queryString}`).then((res) => res.data),
     staleTime: 1000 * 60 * 5,
   });
 };

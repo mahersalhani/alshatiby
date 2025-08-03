@@ -10,6 +10,7 @@ export function useEmployeeSchemas() {
   const t = useTranslations('Validation');
 
   const employeeCreateSchema = z.object({
+    documentId: z.string().optional(),
     name: z.string().min(2, t('nameMinLength')),
     email: z.string().email(t('invalidEmail')),
     password: z.string().min(8, t('passwordMinLength')),
@@ -17,16 +18,15 @@ export function useEmployeeSchemas() {
     nationality: z.string().min(2, t('nationalityRequired')),
     residenceCountry: z.string().min(2, t('residenceCountryRequired')),
     gender: GenderEnum,
-    birthday: z.string().min(1, t('birthdayRequired')),
+    birthday: z.date().min(new Date('1900-01-01'), t('birthdayRequired')),
     phoneNumber: z.string().min(10, t('phoneMinLength')),
-    joinedAt: z.string().min(1, t('joinedDateRequired')),
+    joinedAt: z.date().min(new Date('1900-01-01'), t('joinedDateRequired')),
   });
 
   const employeeUpdateSchema = employeeCreateSchema.omit({ password: true });
 
   const passwordUpdateSchema = z
     .object({
-      currentPassword: z.string().min(1, t('currentPasswordRequired')),
       newPassword: z.string().min(8, t('newPasswordMinLength')),
       confirmPassword: z.string().min(1, t('confirmPasswordRequired')),
     })

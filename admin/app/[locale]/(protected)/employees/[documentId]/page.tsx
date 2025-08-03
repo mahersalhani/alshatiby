@@ -1,6 +1,6 @@
 import qs from 'qs';
 
-import EmployeeForm from '@/components/partials/employees/employee-form';
+import { EmployeeForm } from '@/components/partials/employees/employee-form';
 import api from '@/lib/axios';
 
 interface EditEmployeeProps {
@@ -10,7 +10,7 @@ const editEmployeePage = async ({ params }: EditEmployeeProps) => {
   const query = {
     populate: {
       user: {
-        fields: ['email'],
+        fields: ['email', 'name', 'nationality', 'residenceCountry', 'gender', 'birthday', 'phoneNumber'],
       },
     },
   };
@@ -18,18 +18,15 @@ const editEmployeePage = async ({ params }: EditEmployeeProps) => {
   const queryString = qs.stringify(query, { encodeValuesOnly: true, addQueryPrefix: true });
 
   const { documentId } = await params;
-  const employee = await api.get(`/admin/employee/${documentId}${queryString}`).then((res) => res?.data?.data);
+  const employee = await api.get(`/dashboard/employee/${documentId}${queryString}`).then((res) => res?.data);
+  const user = employee?.user || {};
 
   return (
     <EmployeeForm
-      isEdit={true}
-      employeeData={{
-        firstName: employee.firstName,
-        lastName: employee.lastName,
-        email: employee.user?.email || '',
-        phoneNumber: employee.phoneNumber || '',
-        role: employee.role,
-        documentId: employee.documentId,
+      mode="update"
+      initialData={{
+        ...user,
+        ...employee,
       }}
     />
   );

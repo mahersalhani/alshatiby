@@ -471,7 +471,10 @@
     "creating": "جاري الإنشاء...",
     "updating": "جاري التحديث...",
     "updatePassword": "تحديث كلمة المرور",
-    "passwordUpdateDescription": "تحديث كلمة مرور الموظف"
+    "passwordUpdateDescription": "تحديث كلمة مرور الموظف",
+    "employee_created_successfully": "تم الاضافة بنجاح",
+    "employee_updated_successfully": "تم التحديث بنجاح",
+    "password_updated_successfully": "تم تحديث كلمة المرور بنجاح"
   },
   "PasswordModal": {
     "updatePasswordTitle": "تحديث كلمة المرور",
@@ -482,7 +485,9 @@
     "enterCurrentPassword": "أدخل كلمة المرور الحالية",
     "enterNewPassword": "أدخل كلمة المرور الجديدة",
     "confirmNewPasswordPlaceholder": "تأكيد كلمة المرور الجديدة",
-    "updatingPassword": "جاري التحديث..."
+    "updatingPassword": "جاري التحديث...",
+    "cancel": "الغاء",
+    "updatePassword": "تحديث كلمة المرور"
   },
   "FormMode": {
     "formMode": "وضع النموذج",

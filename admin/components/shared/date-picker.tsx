@@ -12,16 +12,17 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 interface DatePickerProps {
   onDateChange?: (date: Date | undefined) => void;
   label?: string;
+  value?: Date;
 }
 
-export function DatePicker({ onDateChange, label }: DatePickerProps) {
+export function DatePicker({ onDateChange, label, value }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [date, setDate] = React.useState<Date | undefined>(value);
 
   const t = useTranslations('Form');
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col justify-between">
       {label && (
         <Label htmlFor="date" className="px-1">
           {label}

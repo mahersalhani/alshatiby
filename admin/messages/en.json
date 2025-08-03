@@ -473,7 +473,8 @@
     "creating": "Creating...",
     "updating": "Updating...",
     "updatePassword": "Update Password",
-    "passwordUpdateDescription": "Update the employee's password"
+    "passwordUpdateDescription": "Update the employee's password",
+    "password_updated_successfully": "The password has been successfully updated"
   },
   "PasswordModal": {
     "updatePasswordTitle": "Update Password",
