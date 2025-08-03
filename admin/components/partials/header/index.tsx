@@ -1,16 +1,11 @@
-import React from "react";
-import HeaderContent from "./header-content";
-import HeaderSearch from "./header-search";
-import ProfileInfo from "./profile-info";
-import Notifications from "./notifications";
-import Messages from "./messages";
-import { Cart } from "./cart";
-import ThemeSwitcher from "./theme-switcher";
-import { SidebarToggle } from "@/components/partials/sidebar/sidebar-toggle";
-import { SheetMenu } from "@/components/partials/sidebar/menu/sheet-menu";
-import HorizontalMenu from "./horizontal-menu";
-import LocalSwitcher from "./locale-switcher";
-import HeaderLogo from "./header-logo";
+import HeaderContent from './header-content';
+import HeaderLogo from './header-logo';
+import LocalSwitcher from './locale-switcher';
+import ProfileInfo from './profile-info';
+import ThemeSwitcher from './theme-switcher';
+
+import { SheetMenu } from '@/components/partials/sidebar/menu/sheet-menu';
+import { SidebarToggle } from '@/components/partials/sidebar/sidebar-toggle';
 
 const DashCodeHeader = async () => {
   return (
@@ -31,7 +26,6 @@ const DashCodeHeader = async () => {
           <SheetMenu />
         </div>
       </HeaderContent>
-      <HorizontalMenu />
     </>
   );
 };

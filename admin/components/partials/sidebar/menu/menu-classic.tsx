@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils';
 
 export function MenuClassic({}) {
   // translate
-  const t = useTranslations('Menu');
+  const t = useTranslations();
   const pathname = usePathname();
   const params = useParams<{ locale: string }>();
   const direction = getLangDir(params?.locale ?? '');

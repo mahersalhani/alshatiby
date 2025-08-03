@@ -8,13 +8,6 @@ export default factories.createCoreController(
     async register(ctx) {
       const { email, password } = ctx.request.body;
 
-      console.log(
-        "Registering user with email: ",
-        email,
-        " and password: ",
-        password
-      );
-
       if (!email || !password) {
         return ctx.badRequest("Missing email or password");
       }

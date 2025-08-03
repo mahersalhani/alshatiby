@@ -31,13 +31,13 @@ export type Group = {
 export function getMenuList(pathname: string, t: any): Group[] {
   return [
     {
-      groupLabel: t('dashboard'),
+      groupLabel: t('Menu.dashboard'),
       id: 'dashboard',
       menus: [
         {
           id: 'dashboard',
           href: '/',
-          label: t('dashboard'),
+          label: t('Menu.dashboard'),
           active: pathname === '/dashboard' || pathname === '/',
           icon: 'heroicons-outline:home',
           submenus: [],
@@ -45,21 +45,21 @@ export function getMenuList(pathname: string, t: any): Group[] {
         {
           id: 'students',
           href: '/students',
-          label: t('students'),
+          label: t('Menu.students'),
           active: pathname.includes('/students'),
           icon: 'heroicons-outline:academic-cap',
           submenus: [
             {
               icon: 'heroicons-outline:academic-cap',
               href: '/students',
-              label: t('student_list'),
+              label: t('Menu.student_list'),
               active: pathname === '/students',
               children: [],
             },
             {
               icon: 'heroicons-outline:academic-cap',
               href: '/students/create',
-              label: t('create_student'),
+              label: t('Menu.create_student'),
               active: pathname === '/students/create',
               children: [],
             },
@@ -68,43 +68,48 @@ export function getMenuList(pathname: string, t: any): Group[] {
         {
           id: 'employees',
           href: '/employees',
-          label: t('employees'),
+          label: t('Menu.employees'),
           active: pathname.includes('/employees'),
           icon: 'heroicons-outline:users',
           submenus: [
             {
               icon: 'heroicons-outline:user-group',
               href: '/employees',
-              label: t('employee_list'),
+              label: t('Menu.employee_list'),
               active: pathname === '/employees',
               children: [],
             },
             {
               icon: 'heroicons-outline:user-group',
               href: '/employees/create',
-              label: t('create_employee'),
+              label: t('Menu.create_employee'),
               active: pathname === '/employees/create',
               children: [],
             },
           ],
         },
-      ],
-    },
-  ];
-}
-export function getHorizontalMenuList(pathname: string, t: any): Group[] {
-  return [
-    {
-      groupLabel: t('dashboard'),
-      id: 'dashboard',
-      menus: [
         {
-          id: 'dashboard',
-          href: '/',
-          label: t('dashboard'),
-          active: pathname.includes('/'),
-          icon: 'heroicons-outline:home',
-          submenus: [],
+          id: 'classrooms',
+          href: '/classrooms',
+          label: t('Menu.classrooms'),
+          active: pathname.includes('/classrooms'),
+          icon: 'heroicons-outline:users',
+          submenus: [
+            {
+              icon: 'heroicons-outline:user-group',
+              href: '/classrooms',
+              label: t('Menu.classroom_list'),
+              active: pathname === '/classrooms',
+              children: [],
+            },
+            {
+              icon: 'heroicons-outline:user-group',
+              href: '/classrooms/create',
+              label: t('Menu.create_classroom'),
+              active: pathname === '/classrooms/create',
+              children: [],
+            },
+          ],
         },
       ],
     },
