@@ -454,6 +454,34 @@ export interface ApiClassroomClassroom extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiDashboardDashboard extends Struct.CollectionTypeSchema {
+  collectionName: 'dashboards';
+  info: {
+    displayName: 'dashboard';
+    pluralName: 'dashboards';
+    singularName: 'dashboard';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    isActive: Schema.Attribute.Boolean;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::dashboard.dashboard'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiEmployeeEmployee extends Struct.CollectionTypeSchema {
   collectionName: 'employees';
   info: {
@@ -466,26 +494,19 @@ export interface ApiEmployeeEmployee extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
-    birthday: Schema.Attribute.Date;
     classrooms: Schema.Attribute.Relation<
       'oneToMany',
       'api::classroom.classroom'
     >;
-    countryOfResidence: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    gender: Schema.Attribute.Enumeration<['MALE', 'FEMALE']>;
-    joinedAt: Schema.Attribute.Date;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::employee.employee'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String;
-    nationality: Schema.Attribute.String;
-    phoneNumber: Schema.Attribute.String;
     programs: Schema.Attribute.Relation<'manyToMany', 'api::program.program'>;
     publishedAt: Schema.Attribute.DateTime;
     role: Schema.Attribute.Enumeration<
@@ -683,25 +704,17 @@ export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::attendance.attendance'
     >;
-    contactNumber: Schema.Attribute.String;
-    countryOfResidence: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    dateOfBirth: Schema.Attribute.Date;
-    dateOfJoining: Schema.Attribute.DateTime;
-    deletedAt: Schema.Attribute.Date;
-    gender: Schema.Attribute.Enumeration<['male', 'female']>;
     generalNotes: Schema.Attribute.Text;
-    isGrant: Schema.Attribute.Boolean;
+    isHadScholarship: Schema.Attribute.Boolean;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::student.student'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String;
-    nationality: Schema.Attribute.String;
     payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     publishedAt: Schema.Attribute.DateTime;
     studentSchedules: Schema.Attribute.Relation<
@@ -711,6 +724,10 @@ export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -1171,6 +1188,7 @@ export interface PluginUsersPermissionsUser
     draftAndPublish: false;
   };
   attributes: {
+    birthday: Schema.Attribute.Date;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1183,24 +1201,31 @@ export interface PluginUsersPermissionsUser
         minLength: 6;
       }>;
     employee: Schema.Attribute.Relation<'oneToOne', 'api::employee.employee'>;
+    gender: Schema.Attribute.Enumeration<['MALE', 'FEMALE']>;
+    joinedAt: Schema.Attribute.Date;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    nationality: Schema.Attribute.String;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    phoneNumber: Schema.Attribute.String;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
+    residenceCountry: Schema.Attribute.String;
     role: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    student: Schema.Attribute.Relation<'oneToOne', 'api::student.student'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1220,6 +1245,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::attendance.attendance': ApiAttendanceAttendance;
       'api::classroom.classroom': ApiClassroomClassroom;
+      'api::dashboard.dashboard': ApiDashboardDashboard;
       'api::employee.employee': ApiEmployeeEmployee;
       'api::payment.payment': ApiPaymentPayment;
       'api::program.program': ApiProgramProgram;

@@ -12,28 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
-      "type": "string"
-    },
-    "gender": {
-      "type": "enumeration",
-      "enum": [
-        "MALE",
-        "FEMALE"
-      ]
-    },
-    "birthday": {
-      "type": "date"
-    },
-    "countryOfResidence": {
-      "type": "string"
-    },
-    "nationality": {
-      "type": "string"
-    },
-    "phoneNumber": {
-      "type": "string"
-    },
     "role": {
       "type": "enumeration",
       "enum": [
@@ -53,9 +31,6 @@
       "relation": "manyToMany",
       "target": "api::program.program",
       "mappedBy": "supervisors"
-    },
-    "joinedAt": {
-      "type": "date"
     },
     "classrooms": {
       "type": "relation",

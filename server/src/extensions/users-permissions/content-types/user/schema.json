@@ -58,16 +58,45 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "username": {
-      "type": "string",
-      "unique": false,
-      "required": false
-    },
     "employee": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::employee.employee",
       "mappedBy": "user"
+    },
+    "name": {
+      "type": "string"
+    },
+    "nationality": {
+      "type": "string"
+    },
+    "residenceCountry": {
+      "type": "string"
+    },
+    "gender": {
+      "type": "enumeration",
+      "enum": [
+        "MALE",
+        "FEMALE"
+      ]
+    },
+    "birthday": {
+      "type": "date"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::student.student",
+      "mappedBy": "user"
+    },
+    "username": {
+      "type": "string"
+    },
+    "joinedAt": {
+      "type": "date"
     }
   }
 }

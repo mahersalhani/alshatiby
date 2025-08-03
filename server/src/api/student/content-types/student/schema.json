@@ -12,36 +12,8 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
-      "type": "string"
-    },
-    "nationality": {
-      "type": "string"
-    },
-    "countryOfResidence": {
-      "type": "string"
-    },
-    "gender": {
-      "type": "enumeration",
-      "enum": [
-        "male",
-        "female"
-      ]
-    },
-    "dateOfBirth": {
-      "type": "date"
-    },
-    "contactNumber": {
-      "type": "string"
-    },
-    "dateOfJoining": {
-      "type": "datetime"
-    },
-    "isGrant": {
+    "isHadScholarship": {
       "type": "boolean"
-    },
-    "deletedAt": {
-      "type": "date"
     },
     "generalNotes": {
       "type": "text"
@@ -63,6 +35,12 @@
       "relation": "oneToMany",
       "target": "api::student-schedule.student-schedule",
       "mappedBy": "student"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "student"
     }
   }
 }

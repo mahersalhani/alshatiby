@@ -13,7 +13,7 @@ const setDefaultPermissions = async (strapi: Core.Strapi) => {
 
   const roleId = authenticatedRole.id;
 
-  const contentTypes = ["employee", "program", "student"];
+  const contentTypes = ["employee", "program", "student", "dashboard"];
 
   const newPermissions: {
     [key: string]: {
@@ -71,6 +71,9 @@ const setDefaultPermissions = async (strapi: Core.Strapi) => {
       },
       permissions: {
         getPermissions: { enabled: true, policy: "" },
+      },
+      auth: {
+        register: { enabled: true, policy: "" },
       },
     },
   };

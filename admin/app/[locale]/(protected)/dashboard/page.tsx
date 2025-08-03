@@ -1,5 +1,11 @@
+import Classrooms from './_components/classrooms';
+
 const page = () => {
-  return <h1 className=" text-2xl"> Your Content goes here... </h1>;
+  return (
+    <div>
+      <Classrooms />
+    </div>
+  );
 };
 
 export default page;
