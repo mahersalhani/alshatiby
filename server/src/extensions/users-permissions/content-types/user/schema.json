@@ -75,7 +75,10 @@
     },
     "gender": {
       "type": "enumeration",
-      "enum": ["MALE", "FEMALE"]
+      "enum": [
+        "MALE",
+        "FEMALE"
+      ]
     },
     "birthday": {
       "type": "date"
@@ -91,6 +94,9 @@
     },
     "username": {
       "type": "string"
+    },
+    "joinedAt": {
+      "type": "date"
     }
   }
 }

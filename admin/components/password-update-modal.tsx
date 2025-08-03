@@ -67,6 +67,7 @@ export function PasswordUpdateModal({ open, onOpenChange, onSubmit, isLoading = 
                   <div className="relative">
                     <FormControl>
                       <Input
+                        size="lg"
                         {...field}
                         type={showNewPassword ? 'text' : 'password'}
                         placeholder={t('enterNewPassword')}
@@ -100,6 +101,7 @@ export function PasswordUpdateModal({ open, onOpenChange, onSubmit, isLoading = 
                   <div className="relative">
                     <FormControl>
                       <Input
+                        size="lg"
                         {...field}
                         type={showConfirmPassword ? 'text' : 'password'}
                         placeholder={t('confirmNewPasswordPlaceholder')}

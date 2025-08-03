@@ -1,12 +1,12 @@
 import qs from 'qs';
 
-import { EmployeeForm } from '@/components/partials/employees/employee-form';
+import { StudentForm } from '@/components/partials/students/student-form';
 import api from '@/lib/axios';
 
-interface EditEmployeeProps {
+interface EditStudentProps {
   params: Promise<{ documentId: string }>;
 }
-const editEmployeePage = async ({ params }: EditEmployeeProps) => {
+const editStudentPage = async ({ params }: EditStudentProps) => {
   const query = {
     populate: {
       user: {
@@ -18,18 +18,18 @@ const editEmployeePage = async ({ params }: EditEmployeeProps) => {
   const queryString = qs.stringify(query, { encodeValuesOnly: true, addQueryPrefix: true });
 
   const { documentId } = await params;
-  const employee = await api.get(`/dashboard/employee/${documentId}${queryString}`).then((res) => res?.data);
-  const user = employee?.user || {};
+  const student = await api.get(`/dashboard/student/${documentId}${queryString}`).then((res) => res?.data);
+  const user = student?.user || {};
 
   return (
-    <EmployeeForm
+    <StudentForm
       mode="update"
       initialData={{
         ...user,
-        ...employee,
+        ...student,
       }}
     />
   );
 };
 
-export default editEmployeePage;
+export default editStudentPage;

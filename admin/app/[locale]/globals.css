@@ -34,8 +34,6 @@
     --warning: 16 93% 70%;
     --warning-foreground: 33.3 100% 96.5%;
 
-
-
     --success: 154 52% 55%;
     --success-foreground: 138.5 76.5% 96.7%;
 
@@ -85,7 +83,6 @@
   }
 
   .dark {
-
     --background: 222.2 47.4% 11.2%;
     --foreground: 210 40% 98%;
 
@@ -94,7 +91,6 @@
 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    
 
     --card: 215 27.9% 16.9%;
     --card-foreground: 210 40% 98%;
@@ -152,7 +148,7 @@
   @apply fill-[#6794DC];
 }
 
-.dashcode-app-vmap .svg-map__location[aria-checked="true"] {
+.dashcode-app-vmap .svg-map__location[aria-checked='true'] {
   @apply fill-primary;
 }
 
@@ -160,24 +156,21 @@
   @apply fill-info;
 }
 
-.dashcode-app-codeVmapInfo path .svg-map__location[aria-checked="true"] {
+.dashcode-app-codeVmapInfo path .svg-map__location[aria-checked='true'] {
   @apply fill-info;
 }
 .dashcode-app-codeVmapWarning path {
   @apply fill-warning;
 }
-.dashcode-app-codeVmapWarning path  .svg-map__location[aria-checked="true"] {
-    @apply fill-warning;
+.dashcode-app-codeVmapWarning path .svg-map__location[aria-checked='true'] {
+  @apply fill-warning;
 }
 .dashcode-app-codeVmapSuccess path {
   @apply fill-success;
-
 }
-.dashcode-app-codeVmapSuccess path .svg-map__location[aria-checked="true"]  {
-    @apply fill-success;
+.dashcode-app-codeVmapSuccess path .svg-map__location[aria-checked='true'] {
+  @apply fill-success;
 }
-
-
 
 @layer base {
   * {
@@ -208,7 +201,6 @@
     padding-right: 0px !important;
   }
 
-
   .no-scrollbar::-webkit-scrollbar {
     width: 0px;
   }
@@ -216,7 +208,6 @@
   .no-scrollbar::-webkit-scrollbar-thumb {
     background-color: transparent;
   }
-
 }
 
 .logo-box-3 {
@@ -227,15 +218,21 @@
   @apply flex flex-col items-center justify-center;
 }
 
-
 .has-sticky-header::after {
   position: absolute;
   z-index: -10;
   --tw-backdrop-blur: blur(12px);
-  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
-  --tw-content: "";
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast)
+    var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity)
+    var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  --tw-content: '';
   content: var(--tw-content);
-  background: linear-gradient(180deg, rgba(var(--v-theme-background)) 44%, rgba(var(--v-theme-background)) 73%, rgba(var(--v-theme-background)));
+  background: linear-gradient(
+    180deg,
+    rgba(var(--v-theme-background)) 44%,
+    rgba(var(--v-theme-background)) 73%,
+    rgba(var(--v-theme-background))
+  );
   background-repeat: repeat;
   block-size: 5.5rem;
   inset-block-start: -2.5rem;
@@ -248,10 +245,17 @@
   position: absolute;
   z-index: -10;
   --tw-backdrop-blur: blur(12px);
-  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
-  --tw-content: "";
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast)
+    var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity)
+    var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  --tw-content: '';
   content: var(--tw-content);
-  background: linear-gradient(180deg, rgba(var(--v-theme-background)) 44%, rgba(var(--v-theme-background)) 73%, rgba(var(--v-theme-background)));
+  background: linear-gradient(
+    180deg,
+    rgba(var(--v-theme-background)) 44%,
+    rgba(var(--v-theme-background)) 73%,
+    rgba(var(--v-theme-background))
+  );
   background-repeat: repeat;
   block-size: 5.5rem;
   inset-block-start: 1.5rem;
@@ -365,7 +369,7 @@
   @apply hidden;
 }
 
-.dashcode-app-calendar .fc .fc-list-sticky .fc-list-day>* {
+.dashcode-app-calendar .fc .fc-list-sticky .fc-list-day > * {
   @apply bg-default-50;
 }
 
@@ -373,12 +377,11 @@
   @apply pt-0;
 }
 
-.dashcode-app-calendar .fc-timegrid-event-harness>.fc-timegrid-event {
+.dashcode-app-calendar .fc-timegrid-event-harness > .fc-timegrid-event {
   @apply static;
 }
 
 @media (max-width: 981px) {
-
   .dashcode-app-calendar .fc-button-group,
   .dashcode-app-calendar .fc .fc-toolbar {
     display: block !important;
@@ -445,14 +448,13 @@
   @apply bg-success border-none text-primary-foreground text-center px-2 font-medium text-sm;
 }
 
-.dashcode-app-calendar .dark  {
+.dashcode-app-calendar .dark {
   @apply bg-card-foreground border-none text-primary-foreground px-2 font-medium text-sm;
 }
 
-
 /* react select */
 
- .dashcode-app .react-select .react-select.is-invalid .select__control {
+.dashcode-app .react-select .react-select.is-invalid .select__control {
   border-color: none !important;
 }
 
@@ -473,7 +475,7 @@
 }
 
 .dashcode-app .react-select .select__menu .select__option {
-  @apply  hover:bg-default/10;
+  @apply hover:bg-default/10;
 }
 
 .dashcode-app .react-select .select__menu .select__option.select__option--is-selected {
@@ -520,9 +522,9 @@
   @apply fill-default-foreground;
 }
 
-html[dir=rtl] .react-select .select__loading-indicator {
+html[dir='rtl'] .react-select .select__loading-indicator {
   flex-direction: row-reverse;
-} 
+}
 
 /* quil editor */
 .ql-container {
@@ -540,4 +542,11 @@ html[dir=rtl] .react-select .select__loading-indicator {
   width: 100%;
 }
 
+/* Font family utilities */
+.font-tajawal {
+  font-family: var(--font-tajawal), sans-serif;
+}
 
+.font-fredoka {
+  font-family: var(--font-fredoka), sans-serif;
+}

@@ -1,597 +1,434 @@
-// components/partials/students/student-form.tsx
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Calendar, Eye, EyeOff, FileText, Key, Loader2, Users } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
+import { startTransition, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
 
+import { PasswordUpdateModal } from '../../password-update-modal';
+
+import { LoadingOverlay } from '@/components/loading-overlay';
+import { useRouter } from '@/components/navigation';
+import DatePicker from '@/components/shared/date-picker';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox'; // قد تحتاج لاستيراد Checkbox
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea'; // قد تحتاج لاستيراد Textarea
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import api from '@/lib/axios';
-import { cn } from '@/lib/utils';
+import {
+  useStudentSchemas,
+  type StudentCreateData,
+  type StudentPasswordUpdateData,
+  type StudentUpdateData,
+} from '@/lib/schemas/student';
 
-// 1. تحديد الـ Enum (إذا كانت هناك قيم ثابتة)
-// هذه القيم يجب أن تتطابق مع قيم الـ Enumeration التي قمت بتعريفها في Strapi
-enum ProgramType {
-  HIFZ = 'Hifz',
-  DABT = 'Dabt',
-  IJAZAH = 'Ijazah',
-  // أضف أي أنواع برامج أخرى لديك في Strapi
+interface StudentFormProps {
+  mode: 'create' | 'update';
+  initialData?: Partial<StudentUpdateData>;
+  isLoading?: boolean;
 }
 
-enum SessionType {
-  FIRST = 'first',
-  SECOND = 'second',
-  // أضف أي أنواع حلقات أخرى لديك في Strapi
-}
+export function StudentForm({ mode, initialData }: StudentFormProps) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-enum SubscriptionType {
-  MONTHLY = 'monthly',
-  BIMONTHLY = 'bi-monthly',
-  THREE_MONTHS = '3-months',
-  SIX_MONTHS = '6-months',
-  YEARLY = 'yearly',
-}
-
-enum CurrencyType {
-  TRY = 'TRY',
-  USD = 'USD',
-}
-
-// 2. تعريف الـ Schema لـ Zod (للتحقق من صحة البيانات)
-// تأكد من أن أسماء الحقول هنا (مثل name, nationality) تتطابق تمامًا مع أسماء الـ API ID في Strapi
-const schema = z
-  .object({
-    name: z.string().min(1, 'student_name_required'),
-    nationality: z.string().min(1, 'nationality_required'),
-    countryOfResidence: z.string().min(1, 'country_of_residence_required'),
-    gender: z.enum(['male', 'female'], {
-      errorMap: (issue, _ctx) => {
-        if (issue.code === 'invalid_type') {
-          return { message: 'gender_required' };
-        }
-        return { message: 'Invalid gender' };
-      },
-    }),
-    dateOfBirth: z.string().min(1, 'date_of_birth_required'), // يمكن استخدام z.date() إذا كنت تحولها لـ Date object
-    contactNumber: z.string().optional(),
-    generalNotes: z.string().optional(),
-    dateOfJoining: z.string().min(1, 'date_of_joining_required'),
-    workingDays: z.string().optional(), // إذا كان نصًا واحدًا، وإلا استخدم z.array(z.string())
-    teacherName: z.string().optional(),
-    programType: z.enum([ProgramType.HIFZ, ProgramType.DABT, ProgramType.IJAZAH], {
-      errorMap: (issue, _ctx) => {
-        if (issue.code === 'invalid_type') {
-          return { message: 'program_type_required' };
-        }
-        return { message: 'Invalid program type' };
-      },
-    }),
-    session: z.enum([SessionType.FIRST, SessionType.SECOND], {
-      errorMap: (issue, _ctx) => {
-        if (issue.code === 'invalid_type') {
-          return { message: 'session_required' };
-        }
-        return { message: 'Invalid session' };
-      },
-    }),
-    subscriptionType: z.enum(
-      [
-        SubscriptionType.MONTHLY,
-        SubscriptionType.BIMONTHLY,
-        SubscriptionType.THREE_MONTHS,
-        SubscriptionType.SIX_MONTHS,
-        SubscriptionType.YEARLY,
-      ],
-      {
-        errorMap: (issue, _ctx) => {
-          if (issue.code === 'invalid_type') {
-            return { message: 'subscription_type_required' };
-          }
-          return { message: 'Invalid subscription type' };
-        },
-      }
-    ),
-    isGrant: z.boolean(),
-    lastPaymentDate: z.string().optional(), // سيكون مطلوبًا بشكل شرطي في الواجهة الأمامية
-    currencyType: z.enum([CurrencyType.TRY, CurrencyType.USD]).optional(), // سيكون مطلوبًا بشكل شرطي
-    amount: z.union([z.number().min(0, 'amount_must_be_positive'), z.literal('')]).optional(), // يمكن أن يكون رقمًا أو فارغًا
-  })
-  .superRefine((data, ctx) => {
-    // التحقق الشرطي: إذا لم تكن منحة، يجب أن تكون حقول الدفع موجودة
-    if (!data.isGrant) {
-      if (!data.lastPaymentDate) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'last_payment_date_required',
-          path: ['lastPaymentDate'],
-        });
-      }
-      if (!data.currencyType) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'currency_type_required',
-          path: ['currencyType'],
-        });
-      }
-      if (data.amount === undefined || data.amount === null || data.amount === '') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'amount_required',
-          path: ['amount'],
-        });
-      }
-    }
-  });
-
-const StudentForm = () => {
-  const [isPending, startTransition] = useTransition();
-  const t = useTranslations('Form'); // تأكد من وجود ترجمات لـ 'Form' في ملفات i18n الخاصة بك
-
+  const scopT = useTranslations();
+  const t = useTranslations('StudentForm');
+  const locale = useLocale();
   const router = useRouter();
+  const { studentCreateSchema, studentUpdateSchema } = useStudentSchemas();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-    watch, // لـ watch قيمة isGrant
-    setValue, // لضبط قيمة amount عند التبديل بين المنحة/غير المنحة
-  } = useForm<z.infer<typeof schema>>({
+  const schema = mode === 'create' ? studentCreateSchema : studentUpdateSchema;
+
+  const form = useForm<StudentCreateData | StudentUpdateData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: '',
-      nationality: '',
-      countryOfResidence: '',
-      gender: 'female',
-      dateOfBirth: '',
-      contactNumber: '',
-      generalNotes: '',
-      dateOfJoining: '',
-      workingDays: '',
-      teacherName: '',
-      programType: ProgramType.HIFZ, // قيمة افتراضية
-      session: SessionType.FIRST, // قيمة افتراضية
-      subscriptionType: SubscriptionType.MONTHLY, // قيمة افتراضية
-      isGrant: false,
-      lastPaymentDate: '',
-      currencyType: CurrencyType.TRY, // قيمة افتراضية
-      amount: 0, // قيمة افتراضية
+      name: initialData?.name || '',
+      email: initialData?.email || '',
+      nationality: initialData?.nationality || '',
+      residenceCountry: initialData?.residenceCountry || '',
+      gender: initialData?.gender || 'MALE',
+      birthday: initialData?.birthday && new Date(initialData.birthday),
+      phoneNumber: initialData?.phoneNumber || '',
+      joinedAt: initialData?.joinedAt && new Date(initialData.joinedAt),
+      generalNotes: initialData?.generalNotes || '',
+      isHadScholarship: initialData?.isHadScholarship || false,
+      ...(mode === 'create' && { password: '' }),
     },
   });
 
-  const isGrant = watch('isGrant'); // مراقبة قيمة isGrant
+  const isEdit = mode === 'update';
 
-  const onSubmit = (data: z.infer<typeof schema>) => {
+  const handlePasswordUpdate = (data: StudentPasswordUpdateData) => {
+    setIsLoading(true);
     startTransition(async () => {
       try {
-        // إذا كانت منحة، قم بتصفير حقول الدفع قبل الإرسال
-        if (data.isGrant) {
-          data.lastPaymentDate = '';
-          data.currencyType = undefined; // أو null
-          data.amount = undefined; // أو null
-        }
-
-        // ****** تأكد من أن هذا الرابط هو endpoint الصحيح لـ Strapi Student API ******
-        // عادة ما يكون Strapi على http://localhost:1337
-        await api.post('/students', { data }); // Strapi يتوقع البيانات تحت مفتاح 'data'
-        toast.success(t('Student.student_created_successfully'));
-        router.push('/students'); // التوجيه إلى صفحة قائمة الطلاب بعد النجاح
+        await api.put(`/dashboard/student/${initialData?.documentId}/password`, {
+          password: data.newPassword,
+        });
+        toast.success(t('password_updated_successfully'));
+        setPasswordModalOpen(false);
       } catch (err: any) {
-        console.error('Failed to create student:', err);
-        // عرض رسالة خطأ أكثر تفصيلاً إذا كانت متاحة من Strapi
-        toast.error(err.response?.data?.error?.message || t('Student.failed_to_create_student'));
+        toast.error(scopT(err.response?.data?.error?.message) || err.message);
+      } finally {
+        setIsLoading(false);
       }
     });
   };
 
+  const handleUpdate = (data: StudentCreateData | StudentUpdateData) => {
+    setIsLoading(true);
+    startTransition(async () => {
+      try {
+        if (!isEdit) {
+          const res = await api.post('/dashboard/student', data);
+          toast.success(t('student_created_successfully'));
+
+          const student = res.data;
+
+          router.push(`/students/${student.documentId}`);
+        } else {
+          if (!initialData?.documentId) {
+            return;
+          }
+          await api.put(`/dashboard/student/${initialData.documentId}`, data);
+          toast.success(t('student_updated_successfully'));
+        }
+      } catch (err: any) {
+        toast.error(scopT(err.response?.data?.error?.message) || err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    });
+  };
+
+  const isRTL = locale === 'ar';
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">{t('Student.add_new_student')}</h1>
-        <p className="text-muted-foreground">{t('Student.create_new_student_record')}</p>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-12 gap-4 rounded-lg">
-          <div className="col-span-12 space-y-4">
-            <Card>
-              <CardHeader className="border-b border-solid border-default-200 mb-6">
-                <CardTitle>{t('Student.student_information')}</CardTitle>
-              </CardHeader>
-              <CardContent className="grid grid-cols-12 gap-4">
-                {/* اسم الطالب */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="name" className="font-medium text-default-600">
-                    {t('Student.student_name')} *
-                  </Label>
-                  <Input
-                    disabled={isPending}
-                    {...register('name')}
-                    type="text"
-                    id="name"
-                    className={cn('', { 'border-destructive ': errors.name })}
+    <>
+      <Card className="w-full max-w-4xl mx-auto relative">
+        <LoadingOverlay isLoading={isLoading} message={mode === 'create' ? t('creating') : t('updating')} />
+        <CardHeader>
+          <CardTitle>{mode === 'create' ? t('createStudent') : t('updateStudent')}</CardTitle>
+          <CardDescription>
+            {mode === 'create' ? t('createStudentDescription') : t('updateStudentDescription')}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleUpdate)} className="space-y-6">
+              {/* Personal Information */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  {t('personalInformation')}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('fullName')}</FormLabel>
+                        <FormControl>
+                          <Input size="lg" placeholder={t('enterFullName')} {...field} disabled={isLoading} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                  {errors.name && <p className="text-destructive text-sm mt-1">{t(errors.name.message as string)}</p>}
-                </div>
-
-                {/* الجنسية */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="nationality" className="font-medium text-default-600">
-                    {t('Student.nationality')} *
-                  </Label>
-                  <Input
-                    disabled={isPending}
-                    {...register('nationality')}
-                    type="text"
-                    id="nationality"
-                    className={cn('', { 'border-destructive ': errors.nationality })}
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('email')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            size="lg"
+                            type="email"
+                            placeholder={t('enterEmailAddress')}
+                            {...field}
+                            disabled={isLoading}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                  {errors.nationality && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.nationality.message as string)}</p>
-                  )}
-                </div>
-
-                {/* بلد الإقامة */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="countryOfResidence" className="font-medium text-default-600">
-                    {t('Student.country_of_residence')} *
-                  </Label>
-                  <Input
-                    disabled={isPending}
-                    {...register('countryOfResidence')}
-                    type="text"
-                    id="countryOfResidence"
-                    className={cn('', { 'border-destructive ': errors.countryOfResidence })}
+                  <FormField
+                    control={form.control}
+                    name="phoneNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('phoneNumber')}</FormLabel>
+                        <FormControl>
+                          <Input size="lg" placeholder={t('enterPhoneNumber')} {...field} disabled={isLoading} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                  {errors.countryOfResidence && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.countryOfResidence.message as string)}</p>
-                  )}
-                </div>
-
-                {/* الجنس */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="gender" className="font-medium text-default-600">
-                    {t('Student.gender')} *
-                  </Label>
-                  <Controller
-                    control={control}
+                  <FormField
+                    control={form.control}
                     name="gender"
                     render={({ field }) => (
-                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
-                        <SelectTrigger className={cn('', { 'border-destructive ': errors.gender })}>
-                          <SelectValue placeholder={t('Student.select_gender')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>{t('Student.gender')}</SelectLabel>
-                            <SelectItem value="male">{t('Student.male')}</SelectItem>
-                            <SelectItem value="female">{t('Student.female')}</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.gender && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.gender.message as string)}</p>
-                  )}
-                </div>
-
-                {/* تاريخ الميلاد */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="dateOfBirth" className="font-medium text-default-600">
-                    {t('Student.date_of_birth')} *
-                  </Label>
-                  <Input
-                    disabled={isPending}
-                    {...register('dateOfBirth')}
-                    type="date"
-                    id="dateOfBirth"
-                    className={cn('', { 'border-destructive ': errors.dateOfBirth })}
-                  />
-                  {errors.dateOfBirth && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.dateOfBirth.message as string)}</p>
-                  )}
-                </div>
-
-                {/* رقم التواصل */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="contactNumber" className="font-medium text-default-600">
-                    {t('Student.contact_number')}
-                  </Label>
-                  <Input
-                    disabled={isPending}
-                    {...register('contactNumber')}
-                    type="tel"
-                    id="contactNumber"
-                    className={cn('', { 'border-destructive ': errors.contactNumber })}
-                  />
-                  {errors.contactNumber && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.contactNumber.message as string)}</p>
-                  )}
-                </div>
-
-                {/* ملاحظات عامة */}
-                <div className="space-y-2 col-span-12">
-                  <Label htmlFor="generalNotes" className="font-medium text-default-600">
-                    {t('Student.general_notes')}
-                  </Label>
-                  <Textarea
-                    disabled={isPending}
-                    {...register('generalNotes')}
-                    id="generalNotes"
-                    className={cn('', { 'border-destructive ': errors.generalNotes })}
-                  />
-                  {errors.generalNotes && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.generalNotes.message as string)}</p>
-                  )}
-                </div>
-
-                {/* تاريخ الانضمام للمقرأة */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="dateOfJoining" className="font-medium text-default-600">
-                    {t('Student.date_of_joining')} *
-                  </Label>
-                  <Input
-                    disabled={isPending}
-                    {...register('dateOfJoining')}
-                    type="date"
-                    id="dateOfJoining"
-                    className={cn('', { 'border-destructive ': errors.dateOfJoining })}
-                  />
-                  {errors.dateOfJoining && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.dateOfJoining.message as string)}</p>
-                  )}
-                </div>
-
-                {/* أيام الدوام (اختياري) */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="workingDays" className="font-medium text-default-600">
-                    {t('Student.working_days')}
-                  </Label>
-                  <Input
-                    disabled={isPending}
-                    {...register('workingDays')}
-                    type="text"
-                    id="workingDays"
-                    placeholder={t('Student.example_working_days')}
-                    className={cn('', { 'border-destructive ': errors.workingDays })}
-                  />
-                  {errors.workingDays && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.workingDays.message as string)}</p>
-                  )}
-                </div>
-
-                {/* اسم المعلم (اختياري) */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="teacherName" className="font-medium text-default-600">
-                    {t('Student.teacher_name')}
-                  </Label>
-                  <Input
-                    disabled={isPending}
-                    {...register('teacherName')}
-                    type="text"
-                    id="teacherName"
-                    className={cn('', { 'border-destructive ': errors.teacherName })}
-                  />
-                  {errors.teacherName && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.teacherName.message as string)}</p>
-                  )}
-                </div>
-
-                {/* نوع البرنامج */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="programType" className="font-medium text-default-600">
-                    {t('Student.program_type')} *
-                  </Label>
-                  <Controller
-                    control={control}
-                    name="programType"
-                    render={({ field }) => (
-                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
-                        <SelectTrigger className={cn('', { 'border-destructive ': errors.programType })}>
-                          <SelectValue placeholder={t('Student.select_program_type')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>{t('program_types')}</SelectLabel>
-                            <SelectItem value={ProgramType.HIFZ}>{t('Student.hifz')}</SelectItem>
-                            <SelectItem value={ProgramType.DABT}>{t('Student.dabt')}</SelectItem>
-                            <SelectItem value={ProgramType.IJAZAH}>{t('Student.ijazah')}</SelectItem>
-                            {/* أضف المزيد من SelectItem هنا إذا كان لديك أنواع برامج أخرى */}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.programType && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.programType.message as string)}</p>
-                  )}
-                </div>
-
-                {/* الحلقة */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="session" className="font-medium text-default-600">
-                    {t('Student.session')} *
-                  </Label>
-                  <Controller
-                    control={control}
-                    name="session"
-                    render={({ field }) => (
-                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
-                        <SelectTrigger className={cn('', { 'border-destructive ': errors.session })}>
-                          <SelectValue placeholder={t('Student.select_session')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>{t('Student.sessions')}</SelectLabel>
-                            <SelectItem value={SessionType.FIRST}>{t('Student.first_session')}</SelectItem>
-                            <SelectItem value={SessionType.SECOND}>{t('Student.second_session')}</SelectItem>
-                            {/* أضف المزيد من SelectItem هنا إذا كان لديك حلقات أخرى */}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.session && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.session.message as string)}</p>
-                  )}
-                </div>
-
-                {/* نوع الاشتراك */}
-                <div className="space-y-2 col-span-12 sm:col-span-6">
-                  <Label htmlFor="subscriptionType" className="font-medium text-default-600">
-                    {t('Student.subscription_type')} *
-                  </Label>
-                  <Controller
-                    control={control}
-                    name="subscriptionType"
-                    render={({ field }) => (
-                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
-                        <SelectTrigger className={cn('', { 'border-destructive ': errors.subscriptionType })}>
-                          <SelectValue placeholder={t('Student.select_subscription_type')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>{t('Student.subscription_types')}</SelectLabel>
-                            <SelectItem value={SubscriptionType.MONTHLY}>{t('Student.monthly')}</SelectItem>
-                            <SelectItem value={SubscriptionType.BIMONTHLY}>{t('Student.bi_monthly')}</SelectItem>
-                            <SelectItem value={SubscriptionType.THREE_MONTHS}>{t('Student.three_months')}</SelectItem>
-                            <SelectItem value={SubscriptionType.SIX_MONTHS}>{t('Student.six_months')}</SelectItem>
-                            <SelectItem value={SubscriptionType.YEARLY}>{t('Student.yearly')}</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.subscriptionType && (
-                    <p className="text-destructive text-sm mt-1">{t(errors.subscriptionType.message as string)}</p>
-                  )}
-                </div>
-
-                {/* منحة (Checkbox) */}
-                <div className="space-y-2 col-span-12 sm:col-span-6 flex items-center gap-2">
-                  <Controller
-                    control={control}
-                    name="isGrant"
-                    render={({ field }) => (
-                      <Checkbox
-                        id="isGrant"
-                        checked={field.value}
-                        onCheckedChange={(checked) => {
-                          field.onChange(checked);
-                          // إذا تم تحديد منحة، قم بتصفير حقول الدفع
-                          if (checked) {
-                            setValue('lastPaymentDate', '');
-                            setValue('currencyType', undefined);
-                            setValue('amount', '');
-                          }
-                        }}
-                        disabled={isPending}
-                      />
-                    )}
-                  />
-                  <Label htmlFor="isGrant" className="font-medium text-default-600">
-                    {t('Student.is_grant')}
-                  </Label>
-                </div>
-
-                {/* حقول الدفع - تظهر فقط إذا لم تكن منحة */}
-                {!isGrant && (
-                  <>
-                    {/* تاريخ آخر دفعة */}
-                    <div className="space-y-2 col-span-12 sm:col-span-6">
-                      <Label htmlFor="lastPaymentDate" className="font-medium text-default-600">
-                        {t('Student.last_payment_date')} *
-                      </Label>
-                      <Input
-                        disabled={isPending}
-                        {...register('lastPaymentDate')}
-                        type="date"
-                        id="lastPaymentDate"
-                        className={cn('', { 'border-destructive ': errors.lastPaymentDate })}
-                      />
-                      {errors.lastPaymentDate && (
-                        <p className="text-destructive text-sm mt-1">{t(errors.lastPaymentDate.message as string)}</p>
-                      )}
-                    </div>
-
-                    {/* نوع العملة */}
-                    <div className="space-y-2 col-span-12 sm:col-span-6">
-                      <Label htmlFor="currencyType" className="font-medium text-default-600">
-                        {t('Student.currency_types')} *
-                      </Label>
-                      <Controller
-                        control={control}
-                        name="currencyType"
-                        render={({ field }) => (
-                          <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
-                            <SelectTrigger className={cn('', { 'border-destructive ': errors.currencyType })}>
-                              <SelectValue placeholder={t('Student.select_currency_type')} />
+                      <FormItem>
+                        <FormLabel>{t('gender')}</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
+                          <FormControl>
+                            <SelectTrigger size="lg">
+                              <SelectValue placeholder={t('selectGender')} />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectLabel>{t('Student.currency_types')}</SelectLabel>
-                                <SelectItem value={CurrencyType.TRY}>{t('Student.turkish_lira')}</SelectItem>
-                                <SelectItem value={CurrencyType.USD}>{t('Student.us_dollar')}</SelectItem>
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
-                      {errors.currencyType && (
-                        <p className="text-destructive text-sm mt-1">{t(errors.currencyType.message as string)}</p>
-                      )}
-                    </div>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="MALE">{t('male')}</SelectItem>
+                            <SelectItem value="FEMALE">{t('female')}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="birthday"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('birthday')}</FormLabel>
+                        <FormControl>
+                          <DatePicker onDateChange={field.onChange} value={field.value} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="nationality"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('nationality')}</FormLabel>
+                        <FormControl>
+                          <Input size="lg" placeholder={t('enterNationality')} {...field} disabled={isLoading} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="residenceCountry"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('residenceCountry')}</FormLabel>
+                        <FormControl>
+                          <Input size="lg" placeholder={t('enterResidenceCountry')} {...field} disabled={isLoading} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
 
-                    {/* المبلغ */}
-                    <div className="space-y-2 col-span-12 sm:col-span-6">
-                      <Label htmlFor="amount" className="font-medium text-default-600">
-                        {t('Student.amount')} *
-                      </Label>
-                      <Input
-                        disabled={isPending}
-                        {...register('amount', { valueAsNumber: true })} // مهم لتحويل القيمة إلى رقم
-                        type="number"
-                        id="amount"
-                        className={cn('', { 'border-destructive ': errors.amount })}
-                      />
-                      {errors.amount && (
-                        <p className="text-destructive text-sm mt-1">{t(errors.amount.message as string)}</p>
-                      )}
+              <Separator />
+
+              {/* Academic Information */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  {t('academicInformation')}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="joinedAt"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('joinedDate')}</FormLabel>
+                        <FormControl>
+                          {/* <Input size="lg" type="date" {...field} disabled={isLoading} /> */}
+                          <DatePicker onDateChange={field.onChange} value={field.value} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="isHadScholarship"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 gap-2">
+                        <FormControl>
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} disabled={isLoading} />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>{t('isHadScholarship')}</FormLabel>
+                          <p className="text-sm text-muted-foreground">{t('grantAccessDescription')}</p>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Future sections for attendances and classroom */}
+                {mode === 'update' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center space-x-3 gap-2">
+                        <Calendar className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="font-medium">{t('attendances')}</p>
+                          <p className="text-sm text-muted-foreground">{t('attendanceHistory')}</p>
+                        </div>
+                      </div>
+                      <Button type="button" variant="outline" disabled={isLoading}>
+                        {t('viewAttendances')}
+                      </Button>
                     </div>
-                  </>
+                    <div className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center space-x-3 gap-2">
+                        <Users className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="font-medium">{t('classroom')}</p>
+                          <p className="text-sm text-muted-foreground">{t('classroomManagement')}</p>
+                        </div>
+                      </div>
+                      <Button type="button" variant="outline" disabled={isLoading}>
+                        {t('manageClassroom')}
+                      </Button>
+                    </div>
+                  </div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
+              </div>
 
-          <div className="col-span-12 flex justify-end">
-            <Button disabled={isPending} type="submit">
-              {isPending ? t('Student.saving') : t('Student.save_student')}
-            </Button>
-          </div>
-        </div>
-      </form>
-    </div>
+              <Separator />
+
+              {/* Additional Information */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  {t('additionalInformation')}
+                </h3>
+                <FormField
+                  control={form.control}
+                  name="generalNotes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('generalNotes')}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder={t('enterGeneralNotes')}
+                          className={`resize-none `}
+                          rows={4}
+                          {...field}
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <Separator />
+
+              {/* Password Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">{mode === 'create' ? t('security') : t('passwordManagement')}</h3>
+                {mode === 'create' ? (
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('password')}</FormLabel>
+                        <div className="relative">
+                          <FormControl>
+                            <Input
+                              size="lg"
+                              {...field}
+                              type={showPassword ? 'text' : 'password'}
+                              placeholder={t('enterPassword')}
+                              className={'pr-10'}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className={`absolute ${
+                              isRTL ? 'left-0' : 'right-0'
+                            } top-0 h-full px-3 py-2 hover:bg-transparent`}
+                            onClick={() => setShowPassword(!showPassword)}
+                            tabIndex={-1}
+                            disabled={isLoading}
+                          >
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </Button>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : (
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <Key className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="font-medium">{t('password')}</p>
+                        <p className="text-sm text-muted-foreground">{t('passwordUpdateDescription')}</p>
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setPasswordModalOpen(true)}
+                      disabled={isLoading}
+                    >
+                      {t('updatePassword')}
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              <div className={`flex justify-end space-x-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Button type="button" variant="outline" disabled={isLoading}>
+                  {t('cancel')}
+                </Button>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {mode === 'create' ? t('creating') : t('updating')}
+                    </>
+                  ) : mode === 'create' ? (
+                    t('addStudentButton')
+                  ) : (
+                    t('updateStudentButton')
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
+      <PasswordUpdateModal
+        open={passwordModalOpen}
+        onOpenChange={setPasswordModalOpen}
+        onSubmit={handlePasswordUpdate}
+        isLoading={isLoading}
+      />
+    </>
   );
-};
-
-export default StudentForm;
+}

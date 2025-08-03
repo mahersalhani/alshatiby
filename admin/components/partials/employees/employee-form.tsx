@@ -7,8 +7,9 @@ import { startTransition, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { PasswordUpdateModal } from './password-update-modal';
+import { PasswordUpdateModal } from '../../password-update-modal';
 
+import { LoadingOverlay } from '@/components/loading-overlay';
 import { useRouter } from '@/components/navigation';
 import DatePicker from '@/components/shared/date-picker';
 import { Button } from '@/components/ui/button';
@@ -110,6 +111,7 @@ export function EmployeeForm({ mode = 'create', initialData }: EmployeeFormProps
   return (
     <>
       <Card className="w-full max-w-4xl mx-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+        <LoadingOverlay isLoading={isLoading} message={mode === 'create' ? t('creating') : t('updating')} />
         <CardHeader>
           <CardTitle>{mode === 'create' ? t('createEmployee') : t('updateEmployee')}</CardTitle>
           <CardDescription>

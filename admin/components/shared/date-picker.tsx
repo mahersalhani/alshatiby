@@ -31,9 +31,9 @@ export function DatePicker({ onDateChange, label, value }: DatePickerProps) {
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full justify-between font-normal">
+          <Button variant="outline" className="w-full justify-between font-normal border-default-200" id="date">
             {date ? date.toLocaleDateString() : t('selectDate')}
-            <ChevronDownIcon />
+            <ChevronDownIcon className="ml-2 h-4 w-4 text-default-500" aria-hidden="true" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">

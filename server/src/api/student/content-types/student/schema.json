@@ -12,10 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "dateOfJoining": {
-      "type": "datetime"
-    },
-    "isGrant": {
+    "isHadScholarship": {
       "type": "boolean"
     },
     "generalNotes": {

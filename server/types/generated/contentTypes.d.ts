@@ -501,7 +501,6 @@ export interface ApiEmployeeEmployee extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    joinedAt: Schema.Attribute.Date;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -708,9 +707,8 @@ export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    dateOfJoining: Schema.Attribute.DateTime;
     generalNotes: Schema.Attribute.Text;
-    isGrant: Schema.Attribute.Boolean;
+    isHadScholarship: Schema.Attribute.Boolean;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1204,6 +1202,7 @@ export interface PluginUsersPermissionsUser
       }>;
     employee: Schema.Attribute.Relation<'oneToOne', 'api::employee.employee'>;
     gender: Schema.Attribute.Enumeration<['MALE', 'FEMALE']>;
+    joinedAt: Schema.Attribute.Date;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

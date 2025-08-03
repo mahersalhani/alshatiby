@@ -32,9 +32,6 @@
       "target": "api::program.program",
       "mappedBy": "supervisors"
     },
-    "joinedAt": {
-      "type": "date"
-    },
     "classrooms": {
       "type": "relation",
       "relation": "oneToMany",
