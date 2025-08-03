@@ -380,7 +380,10 @@
     "phone_number": "phone number",
     "search": "Search ...",
     "no_results": "There is no data",
-    "loading": "Loading is underway"
+    "loading": "Loading is underway",
+    "gender": "gender",
+    "male": "male",
+    "female": "female"
   },
   "error": {
     "email_already_in_use": "Email is already in use"
