@@ -1,6 +1,6 @@
-import EmployeeForm from '@/components/partials/employees/employee-form';
+import { EmployeeForm } from '@/components/partials/employees/employee-form';
 
 const CreateEmployee = () => {
-  return <EmployeeForm />;
+  return <EmployeeForm mode="create" />;
 };
 export default CreateEmployee;
