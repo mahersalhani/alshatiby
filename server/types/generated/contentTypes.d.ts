@@ -1202,6 +1202,7 @@ export interface PluginUsersPermissionsUser
       }>;
     employee: Schema.Attribute.Relation<'oneToOne', 'api::employee.employee'>;
     gender: Schema.Attribute.Enumeration<['MALE', 'FEMALE']>;
+    isSuperAdmin: Schema.Attribute.Boolean;
     joinedAt: Schema.Attribute.Date;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<

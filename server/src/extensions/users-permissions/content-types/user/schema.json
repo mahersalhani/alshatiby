@@ -97,6 +97,9 @@
     },
     "joinedAt": {
       "type": "date"
+    },
+    "isSuperAdmin": {
+      "type": "boolean"
     }
   }
 }
