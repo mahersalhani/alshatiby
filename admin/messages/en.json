@@ -623,6 +623,10 @@
     "students": "Students",
     "viewStudents": "View Students",
     "manageStudents": "Manage classroom students",
-    "studentsCount": "{count} students enrolled"
+    "studentsCount": "{count} students enrolled",
+    "loading": "Loadıng ...",
+    "noOptionsFound": "No Options found",
+    "classroom_created_successfully": "Classroom created succesfully",
+    "classroom_updated_successfully": "Classroom updated successfully"
   }
 }

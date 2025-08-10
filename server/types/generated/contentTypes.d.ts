@@ -438,7 +438,7 @@ export interface ApiClassroomClassroom extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     program: Schema.Attribute.Relation<'manyToOne', 'api::program.program'>;
     publishedAt: Schema.Attribute.DateTime;
-    schedules: Schema.Attribute.Relation<'oneToMany', 'api::schedule.schedule'>;
+    schedules: Schema.Attribute.Component<'common.schedule', true>;
     studentSchedules: Schema.Attribute.Relation<
       'oneToMany',
       'api::student-schedule.student-schedule'
@@ -598,51 +598,6 @@ export interface ApiProgramProgram extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::employee.employee'
     >;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiScheduleSchedule extends Struct.CollectionTypeSchema {
-  collectionName: 'schedules';
-  info: {
-    description: '';
-    displayName: 'Schedule ';
-    pluralName: 'schedules';
-    singularName: 'schedule';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    classroom: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::classroom.classroom'
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    day: Schema.Attribute.Enumeration<
-      [
-        'SUNDAY',
-        'MONDAY',
-        'TUESDAY',
-        'WEDNESDAY',
-        'THURSDAY',
-        'FRIDAY',
-        'SATURDAY',
-      ]
-    >;
-    endTime: Schema.Attribute.Time;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::schedule.schedule'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    startTime: Schema.Attribute.Time;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1250,7 +1205,6 @@ declare module '@strapi/strapi' {
       'api::employee.employee': ApiEmployeeEmployee;
       'api::payment.payment': ApiPaymentPayment;
       'api::program.program': ApiProgramProgram;
-      'api::schedule.schedule': ApiScheduleSchedule;
       'api::student-schedule.student-schedule': ApiStudentScheduleStudentSchedule;
       'api::student.student': ApiStudentStudent;
       'plugin::content-releases.release': PluginContentReleasesRelease;

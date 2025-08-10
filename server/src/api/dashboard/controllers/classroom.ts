@@ -67,4 +67,25 @@ export default {
 
     return classroom;
   },
+  async create(ctx) {
+    const data = ctx.request.body;
+
+    const classroom = await strapi
+      .documents("api::classroom.classroom")
+      .create({ data });
+
+    return classroom;
+  },
+  async find(ctx) {
+    const { query } = ctx;
+    const { filters, pagination, sort } = query as any;
+
+    const data = await strapi.service("api::classroom.classroom").find({
+      filters,
+      pagination,
+      sort,
+    });
+
+    return data;
+  },
 };

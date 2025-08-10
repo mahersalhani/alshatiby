@@ -18,10 +18,9 @@ export function useClassroomSchemas() {
     })
     .refine(
       (data) => {
-        // Validate that end time is after start time
-        const start = new Date(`2000-01-01T${data.startTime}:00`);
-        const end = new Date(`2000-01-01T${data.endTime}:00`);
-        return end > start;
+        const start = data.startTime.split(':').map(Number);
+        const end = data.endTime.split(':').map(Number);
+        return start[0] < end[0] || (start[0] === end[0] && start[1] < end[1]);
       },
       {
         message: t('endTimeAfterStartTime'),
@@ -31,9 +30,18 @@ export function useClassroomSchemas() {
 
   const classroomCreateSchema = z.object({
     classroomName: z.string().min(2, t('classroomNameMinLength')).min(1, t('classroomNameRequired')),
-    programId: z.string().min(1, t('programRequired')),
-    teacherId: z.string().min(1, t('teacherRequired')),
-    supervisorIds: z.array(z.string()).min(1, t('supervisorsRequired')),
+    programId: z
+      .string()
+      .min(1, t('programRequired'))
+      .or(z.number().min(1, t('programRequired'))),
+    teacherId: z
+      .string()
+      .min(1, t('teacherRequired'))
+      .or(z.number().min(1, t('teacherRequired'))),
+    supervisorIds: z
+      .array(z.string())
+      .min(1, t('supervisorsRequired'))
+      .or(z.array(z.number()).min(1, t('supervisorsRequired'))),
     schedules: z.array(scheduleSchema).min(1, t('schedulesRequired')),
   });
 
@@ -84,9 +92,10 @@ export interface Schedule {
 
 export interface ClassroomData extends ClassroomCreateData {
   id?: string;
-  program?: Program;
-  teacher?: Teacher;
-  supervisors?: Supervisor[];
+  documentId?: string;
+  program: string;
+  teacher: string;
+  supervisors: string[];
   studentsCount?: number;
   createdAt?: string;
   updatedAt?: string;

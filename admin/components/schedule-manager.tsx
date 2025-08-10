@@ -62,8 +62,8 @@ export function ScheduleManager({ schedules, onSchedulesChange, disabled = false
 
       const schedule: ScheduleData = {
         day: newSchedule.day,
-        startTime: newSchedule.startTime!,
-        endTime: newSchedule.endTime!,
+        startTime: newSchedule.startTime!.padEnd(8, ':00'),
+        endTime: newSchedule.endTime!.padEnd(8, ':00'),
       };
 
       onSchedulesChange([...schedules, schedule]);

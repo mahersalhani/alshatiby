@@ -21,12 +21,6 @@
       "target": "api::program.program",
       "inversedBy": "classrooms"
     },
-    "schedules": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::schedule.schedule",
-      "mappedBy": "classroom"
-    },
     "attendances": {
       "type": "relation",
       "relation": "oneToMany",
@@ -50,6 +44,11 @@
       "relation": "oneToMany",
       "target": "api::student-schedule.student-schedule",
       "mappedBy": "classroom"
+    },
+    "schedules": {
+      "type": "component",
+      "repeatable": true,
+      "component": "common.schedule"
     }
   }
 }

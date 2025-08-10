@@ -8,27 +8,12 @@ import { Button } from '@/components/ui/button';
 
 export const getColumns = (t: (key: string) => string): ColumnDef<any>[] => [
   {
-    accessorKey: 'fullName',
-    header: t('common.full_name'),
+    accessorKey: 'classroomName',
+    header: t('common.classroom_name'),
     cell: ({ row }) => {
-      const { name } = row.original;
-      return <span>{name}</span>;
+      const { classroomName } = row.original;
+      return <span>{classroomName}</span>;
     },
-  },
-  {
-    accessorKey: 'role',
-    header: t('common.role'),
-    cell: ({ row }) => <span>{t(`Form.${(row.getValue('role') as string)?.toLowerCase()}`)}</span>,
-  },
-  {
-    accessorKey: 'phoneNumber',
-    header: t('common.phone_number'),
-    cell: ({ row }) => <span>{row.getValue('phoneNumber') || '-'}</span>,
-  },
-  {
-    accessorKey: 'email',
-    header: t('common.email'),
-    cell: ({ row }) => <span className="text-sm lowercase">{row.original?.email || '-'}</span>,
   },
   {
     id: 'actions',
@@ -38,7 +23,7 @@ export const getColumns = (t: (key: string) => string): ColumnDef<any>[] => [
 
       return (
         <div className="flex items-center gap-2">
-          <Link href={`/employees/${documentId}`}>
+          <Link href={`/classroom/${documentId}`}>
             <Button variant="ghost" size="icon">
               <SquarePen className="h-4 w-4" />
             </Button>

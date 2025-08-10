@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
-export const RoleEnum = z.enum(['TEACHER', 'PROGRAMS_SUPERVISOR', 'CLASSROOM_SUPERVISOR']);
+export const EmployeeRoleEnum = z.enum(['TEACHER', 'PROGRAMS_SUPERVISOR', 'CLASSROOM_SUPERVISOR']);
 export const GenderEnum = z.enum(['MALE', 'FEMALE']);
 
 export function useEmployeeSchemas() {
@@ -14,7 +14,7 @@ export function useEmployeeSchemas() {
     name: z.string().min(2, t('nameMinLength')),
     email: z.string().email(t('invalidEmail')),
     password: z.string().min(8, t('passwordMinLength')),
-    role: RoleEnum,
+    role: EmployeeRoleEnum,
     nationality: z.string().min(2, t('nationalityRequired')),
     residenceCountry: z.string().min(2, t('residenceCountryRequired')),
     gender: GenderEnum,

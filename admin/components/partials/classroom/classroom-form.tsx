@@ -3,47 +3,48 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Calendar, GraduationCap, Loader2, School, UserCheck, Users } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import qs from 'qs';
+import { startTransition, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
+import { AsyncMultiSelectComponent } from '@/components/async-multi-select';
+import { AsyncSelectComponent } from '@/components/async-select';
 import { LoadingOverlay } from '@/components/loading-overlay';
-import { MultiSelect } from '@/components/multi-select';
+import { useRouter } from '@/components/navigation';
 import { ScheduleManager } from '@/components/schedule-manager';
-import { SearchableSelect } from '@/components/searchable-select';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { fetchPrograms, fetchSupervisors, fetchTeachers } from '@/lib/api/classroom-api';
+import api from '@/lib/axios';
 import {
   useClassroomSchemas,
   type ClassroomCreateData,
   type ClassroomData,
   type ClassroomUpdateData,
-  type Program,
-  type Supervisor,
-  type Teacher,
 } from '@/lib/schemas/classroom';
+import { EmployeeRoleEnum } from '@/lib/schemas/employee';
 
 interface ClassroomFormProps {
   mode: 'create' | 'update';
   initialData?: Partial<ClassroomData>;
 }
 
-export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
-  const [programs, setPrograms] = useState<Program[]>([]);
-  const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [supervisors, setSupervisors] = useState<Supervisor[]>([]);
-  const [loadingPrograms, setLoadingPrograms] = useState(true);
-  const [loadingTeachers, setLoadingTeachers] = useState(true);
-  const [loadingSupervisors, setLoadingSupervisors] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+interface ClassroomFormProps {
+  mode: 'create' | 'update';
+  initialData?: Partial<ClassroomData>;
+  // onSubmit: (data: ClassroomCreateData | ClassroomUpdateData) => void;
+}
 
+export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
+  const scopT = useTranslations();
   const t = useTranslations('ClassroomForm');
   const locale = useLocale();
   const { classroomCreateSchema, classroomUpdateSchema } = useClassroomSchemas();
-
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const schema = mode === 'create' ? classroomCreateSchema : classroomUpdateSchema;
 
   const form = useForm<ClassroomCreateData | ClassroomUpdateData>({
@@ -57,38 +58,189 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
     },
   });
 
-  // Fetch data on component mount
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [programsData, teachersData, supervisorsData] = await Promise.all([
-          fetchPrograms(),
-          fetchTeachers(),
-          fetchSupervisors(),
-        ]);
-
-        setPrograms(programsData);
-        setTeachers(teachersData);
-        setSupervisors(supervisorsData);
-      } catch (error) {
-        console.error('Error loading classroom data:', error);
-      } finally {
-        setLoadingPrograms(false);
-        setLoadingTeachers(false);
-        setLoadingSupervisors(false);
-      }
+  const loadProgramOptions = async (inputValue: string, page: number) => {
+    const reqQuery: any = {};
+    reqQuery.pagination = {
+      page: page,
+      pageSize: 10,
     };
 
-    loadData();
-  }, []);
+    reqQuery.filters = {
+      isActive: {
+        $eq: true,
+      },
+    };
+
+    if (inputValue) {
+      reqQuery.filters = {
+        name: {
+          $containsi: inputValue,
+        },
+      };
+    }
+
+    const queryString = qs.stringify(reqQuery, {
+      skipNulls: true,
+    });
+
+    const { data } = await api.get(`/dashboard/program?${queryString}`);
+
+    const options = data.results.map((program: any) => ({
+      value: program.id,
+      label: program.name,
+      data: program,
+    }));
+
+    return { options, hasMore: data.pagination?.pageCount !== page };
+  };
+
+  const loadTeacherOptions = async (inputValue: string, page: number) => {
+    const reqQuery: any = {};
+
+    reqQuery.pagination = {
+      page: page,
+      pageSize: 10,
+    };
+
+    reqQuery.filters = {
+      role: {
+        $eq: EmployeeRoleEnum.Enum.TEACHER,
+      },
+    };
+
+    if (inputValue) {
+      reqQuery.filters = {
+        ...reqQuery.filters,
+        user: {
+          $or: [
+            { name: { $containsi: inputValue } },
+            { phoneNumber: { $containsi: inputValue } },
+            { email: { $containsi: inputValue } },
+          ],
+        },
+      };
+    }
+    const queryString = qs.stringify(reqQuery, {
+      skipNulls: true,
+    });
+
+    const { data } = await api.get(`/dashboard/employee?${queryString}`);
+    const options = data.results.map((teacher: any) => ({
+      value: teacher.id,
+      label: teacher?.name || teacher?.email || 'Unknown',
+      data: teacher,
+    }));
+
+    return { options, hasMore: data.pagination?.pageCount !== page };
+  };
+
+  const loadSupervisorOptions = async (inputValue: string, page: number) => {
+    const reqQuery: any = {};
+
+    reqQuery.pagination = {
+      page: page,
+      pageSize: 10,
+    };
+
+    reqQuery.filters = {
+      role: {
+        $eq: EmployeeRoleEnum.Enum.CLASSROOM_SUPERVISOR,
+      },
+    };
+
+    if (inputValue) {
+      reqQuery.filters = {
+        ...reqQuery.filters,
+        user: {
+          $or: [
+            { name: { $containsi: inputValue } },
+            { phoneNumber: { $containsi: inputValue } },
+            { email: { $containsi: inputValue } },
+          ],
+        },
+      };
+    }
+    const queryString = qs.stringify(reqQuery, {
+      skipNulls: true,
+    });
+
+    const { data } = await api.get(`/dashboard/employee?${queryString}`);
+    const options = data.results.map((teacher: any) => ({
+      value: teacher.id,
+      label: teacher?.name || teacher?.email || 'Unknown',
+      data: teacher,
+    }));
+
+    return { options, hasMore: data.pagination?.pageCount !== page };
+  };
+
+  const formatProgramOption = (option: any) => (
+    <div className="py-1">
+      <div className="font-medium">{option.data.name}</div>
+    </div>
+  );
+
+  const formatTeacherOption = (option: any) => {
+    return (
+      <div className="py-1">
+        <div className="font-medium">{option.data?.name}</div>
+        <div className="text-sm ">{option.data?.email}</div>
+      </div>
+    );
+  };
+
+  const formatSupervisorOption = (option: any) => (
+    <div className="py-1">
+      <div className="font-medium">{option.data?.name}</div>
+      <div className="text-sm ">{option.data?.email}</div>
+    </div>
+  );
+
+  const formatSelectedSupervisor = (option: any) => (
+    <div>
+      <div className="font-medium text-xs">{option.data.name}</div>
+      <div className="text-xs text-muted-foreground">{scopT(`Form.${option.data?.role?.toLowerCase()}`)}</div>
+    </div>
+  );
 
   const isRTL = locale === 'ar';
-  const isDataLoading = loadingPrograms || loadingTeachers || loadingSupervisors;
+  const isEdit = mode === 'update';
 
-  const handleSubmit = (data: ClassroomCreateData | ClassroomUpdateData) => {};
+  const handleSubmit = (data: ClassroomCreateData | ClassroomUpdateData) => {
+    setIsLoading(true);
+    startTransition(async () => {
+      try {
+        const formattedData = {
+          ...data,
+          program: data.programId,
+          teacher: data.teacherId,
+          supervisors: data.supervisorIds,
+        };
+
+        if (!isEdit) {
+          const res = await api.post('/dashboard/classroom', formattedData);
+          toast.success(t('classroom_created_successfully'));
+
+          const classroom = res.data;
+
+          router.push(`/classrooms/${classroom.documentId}`);
+        } else {
+          if (!initialData?.documentId) {
+            return;
+          }
+          await api.put(`/dashboard/classroom/${initialData.documentId}`, formattedData);
+          toast.success(t('classroom_updated_successfully'));
+        }
+      } catch (err: any) {
+        toast.error(scopT(err.response?.data?.error?.message) || err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    });
+  };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto relative">
+    <Card className="w-full max-w-4xl mx-auto relative" dir={isRTL ? 'rtl' : 'ltr'}>
       <LoadingOverlay isLoading={isLoading} message={mode === 'create' ? t('creating') : t('updating')} />
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
@@ -116,7 +268,7 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
                     <FormLabel>{t('classroomName')}</FormLabel>
                     <FormControl>
                       <Input
-                        size={'lg'}
+                        size={'large'}
                         placeholder={t('enterClassroomName')}
                         {...field}
                         className={isRTL ? 'text-right' : ''}
@@ -145,22 +297,13 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
                     <FormItem>
                       <FormLabel>{t('program')}</FormLabel>
                       <FormControl>
-                        <SearchableSelect
-                          options={programs.map((program) => ({
-                            id: program.id,
-                            name: program.name,
-                            description: program.description,
-                            metadata:
-                              program.duration && program.level ? `${program.duration} • ${program.level}` : undefined,
-                          }))}
-                          selected={field.value}
-                          onSelectionChange={field.onChange}
+                        <AsyncSelectComponent
+                          loadOptions={loadProgramOptions}
+                          value={field.value as any}
+                          onChange={field.onChange}
                           placeholder={t('selectProgram')}
-                          searchPlaceholder={t('searchPrograms')}
-                          emptyText={t('noPrograms')}
-                          loadingText={t('loadingPrograms')}
-                          isLoading={loadingPrograms}
-                          disabled={isLoading}
+                          isDisabled={isLoading}
+                          formatOptionLabel={formatProgramOption}
                         />
                       </FormControl>
                       <FormMessage />
@@ -175,24 +318,13 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
                     <FormItem>
                       <FormLabel>{t('teacher')}</FormLabel>
                       <FormControl>
-                        <SearchableSelect
-                          options={teachers.map((teacher) => ({
-                            id: teacher.id,
-                            name: teacher.name,
-                            subtitle: teacher.email,
-                            metadata:
-                              teacher.specialization && teacher.experience
-                                ? `${teacher.specialization} • ${teacher.experience} years exp.`
-                                : undefined,
-                          }))}
-                          selected={field.value}
-                          onSelectionChange={field.onChange}
+                        <AsyncSelectComponent
+                          loadOptions={loadTeacherOptions}
+                          value={field.value as any}
+                          onChange={field.onChange}
                           placeholder={t('selectTeacher')}
-                          searchPlaceholder={t('searchTeachers')}
-                          emptyText={t('noTeachers')}
-                          loadingText={t('loadingTeachers')}
-                          isLoading={loadingTeachers}
-                          disabled={isLoading}
+                          isDisabled={isLoading}
+                          formatOptionLabel={formatTeacherOption}
                         />
                       </FormControl>
                       <FormMessage />
@@ -217,20 +349,14 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
                   <FormItem>
                     <FormLabel>{t('supervisors')}</FormLabel>
                     <FormControl>
-                      <MultiSelect
-                        options={supervisors.map((supervisor) => ({
-                          ...supervisor,
-                          name: `${supervisor.name} (${supervisor.role.replace('_', ' ')})`,
-                          email: `${supervisor.email} • ${supervisor.department}`,
-                        }))}
-                        selected={field.value}
-                        onSelectionChange={field.onChange}
+                      <AsyncMultiSelectComponent
+                        loadOptions={loadSupervisorOptions}
+                        value={field.value as any}
+                        onChange={field.onChange}
                         placeholder={t('selectSupervisors')}
-                        searchPlaceholder={t('searchSupervisors')}
-                        emptyText={t('noSupervisors')}
-                        loadingText={t('loadingSupervisors')}
-                        isLoading={loadingSupervisors}
-                        disabled={isLoading}
+                        isDisabled={isLoading}
+                        formatOptionLabel={formatSupervisorOption}
+                        formatSelectedLabel={formatSelectedSupervisor}
                       />
                     </FormControl>
                     <FormMessage />
@@ -257,17 +383,20 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
                         schedules={field.value}
                         onSchedulesChange={field.onChange}
                         disabled={isLoading}
-                        error={form.formState.errors.schedules?.message}
+                        error={
+                          form.formState.errors.schedules?.message ||
+                          form.formState.errors?.schedules?.[0]?.endTime?.message ||
+                          form.formState.errors?.schedules?.[0]?.startTime?.message
+                        }
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
             {/* Students Section (Update Mode Only) */}
-            {mode === 'update' && (
+            {isEdit && (
               <>
                 <Separator />
                 <div className="space-y-4">
@@ -277,7 +406,7 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
                   </h3>
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <Users className="h-5 w-5 text-muted-foreground" />
+                      <Users className="h-5 w-5 text-muted-foreground ml-2 ltr:mr-2" />
                       <div>
                         <p className="font-medium">{t('students')}</p>
                         <p className="text-sm text-muted-foreground">
@@ -294,10 +423,10 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
             )}
 
             <div className={`flex justify-end space-x-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              <Button type="button" variant="outline" disabled={isLoading || isDataLoading}>
+              <Button type="button" variant="outline" disabled={isLoading}>
                 {t('cancel')}
               </Button>
-              <Button type="submit" disabled={isLoading || isDataLoading}>
+              <Button type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

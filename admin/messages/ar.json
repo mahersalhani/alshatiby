@@ -384,7 +384,8 @@
     "email": "بريد الالكتروني",
     "gender": "الجنس",
     "male": "ذكر",
-    "female": "انثى"
+    "female": "انثى",
+    "classroom_name": "الحلقة"
   },
   "error": {
     "email_already_in_use": "البريد الإلكتروني مستخدم بالفعل"
@@ -618,7 +619,6 @@
     "viewStudents": "عرض الطلاب",
     "manageStudents": "إدارة طلاب الفصل الدراسي",
     "studentsCount": "{count} طالب مسجل",
-
     "scheduleInformation": "معلومات الجدول الزمني",
     "schedules": "جداول الحصص",
     "day": "اليوم",
@@ -629,6 +629,10 @@
     "currentSchedules": "الجداول الحالية",
     "noSchedulesAdded": "لا توجد جداول مضافة بعد",
     "addScheduleHint": "قم بإضافة جداول الحصص باستخدام النموذج أعلاه",
-    "scheduleConflict": "تم اكتشاف تعارض في الجدول! يرجى اختيار أوقات مختلفة."
+    "scheduleConflict": "تم اكتشاف تعارض في الجدول! يرجى اختيار أوقات مختلفة.",
+    "loading": "جاري التحميل ...",
+    "noOptionsFound": "لا يوجد بيانات",
+    "classroom_created_successfully": "تم اضافة حلقة جديدة بنجاح",
+    "classroom_updated_successfully": "تم تحديث معلومات الحلقة"
   }
 }
