@@ -634,5 +634,11 @@
     "noOptionsFound": "لا يوجد بيانات",
     "classroom_created_successfully": "تم اضافة حلقة جديدة بنجاح",
     "classroom_updated_successfully": "تم تحديث معلومات الحلقة"
+  },
+  "classroom": {
+    "list_title": "الحلقات"
+  },
+  "student": {
+    "list_title": "الطلاب"
   }
 }

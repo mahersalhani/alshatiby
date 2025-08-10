@@ -1,4 +1,5 @@
 'use client';
+import { useTranslations } from 'next-intl';
 import React, { ReactNode } from 'react';
 
 import { Link, usePathname } from '@/components/navigation';
@@ -8,6 +9,7 @@ import { Icon } from '@/components/ui/icon';
 const SiteBreadcrumb = ({ children }: { children?: ReactNode }) => {
   const location = usePathname();
   const locations = location.split('/').filter((path) => path);
+  const t = useTranslations();
 
   return (
     <div className="flex justify-between gap-3 items-center mb-6">
@@ -28,7 +30,7 @@ const SiteBreadcrumb = ({ children }: { children?: ReactNode }) => {
               return (
                 <React.Fragment key={index}>
                   <BreadcrumbItem className=" capitalize">
-                    {isLast ? itemLink : <Link href={href}>{itemLink}</Link>}
+                    {isLast ? t(`Menu.${itemLink}`) : <Link href={href}>{t(`Menu.${itemLink}`)}</Link>}
                   </BreadcrumbItem>
                   {locations.length !== index + 1 && <BreadcrumbSeparator />}
                 </React.Fragment>

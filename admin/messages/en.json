@@ -628,5 +628,11 @@
     "noOptionsFound": "No Options found",
     "classroom_created_successfully": "Classroom created succesfully",
     "classroom_updated_successfully": "Classroom updated successfully"
+  },
+  "classroom": {
+    "list_title": "Classrooms"
+  },
+  "student": {
+    "list_title": "Students"
   }
 }
