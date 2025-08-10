@@ -16,6 +16,22 @@ export const getColumns = (t: (key: string) => string): ColumnDef<any>[] => [
     },
   },
   {
+    accessorKey: 'teacher',
+    header: t('common.teacher'),
+    cell: ({ row }) => {
+      const { teacher } = row.original;
+      return <span>{teacher?.name}</span>;
+    },
+  },
+  {
+    accessorKey: 'studentCount',
+    header: t('common.student_count'),
+    cell: ({ row }) => {
+      const { studentCount } = row.original;
+      return <span>{studentCount}</span>;
+    },
+  },
+  {
     id: 'actions',
     header: t('common.actions'),
     cell: ({ row }) => {

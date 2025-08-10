@@ -385,7 +385,8 @@
     "gender": "الجنس",
     "male": "ذكر",
     "female": "انثى",
-    "classroom_name": "الحلقة"
+    "classroom_name": "الحلقة",
+    "student_count": "عدد الطلاب"
   },
   "error": {
     "email_already_in_use": "البريد الإلكتروني مستخدم بالفعل"

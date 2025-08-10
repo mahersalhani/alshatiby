@@ -384,7 +384,8 @@
     "loading": "Loading is underway",
     "gender": "gender",
     "male": "male",
-    "female": "female"
+    "female": "female",
+    "student_count": "Students count"
   },
   "error": {
     "email_already_in_use": "Email is already in use"
