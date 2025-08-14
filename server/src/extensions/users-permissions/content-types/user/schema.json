@@ -14,9 +14,8 @@
   "attributes": {
     "email": {
       "type": "email",
-      "minLength": 6,
       "configurable": false,
-      "required": true
+      "required": false
     },
     "provider": {
       "type": "string",
@@ -24,9 +23,8 @@
     },
     "password": {
       "type": "password",
-      "minLength": 6,
       "configurable": false,
-      "private": true,
+      "private": false,
       "searchable": false
     },
     "resetPasswordToken": {
@@ -75,10 +73,7 @@
     },
     "gender": {
       "type": "enumeration",
-      "enum": [
-        "MALE",
-        "FEMALE"
-      ]
+      "enum": ["MALE", "FEMALE"]
     },
     "birthday": {
       "type": "date"

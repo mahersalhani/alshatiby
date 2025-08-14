@@ -11,8 +11,8 @@ export function useStudentSchemas() {
   const studentCreateSchema = z.object({
     documentId: z.string().optional(),
     name: z.string().min(2, t('nameMinLength')),
-    email: z.string().email(t('invalidEmail')),
-    password: z.string().min(8, t('passwordMinLength')),
+    email: z.string().optional(),
+    password: z.string().optional(),
     nationality: z.string().min(2, t('nationalityRequired')),
     residenceCountry: z.string().min(2, t('residenceCountryRequired')),
     gender: GenderEnum,

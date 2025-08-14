@@ -50,17 +50,19 @@ export default {
     const { id } = ctx.params;
     const { email, ...studentData } = ctx.request.body;
 
-    // check if email is used
-    const [existingUser] = await strapi
-      .documents("plugin::users-permissions.user")
-      .findMany({
-        filters: { email },
-        limit: 1,
-        populate: ["student"],
-      });
+    if (email) {
+      // check if email is used
+      const [existingUser] = await strapi
+        .documents("plugin::users-permissions.user")
+        .findMany({
+          filters: { email },
+          limit: 1,
+          populate: ["student"],
+        });
 
-    if (existingUser && existingUser.student.documentId !== id) {
-      return ctx.badRequest("error.email_already_in_use");
+      if (existingUser && existingUser.student.documentId !== id) {
+        return ctx.badRequest("error.email_already_in_use");
+      }
     }
 
     const student = await strapi.service("api::student.student").update(id, {
@@ -68,7 +70,7 @@ export default {
     });
 
     await strapi.documents("plugin::users-permissions.user").update({
-      documentId: existingUser.documentId,
+      documentId: student.documentId,
       data: {
         email,
         ..._.omit(studentData, ["role"]),

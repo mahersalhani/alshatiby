@@ -1150,11 +1150,7 @@ export interface PluginUsersPermissionsUser
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    email: Schema.Attribute.Email &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        minLength: 6;
-      }>;
+    email: Schema.Attribute.Email;
     employee: Schema.Attribute.Relation<'oneToOne', 'api::employee.employee'>;
     gender: Schema.Attribute.Enumeration<['MALE', 'FEMALE']>;
     isSuperAdmin: Schema.Attribute.Boolean;
@@ -1167,11 +1163,7 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
     nationality: Schema.Attribute.String;
-    password: Schema.Attribute.Password &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        minLength: 6;
-      }>;
+    password: Schema.Attribute.Password;
     phoneNumber: Schema.Attribute.String;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
