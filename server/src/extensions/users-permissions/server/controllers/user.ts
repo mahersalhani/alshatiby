@@ -1,7 +1,4 @@
-import { Core } from "@strapi/strapi";
 import _ from "lodash";
-
-declare const strapi: Core.Strapi;
 
 export default {
   async me(ctx) {

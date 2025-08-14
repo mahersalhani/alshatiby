@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_common_schedules",
+  "info": {
+    "displayName": "Schedule",
+    "icon": "clock"
+  },
+  "options": {},
+  "attributes": {
+    "day": {
+      "type": "enumeration",
+      "enum": [
+        "SUNDAY",
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY"
+      ]
+    },
+    "startTime": {
+      "type": "time"
+    },
+    "endTime": {
+      "type": "time"
+    }
+  }
+}

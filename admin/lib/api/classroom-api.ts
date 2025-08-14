@@ -1,6 +1,6 @@
 'use client';
 
-import type { Program, Supervisor, Teacher } from '@/lib/schemas/classroom';
+import { Program, Supervisor, Teacher } from '../schemas/classroom';
 
 // Enhanced demo data
 const DEMO_PROGRAMS: Program[] = [
@@ -58,6 +58,55 @@ const DEMO_PROGRAMS: Program[] = [
     name: 'Environmental Science Program',
     description: 'Environmental studies and sustainability curriculum',
     duration: '2 years',
+    level: 'Intermediate',
+  },
+  {
+    id: '9',
+    name: 'Psychology & Behavioral Studies Program',
+    description: 'Human psychology and behavioral analysis curriculum',
+    duration: '3 years',
+    level: 'Advanced',
+  },
+  {
+    id: '10',
+    name: 'Engineering & Technology Program',
+    description: 'Mechanical, electrical, and software engineering fundamentals',
+    duration: '4 years',
+    level: 'Advanced',
+  },
+  {
+    id: '11',
+    name: 'Medical & Health Sciences Program',
+    description: 'Healthcare, anatomy, and medical research curriculum',
+    duration: '5 years',
+    level: 'Advanced',
+  },
+  {
+    id: '12',
+    name: 'Physical Education & Sports Program',
+    description: 'Sports science, fitness, and athletic training',
+    duration: '2 years',
+    level: 'All Levels',
+  },
+  {
+    id: '13',
+    name: 'Music & Performing Arts Program',
+    description: 'Musical instruments, vocal training, and performance arts',
+    duration: '3 years',
+    level: 'All Levels',
+  },
+  {
+    id: '14',
+    name: 'Culinary Arts Program',
+    description: 'Professional cooking, baking, and restaurant management',
+    duration: '2 years',
+    level: 'Beginner',
+  },
+  {
+    id: '15',
+    name: 'Digital Media & Communications Program',
+    description: 'Digital marketing, journalism, and media production',
+    duration: '3 years',
     level: 'Intermediate',
   },
 ];
@@ -132,6 +181,76 @@ const DEMO_TEACHERS: Teacher[] = [
     email: 'carlos.martinez@school.com',
     specialization: 'Music & Performing Arts',
     experience: 16,
+  },
+  {
+    id: '11',
+    name: 'Dr. Jennifer Lee',
+    email: 'jennifer.lee@school.com',
+    specialization: 'Engineering & Technology',
+    experience: 20,
+  },
+  {
+    id: '12',
+    name: 'Ms. Rachel Green',
+    email: 'rachel.green@school.com',
+    specialization: 'Medical Sciences',
+    experience: 17,
+  },
+  {
+    id: '13',
+    name: 'Mr. Kevin Brown',
+    email: 'kevin.brown@school.com',
+    specialization: 'Physical Education',
+    experience: 7,
+  },
+  {
+    id: '14',
+    name: 'Chef Isabella Romano',
+    email: 'isabella.romano@school.com',
+    specialization: 'Culinary Arts',
+    experience: 22,
+  },
+  {
+    id: '15',
+    name: 'Ms. Sophie Turner',
+    email: 'sophie.turner@school.com',
+    specialization: 'Digital Media',
+    experience: 6,
+  },
+  {
+    id: '16',
+    name: 'Dr. Alexander Petrov',
+    email: 'alexander.petrov@school.com',
+    specialization: 'Advanced Mathematics',
+    experience: 25,
+  },
+  {
+    id: '17',
+    name: 'Prof. Yuki Tanaka',
+    email: 'yuki.tanaka@school.com',
+    specialization: 'Quantum Physics',
+    experience: 19,
+  },
+  {
+    id: '18',
+    name: 'Ms. Fatima Al-Zahra',
+    email: 'fatima.alzahra@school.com',
+    specialization: 'Arabic Literature',
+    experience: 14,
+  },
+  {
+    id: '19',
+    name: 'Dr. Hans Mueller',
+    email: 'hans.mueller@school.com',
+    specialization: 'Chemical Engineering',
+    experience: 21,
+  },
+  {
+    id: '20',
+    name: 'Prof. Priya Sharma',
+    email: 'priya.sharma@school.com',
+    specialization: 'Data Science',
+    experience: 12,
   },
 ];
 
@@ -208,26 +327,105 @@ const DEMO_SUPERVISORS: Supervisor[] = [
   },
 ];
 
-// Mock API functions with realistic delays
-export async function fetchPrograms(): Promise<Program[]> {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1200));
-  return DEMO_PROGRAMS;
+// Pagination interface
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  hasMore: boolean;
 }
 
-export async function fetchTeachers(): Promise<Teacher[]> {
+// Search and pagination for programs
+export async function searchPrograms(query = '', page = 1, limit = 10): Promise<PaginatedResponse<Program>> {
   // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 900));
-  return DEMO_TEACHERS;
+  await new Promise((resolve) => setTimeout(resolve, 800));
+
+  // Filter programs based on search query
+  const filteredPrograms = DEMO_PROGRAMS.filter(
+    (program) =>
+      program.name.toLowerCase().includes(query.toLowerCase()) ||
+      program.description?.toLowerCase().includes(query.toLowerCase()) ||
+      program.level?.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // Calculate pagination
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedData = filteredPrograms.slice(startIndex, endIndex);
+
+  return {
+    data: paginatedData,
+    total: filteredPrograms.length,
+    page,
+    limit,
+    hasMore: endIndex < filteredPrograms.length,
+  };
 }
 
+// Search and pagination for teachers
+export async function searchTeachers(query = '', page = 1, limit = 10): Promise<PaginatedResponse<Teacher>> {
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 600));
+
+  // Filter teachers based on search query
+  const filteredTeachers = DEMO_TEACHERS.filter(
+    (teacher) =>
+      teacher.name.toLowerCase().includes(query.toLowerCase()) ||
+      teacher.email.toLowerCase().includes(query.toLowerCase()) ||
+      teacher.specialization?.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // Calculate pagination
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedData = filteredTeachers.slice(startIndex, endIndex);
+
+  return {
+    data: paginatedData,
+    total: filteredTeachers.length,
+    page,
+    limit,
+    hasMore: endIndex < filteredTeachers.length,
+  };
+}
+
+// Search and pagination for supervisors
+export async function searchSupervisors(query = '', page = 1, limit = 10): Promise<PaginatedResponse<Supervisor>> {
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 700));
+
+  // Filter supervisors based on search query
+  const filteredSupervisors = DEMO_SUPERVISORS.filter(
+    (supervisor) =>
+      supervisor.name.toLowerCase().includes(query.toLowerCase()) ||
+      supervisor.email.toLowerCase().includes(query.toLowerCase()) ||
+      supervisor.department?.toLowerCase().includes(query.toLowerCase()) ||
+      supervisor.role.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // Calculate pagination
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedData = filteredSupervisors.slice(startIndex, endIndex);
+
+  return {
+    data: paginatedData,
+    total: filteredSupervisors.length,
+    page,
+    limit,
+    hasMore: endIndex < filteredSupervisors.length,
+  };
+}
+
+// Keep the original functions for supervisors (they use multi-select)
 export async function fetchSupervisors(): Promise<Supervisor[]> {
   // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   return DEMO_SUPERVISORS;
 }
 
-// Additional utility functions for filtering
+// Additional utility functions
 export async function fetchTeachersBySpecialization(specialization: string): Promise<Teacher[]> {
   await new Promise((resolve) => setTimeout(resolve, 600));
   return DEMO_TEACHERS.filter((teacher) =>

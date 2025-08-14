@@ -38,6 +38,7 @@ export default {
 
     data.results = data.results.map((employee) => {
       const user = employee.user || {};
+      delete employee.user;
       return {
         ...user,
         ...employee,

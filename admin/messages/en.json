@@ -384,7 +384,8 @@
     "loading": "Loading is underway",
     "gender": "gender",
     "male": "male",
-    "female": "female"
+    "female": "female",
+    "student_count": "Students count"
   },
   "error": {
     "email_already_in_use": "Email is already in use"
@@ -623,6 +624,16 @@
     "students": "Students",
     "viewStudents": "View Students",
     "manageStudents": "Manage classroom students",
-    "studentsCount": "{count} students enrolled"
+    "studentsCount": "{count} students enrolled",
+    "loading": "Loadıng ...",
+    "noOptionsFound": "No Options found",
+    "classroom_created_successfully": "Classroom created succesfully",
+    "classroom_updated_successfully": "Classroom updated successfully"
+  },
+  "classroom": {
+    "list_title": "Classrooms"
+  },
+  "student": {
+    "list_title": "Students"
   }
 }

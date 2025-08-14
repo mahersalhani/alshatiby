@@ -13,7 +13,7 @@ interface EmployeeQueryProps {
 }
 export const useEmployeeQuery = (props?: EmployeeQueryProps) => {
   const { query } = useQueryState();
-  const { pagination } = props || {};
+  const { pagination, search } = props || {};
 
   let reqQuery = {
     ...query,
@@ -26,13 +26,13 @@ export const useEmployeeQuery = (props?: EmployeeQueryProps) => {
     };
   }
 
-  if (props?.search) {
+  if (search) {
     reqQuery.filters = {
       user: {
         $or: [
-          { name: { $containsi: props.search } },
-          { phoneNumber: { $containsi: props.search } },
-          { email: { $containsi: props.search } },
+          { name: { $containsi: search } },
+          { phoneNumber: { $containsi: search } },
+          { email: { $containsi: search } },
         ],
       },
     };

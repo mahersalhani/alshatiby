@@ -88,29 +88,29 @@ export function getMenuList(pathname: string, t: any): Group[] {
             },
           ],
         },
-        // {
-        //   id: 'classrooms',
-        //   href: '/classrooms',
-        //   label: t('Menu.classrooms'),
-        //   active: pathname.includes('/classrooms'),
-        //   icon: 'heroicons-outline:users',
-        //   submenus: [
-        //     {
-        //       icon: 'heroicons-outline:user-group',
-        //       href: '/classrooms',
-        //       label: t('Menu.classroom_list'),
-        //       active: pathname === '/classrooms',
-        //       children: [],
-        //     },
-        //     {
-        //       icon: 'heroicons-outline:user-group',
-        //       href: '/classrooms/create',
-        //       label: t('Menu.create_classroom'),
-        //       active: pathname === '/classrooms/create',
-        //       children: [],
-        //     },
-        //   ],
-        // },
+        {
+          id: 'classrooms',
+          href: '/classrooms',
+          label: t('Menu.classrooms'),
+          active: pathname.includes('/classrooms'),
+          icon: 'heroicons-outline:user-group',
+          submenus: [
+            {
+              icon: 'heroicons-outline:user-group',
+              href: '/classrooms',
+              label: t('Menu.classroom_list'),
+              active: pathname === '/classrooms',
+              children: [],
+            },
+            {
+              icon: 'heroicons-outline:user-group',
+              href: '/classrooms/create',
+              label: t('Menu.create_classroom'),
+              active: pathname === '/classrooms/create',
+              children: [],
+            },
+          ],
+        },
       ],
     },
   ];

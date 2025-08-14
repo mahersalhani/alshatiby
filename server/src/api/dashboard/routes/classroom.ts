@@ -14,5 +14,15 @@ export default {
       path: "/dashboard/teacher-classroom/:classroomId",
       handler: "classroom.findTeacherClassroom",
     },
+    {
+      method: "POST",
+      path: "/dashboard/classroom",
+      handler: "classroom.create",
+    },
+    {
+      method: "GET",
+      path: "/dashboard/classroom",
+      handler: "classroom.find",
+    },
   ],
 };
