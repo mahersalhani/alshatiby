@@ -6,8 +6,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  console.log('Error:', error);
-
   return (
     <div className="space-y-4">
       <Alert color="destructive" variant="soft">
