@@ -15,6 +15,7 @@
     "@strapi/plugin-users-permissions": "5.22.0",
     "@strapi/strapi": "5.22.0",
     "better-sqlite3": "11.3.0",
+    "minimatch": "^10.0.3",
     "pg": "^8.16.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -26,7 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "typescript": "^5"
+    "concurrently": "^8.2.2"
   },
   "engines": {
     "node": ">=18.0.0 <=22.x.x",
