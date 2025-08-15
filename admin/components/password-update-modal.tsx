@@ -51,7 +51,7 @@ export function PasswordUpdateModal({ open, onOpenChange, onSubmit, isLoading = 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t('updatePasswordTitle')}</DialogTitle>
           <DialogDescription>{t('updatePasswordDescription')}</DialogDescription>

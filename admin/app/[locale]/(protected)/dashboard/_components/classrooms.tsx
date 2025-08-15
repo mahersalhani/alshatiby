@@ -249,10 +249,7 @@ const ClassroomCard = ({ classroom }: { classroom: Classroom }) => {
     >
       <CardHeader className="pb-3">
         <div className={`flex items-start justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-          <CardTitle
-            className={`text-lg font-semibold ${isRTL ? 'text-right' : 'text-left'}`}
-            dir={isRTL ? 'rtl' : 'ltr'}
-          >
+          <CardTitle className={`text-lg font-semibold ${isRTL ? 'text-right' : 'text-left'}`}>
             {classroom.classroomName}
           </CardTitle>
           <Badge color="secondary" className={isRTL ? 'mr-2' : 'ml-2'}>
@@ -264,9 +261,7 @@ const ClassroomCard = ({ classroom }: { classroom: Classroom }) => {
       <CardContent className="space-y-4">
         <div className={`flex items-center gap-2 text-sm text-muted-foreground ${isRTL ? 'flex-row-reverse' : ''}`}>
           <BookOpen className="w-4 h-4" />
-          <span className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`} dir={isRTL ? 'rtl' : 'ltr'}>
-            {classroom.program.name}
-          </span>
+          <span className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>{classroom.program.name}</span>
         </div>
 
         <ScheduleAccordion schedules={classroom.schedules} />
@@ -340,7 +335,7 @@ const Classrooms = () => {
   };
 
   return (
-    <div className="container mx-auto p-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto p-6">
       {/* Header */}
       <div className="mb-8">
         <h1 className={`text-3xl font-bold text-gray-900 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('title')}</h1>

@@ -44,6 +44,9 @@
     },
     "endDate": {
       "type": "date"
+    },
+    "startDate": {
+      "type": "date"
     }
   }
 }

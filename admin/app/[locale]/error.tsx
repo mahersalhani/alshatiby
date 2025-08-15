@@ -10,7 +10,10 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
     <div className="space-y-4">
       <Alert color="destructive" variant="soft">
         <Info className="h-5 w-5" />
-        <AlertDescription>Something went wrong!</AlertDescription>
+        <AlertDescription>
+          Something went wrong!
+          <pre>{error.message}</pre>
+        </AlertDescription>
       </Alert>
       <Button onClick={() => reset()} color="destructive" size="sm">
         Try again

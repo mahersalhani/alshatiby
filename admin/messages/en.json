@@ -519,7 +519,12 @@
     "schedulesRequired": "At least one schedule must be added",
     "startTimeRequired": "Start time is required",
     "endTimeRequired": "End time is required",
-    "endTimeAfterStartTime": "End time must be after start time"
+    "endTimeAfterStartTime": "End time must be after start time",
+    "generalNotesMaxLength": "General notes must not exceed 500 characters",
+    "amountRequired": "Amount is required",
+    "amountTooLarge": "Amount is too large",
+    "studentRequired": "Student is required",
+    "startDateRequired": "Start date is required"
   },
   "StudentForm": {
     "createStudent": "Create Student",
@@ -572,7 +577,26 @@
     "password_updated_successfully": "The password has been successfully updated",
     "student_created_successfully": "The student was successfully added",
     "student_updated_successfully": "Student information has been successfully updated",
-    "addStudentButton": "Add a student"
+    "addStudentButton": "Add a student",
+    "paymentInformation": "Payment Information",
+    "addPayment": "Add Payment",
+    "addNewPaymentDescription": "Add a new payment for this student",
+    "paymentHistory": "Payment History",
+    "viewHistory": "View History",
+    "totalPayments": "{count} payments recorded",
+    "paymentAddedSuccessfully": "Payment added successfully",
+    "paymentExpired": "Student payment has expired. Please add a new payment.",
+    "paymentExpiringSoon": "Student payment expires in {days} days. Consider adding a new payment.",
+    "paymentActive": "Student payment is active and up to date.",
+    "noPaymentsFound": "No batch has been added yet.",
+    "loadingStudent": "Loading student information...",
+    "errorLoadingStudent": "Error Loading Student",
+    "unknownError": "An unknown error occurred",
+    "retry": "Retry",
+    "retrying": "Retrying...",
+    "studentNotFound": "Student Not Found",
+    "studentNotFoundDescription": "The requested student could not be found.",
+    "studentHadScholarship": "The student has a scholarship"
   },
   "ClassroomForm": {
     "createClassroom": "Create Classroom",
@@ -635,5 +659,49 @@
   },
   "student": {
     "list_title": "Students"
+  },
+  "PaymentAlert": {
+    "nextPaymentDue": "Next payment due"
+  },
+  "PaymentForm": {
+    "addPayment": "Add Payment",
+    "addPaymentDescription": "Fill in the payment details for the student.",
+    "paymentType": "Payment Type",
+    "selectPaymentType": "Select payment type",
+    "month1": "1 Month",
+    "month2": "2 Months",
+    "month3": "3 Months",
+    "month6": "6 Months",
+    "year1": "1 Year",
+    "title": "Title",
+    "optional": "Optional",
+    "enterTitle": "Enter payment title",
+    "amount": "Amount",
+    "currency": "Currency",
+    "selectCurrency": "Select currency",
+    "startDate": "Start Date",
+    "cancel": "Cancel",
+    "adding": "Adding...",
+    "amountHint": "Enter the actual amount (will be stored as cents in database)",
+    "paymentContinuityInfo": "New payment will start from {date} to ensure payment continuity.",
+    "minimumStartDateInfo": "Payment must start on or after {date} to maintain continuity."
+  },
+  "PaymentTimeline": {
+    "paymentHistory": "Payment History",
+    "paymentHistoryDescription": "View all payments for this student.",
+    "noPayments": "No payments found",
+    "month1": "1 Month",
+    "month2": "2 Months",
+    "month3": "3 Months",
+    "month6": "6 Months",
+    "year1": "1 Year",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "active": "Active",
+    "expired": "Expired",
+    "latest": "Latest",
+    "duration": "Duration",
+    "status": "Status",
+    "noPaymentsDescription": "This student has no payment records yet."
   }
 }

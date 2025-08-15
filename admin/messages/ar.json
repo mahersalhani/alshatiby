@@ -525,7 +525,11 @@
     "schedulesRequired": "يجب إضافة جدول زمني واحد على الأقل",
     "startTimeRequired": "وقت البدء مطلوب",
     "endTimeRequired": "وقت الانتهاء مطلوب",
-    "endTimeAfterStartTime": "يجب أن يكون وقت الانتهاء بعد وقت البدء"
+    "endTimeAfterStartTime": "يجب أن يكون وقت الانتهاء بعد وقت البدء",
+    "amountRequired": "المبلغ مطلوب",
+    "amountTooLarge": "المبلغ كبير جدًا",
+    "studentRequired": "الطالب مطلوب",
+    "startDateRequired": "تاريخ البدء مطلوب"
   },
   "StudentForm": {
     "createStudent": "إنشاء طالب",
@@ -578,7 +582,26 @@
     "password_updated_successfully": "تم تحديث كلمة المرور بنجاح",
     "student_created_successfully": "تم اضافة الطالب بنجاح",
     "student_updated_successfully": "تم تحديث معلومات الطالب بنجاح",
-    "addStudentButton": "اضافة طالب"
+    "addStudentButton": "اضافة طالب",
+    "paymentInformation": "معلومات الدفع",
+    "addPayment": "إضافة دفعة",
+    "addNewPaymentDescription": "إضافة دفعة جديدة لهذا الطالب",
+    "paymentHistory": "سجل المدفوعات",
+    "viewHistory": "عرض السجل",
+    "totalPayments": "{count} دفعات مسجلة",
+    "paymentAddedSuccessfully": "تمت إضافة الدفعة بنجاح",
+    "paymentExpired": "انتهت صلاحية دفعة الطالب. يرجى إضافة دفعة جديدة.",
+    "paymentExpiringSoon": "ستنتهي صلاحية دفعة الطالب في {days} يومًا. يُرجى التفكير في إضافة دفعة جديدة.",
+    "paymentActive": "دفعة الطالب نشطة ومحدثة.",
+    "noPaymentsFound": "لم تتم اضافة اي دفعة بعد",
+    "loadingStudent": "جاري تحميل معلومات الطالب...",
+    "errorLoadingStudent": "خطأ في تحميل معلومات الطالب",
+    "unknownError": "حدث خطأ غير معروف",
+    "retry": "إعادة المحاولة",
+    "retrying": "جاري إعادة المحاولة...",
+    "studentNotFound": "لم يتم العثور على الطالب",
+    "studentNotFoundDescription": "لم يتم العثور على الطالب المطلوب.",
+    "studentHadScholarship": "الطالب لديه منحة"
   },
   "ClassroomForm": {
     "createClassroom": "إنشاء فصل دراسي",
@@ -641,5 +664,49 @@
   },
   "student": {
     "list_title": "الطلاب"
+  },
+  "PaymentAlert": {
+    "nextPaymentDue": "الدفعة القادمة المستحقة"
+  },
+  "PaymentForm": {
+    "addPayment": "إضافة دفعة",
+    "addPaymentDescription": "املأ تفاصيل الدفع للطالب.",
+    "paymentType": "نوع الدفع",
+    "selectPaymentType": "اختر نوع الدفع",
+    "month1": "1 شهر",
+    "month2": "2 شهر",
+    "month3": "3 شهر",
+    "month6": "6 شهر",
+    "year1": "1 سنة",
+    "title": "العنوان",
+    "optional": "اختياري",
+    "enterTitle": "أدخل عنوان الدفع",
+    "amount": "المبلغ",
+    "currency": "العملة",
+    "selectCurrency": "اختر العملة",
+    "startDate": "تاريخ البدء",
+    "cancel": "إلغاء",
+    "adding": "جارٍ الإضافة...",
+    "amountHint": "أدخل المبلغ الفعلي (سيتم تخزينه كقيمة سنت في قاعدة البيانات)",
+    "paymentContinuityInfo": "ستبدأ الدفعة الجديدة من {date} لضمان استمرارية الدفع.",
+    "minimumStartDateInfo": "يجب أن يبدأ الدفع في أو بعد {date} للحفاظ على الاستمرارية."
+  },
+  "PaymentTimeline": {
+    "paymentHistory": "سجل الدفعات",
+    "paymentHistoryDescription": "عرض جميع الدفعات لهذا الطالب.",
+    "noPayments": "لا توجد دفعات",
+    "month1": "1 شهر",
+    "month2": "2 شهر",
+    "month3": "3 شهر",
+    "month6": "6 شهر",
+    "year1": "1 سنة",
+    "startDate": "تاريخ البدء",
+    "endDate": "تاريخ الانتهاء",
+    "active": "نشط",
+    "expired": "منتهي",
+    "latest": "أحدث",
+    "duration": "المدة",
+    "status": "الحالة",
+    "noPaymentsDescription": "لا يوجد لدى هذا الطالب أي سجلات دفع حتى الآن."
   }
 }

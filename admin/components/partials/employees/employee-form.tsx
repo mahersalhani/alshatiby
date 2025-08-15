@@ -110,7 +110,7 @@ export function EmployeeForm({ mode = 'create', initialData }: EmployeeFormProps
 
   return (
     <>
-      <Card className="w-full max-w-4xl mx-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className="w-full max-w-4xl mx-auto">
         <LoadingOverlay isLoading={isLoading} message={mode === 'create' ? t('creating') : t('updating')} />
         <CardHeader>
           <CardTitle>{mode === 'create' ? t('createEmployee') : t('updateEmployee')}</CardTitle>

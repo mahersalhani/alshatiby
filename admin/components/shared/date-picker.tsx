@@ -2,23 +2,39 @@
 
 import { ChevronDownIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import * as React from 'react';
+import { useState } from 'react';
+
+import { Label } from '../ui/label';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 interface DatePickerProps {
-  onDateChange?: (date: Date | undefined) => void;
-  label?: string;
   value?: Date;
+  onDateChange: (date: Date | undefined) => void;
+  placeholder?: string;
+  minDate?: Date;
+  maxDate?: Date;
+  disabled?: boolean;
+  className?: string;
+  size?: 'default' | 'sm' | 'md' | 'lg' | 'icon' | undefined;
+  label?: string;
 }
 
-export function DatePicker({ onDateChange, label, value }: DatePickerProps) {
-  const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(value);
-
+export default function DatePicker({
+  value,
+  onDateChange,
+  placeholder = 'Pick a date',
+  minDate,
+  maxDate,
+  disabled = false,
+  className,
+  size = 'lg',
+  label,
+}: DatePickerProps) {
+  const [open, setOpen] = useState(false);
   const t = useTranslations('Form');
 
   return (
@@ -31,22 +47,30 @@ export function DatePicker({ onDateChange, label, value }: DatePickerProps) {
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full justify-between font-normal border-default-200" id="date">
-            {date ? date.toLocaleDateString() : t('selectDate')}
+          <Button
+            size={size}
+            variant="outline"
+            className={cn('w-full justify-between font-normal border-default-200', className)}
+            id="date"
+          >
+            {value ? value.toLocaleDateString() : t('selectDate')}
             <ChevronDownIcon className="ml-2 h-4 w-4 text-default-500" aria-hidden="true" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">
           <Calendar
             mode="single"
-            selected={date}
+            selected={value}
             captionLayout="dropdown"
             onSelect={(date) => {
-              setDate(date);
+              onDateChange(date);
               setOpen(false);
-              if (onDateChange) {
-                onDateChange(date);
-              }
+            }}
+            disabled={(date) => {
+              if (disabled) return true;
+              if (minDate && date < minDate) return true;
+              if (maxDate && date > maxDate) return true;
+              return false;
             }}
           />
         </PopoverContent>
@@ -54,5 +78,3 @@ export function DatePicker({ onDateChange, label, value }: DatePickerProps) {
     </div>
   );
 }
-
-export default DatePicker;

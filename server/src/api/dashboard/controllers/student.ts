@@ -67,10 +67,11 @@ export default {
 
     const student = await strapi.service("api::student.student").update(id, {
       data: studentData,
+      populate: ["user"],
     });
 
     await strapi.documents("plugin::users-permissions.user").update({
-      documentId: student.documentId,
+      documentId: student.user.documentId,
       data: {
         email,
         ..._.omit(studentData, ["role"]),

@@ -5,6 +5,36 @@ import { z } from 'zod';
 
 export const GenderEnum = z.enum(['MALE', 'FEMALE']);
 
+// Payment interface to match your API structure
+export interface Payment {
+  id: number;
+  documentId: string;
+  paymentType: 'MONTH_1' | 'MONTH_2' | 'MONTH_3' | 'MONTH_6' | 'YEAR_1';
+  title?: string | null;
+  amount: number;
+  currency: 'USD' | 'TRY' | 'EUR';
+  startDate: string;
+  endDate: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  locale?: string | null;
+}
+
+// User interface for nested user data
+export interface User {
+  id: number;
+  documentId: string;
+  email: string;
+  name: string;
+  nationality: string;
+  residenceCountry: string;
+  gender: 'MALE' | 'FEMALE';
+  birthday: string;
+  phoneNumber: string;
+  joinedAt?: string | null;
+}
+
 export function useStudentSchemas() {
   const t = useTranslations('Validation');
 
@@ -43,5 +73,15 @@ export function useStudentSchemas() {
 }
 
 export type StudentCreateData = z.infer<ReturnType<typeof useStudentSchemas>['studentCreateSchema']>;
-export type StudentUpdateData = z.infer<ReturnType<typeof useStudentSchemas>['studentUpdateSchema']>;
+export type StudentUpdateData = z.infer<ReturnType<typeof useStudentSchemas>['studentUpdateSchema']> & {
+  // Add optional fields that might come from API
+  id?: number;
+  documentId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+  locale?: string | null;
+  user?: User;
+  payments?: Payment[];
+};
 export type StudentPasswordUpdateData = z.infer<ReturnType<typeof useStudentSchemas>['passwordUpdateSchema']>;
