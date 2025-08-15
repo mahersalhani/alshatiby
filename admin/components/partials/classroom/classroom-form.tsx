@@ -240,7 +240,7 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto relative" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="w-full max-w-4xl mx-auto relative">
       <LoadingOverlay isLoading={isLoading} message={mode === 'create' ? t('creating') : t('updating')} />
       <CardHeader>
         <CardTitle className="flex items-center gap-2">

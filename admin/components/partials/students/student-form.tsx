@@ -162,22 +162,6 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
     });
   };
 
-  // const handlePaymentSubmit = async (data: PaymentCreateData) => {
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await api.post('/dashboard/student-payments', data);
-  //     toast.success(t('paymentAddedSuccessfully'));
-  //     setPaymentModalOpen(false);
-
-  //     // Note: You'll need to refresh the page or update the parent component
-  //     // to get the updated payment data since we're not fetching it here anymore
-  //   } catch (err: any) {
-  //     toast.error(scopT(err.response?.data?.error?.message) || err.message);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
   const handlePaymentSubmit = async (data: any) => {
     setIsLoading(true);
     try {
@@ -200,32 +184,6 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
       setIsLoading(false);
     }
   };
-
-  // const handleUpdate = (data: StudentCreateData | StudentUpdateData) => {
-  //   setIsLoading(true);
-  //   startTransition(async () => {
-  //     try {
-  //       if (!isEdit) {
-  //         const res = await api.post('/dashboard/student', data);
-  //         toast.success(t('student_created_successfully'));
-
-  //         const student = res.data;
-
-  //         router.push(`/students/${student.documentId}`);
-  //       } else {
-  //         if (!initialData?.documentId) {
-  //           return;
-  //         }
-  //         const res = await api.put(`/dashboard/student/${initialData.documentId}`, data);
-  //         toast.success(t('student_updated_successfully'));
-  //       }
-  //     } catch (err: any) {
-  //       toast.error(scopT(err.response?.data?.error?.message) || err.message);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   });
-  // };
 
   const handleUpdate = (data: StudentCreateData | StudentUpdateData) => {
     setIsLoading(true);
@@ -646,6 +604,7 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
         onSubmit={handlePaymentSubmit}
         studentId={initialData?.documentId || ''}
         isLoading={isLoading}
+        existingPayments={payments}
       />
 
       <PaymentTimelineModal

@@ -1,10 +1,12 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreditCard, DollarSign, Loader2 } from 'lucide-react';
+import { CreditCard, DollarSign, Info, Loader2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 import DatePicker from '@/components/shared/date-picker';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -18,6 +20,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { usePaymentSchemas, type PaymentCreateData } from '@/lib/schemas/payment';
+import type { Payment } from '@/lib/schemas/student';
 
 interface PaymentModalProps {
   open: boolean;
@@ -25,12 +28,39 @@ interface PaymentModalProps {
   onSubmit: (data: PaymentCreateData) => void;
   studentId: string;
   isLoading?: boolean;
+  existingPayments?: Payment[]; // Add existing payments prop
 }
 
-export function PaymentModal({ open, onOpenChange, onSubmit, studentId, isLoading = false }: PaymentModalProps) {
+export function PaymentModal({
+  open,
+  onOpenChange,
+  onSubmit,
+  studentId,
+  isLoading = false,
+  existingPayments = [],
+}: PaymentModalProps) {
   const t = useTranslations('PaymentForm');
   const locale = useLocale();
   const { paymentCreateSchema } = usePaymentSchemas();
+
+  // Calculate the minimum start date based on existing payments
+  const getMinimumStartDate = () => {
+    if (existingPayments.length === 0) {
+      return new Date(); // If no payments, can start from today
+    }
+
+    // Find the latest payment end date
+    const latestPayment = existingPayments.reduce((latest, payment) => {
+      const paymentEndDate = new Date(payment.endDate);
+      const latestEndDate = new Date(latest.endDate);
+      return paymentEndDate > latestEndDate ? payment : latest;
+    }, existingPayments[0]);
+
+    return new Date(latestPayment.endDate);
+  };
+
+  const minimumStartDate = getMinimumStartDate();
+  const hasExistingPayments = existingPayments.length > 0;
 
   const form = useForm<PaymentCreateData>({
     resolver: zodResolver(paymentCreateSchema),
@@ -39,10 +69,18 @@ export function PaymentModal({ open, onOpenChange, onSubmit, studentId, isLoadin
       title: '',
       amount: 0,
       currency: 'USD',
-      startDate: new Date(),
+      startDate: minimumStartDate,
       student: studentId,
     },
   });
+
+  // Update start date when modal opens or existing payments change
+  useEffect(() => {
+    if (open) {
+      const newMinDate = getMinimumStartDate();
+      form.setValue('startDate', newMinDate);
+    }
+  }, [open, existingPayments, form]);
 
   const handleSubmit = (data: PaymentCreateData) => {
     // Multiply amount by 100 to convert to cents/smallest currency unit for API
@@ -64,9 +102,17 @@ export function PaymentModal({ open, onOpenChange, onSubmit, studentId, isLoadin
     YEAR_1: t('year1'),
   };
 
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString(locale, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="md:max-w-[700px] w-[90%]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CreditCard className="h-5 w-5" />
@@ -74,8 +120,21 @@ export function PaymentModal({ open, onOpenChange, onSubmit, studentId, isLoadin
           </DialogTitle>
           <DialogDescription>{t('addPaymentDescription')}</DialogDescription>
         </DialogHeader>
+
+        {/* Payment Continuity Info */}
+        {hasExistingPayments && (
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              {t('paymentContinuityInfo', {
+                date: formatDate(minimumStartDate),
+              })}
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 ">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -135,7 +194,7 @@ export function PaymentModal({ open, onOpenChange, onSubmit, studentId, isLoadin
                     {t('title')} ({t('optional')})
                   </FormLabel>
                   <FormControl>
-                    <Input size={'lg'} placeholder={t('enterTitle')} {...field} disabled={isLoading} />
+                    <Input size="lg" placeholder={t('enterTitle')} {...field} disabled={isLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -166,6 +225,7 @@ export function PaymentModal({ open, onOpenChange, onSubmit, studentId, isLoadin
                     </FormControl>
                   </div>
                   <FormMessage />
+                  <p className="text-xs text-muted-foreground">{t('amountHint')}</p>
                 </FormItem>
               )}
             />
@@ -177,9 +237,21 @@ export function PaymentModal({ open, onOpenChange, onSubmit, studentId, isLoadin
                 <FormItem>
                   <FormLabel>{t('startDate')}</FormLabel>
                   <FormControl>
-                    <DatePicker onDateChange={field.onChange} value={field.value} />
+                    <DatePicker
+                      onDateChange={field.onChange}
+                      value={field.value}
+                      minDate={minimumStartDate}
+                      disabled={isLoading}
+                    />
                   </FormControl>
                   <FormMessage />
+                  {hasExistingPayments && (
+                    <p className="text-xs text-muted-foreground">
+                      {t('minimumStartDateInfo', {
+                        date: formatDate(minimumStartDate),
+                      })}
+                    </p>
+                  )}
                 </FormItem>
               )}
             />

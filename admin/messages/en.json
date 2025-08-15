@@ -523,7 +523,8 @@
     "generalNotesMaxLength": "General notes must not exceed 500 characters",
     "amountRequired": "Amount is required",
     "amountTooLarge": "Amount is too large",
-    "studentRequired": "Student is required"
+    "studentRequired": "Student is required",
+    "startDateRequired": "Start date is required"
   },
   "StudentForm": {
     "createStudent": "Create Student",
@@ -680,7 +681,10 @@
     "selectCurrency": "Select currency",
     "startDate": "Start Date",
     "cancel": "Cancel",
-    "adding": "Adding..."
+    "adding": "Adding...",
+    "amountHint": "Enter the actual amount (will be stored as cents in database)",
+    "paymentContinuityInfo": "New payment will start from {date} to ensure payment continuity.",
+    "minimumStartDateInfo": "Payment must start on or after {date} to maintain continuity."
   },
   "PaymentTimeline": {
     "paymentHistory": "Payment History",

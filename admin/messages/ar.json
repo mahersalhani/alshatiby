@@ -528,7 +528,8 @@
     "endTimeAfterStartTime": "يجب أن يكون وقت الانتهاء بعد وقت البدء",
     "amountRequired": "المبلغ مطلوب",
     "amountTooLarge": "المبلغ كبير جدًا",
-    "studentRequired": "الطالب مطلوب"
+    "studentRequired": "الطالب مطلوب",
+    "startDateRequired": "تاريخ البدء مطلوب"
   },
   "StudentForm": {
     "createStudent": "إنشاء طالب",
@@ -685,7 +686,10 @@
     "selectCurrency": "اختر العملة",
     "startDate": "تاريخ البدء",
     "cancel": "إلغاء",
-    "adding": "جارٍ الإضافة..."
+    "adding": "جارٍ الإضافة...",
+    "amountHint": "أدخل المبلغ الفعلي (سيتم تخزينه كقيمة سنت في قاعدة البيانات)",
+    "paymentContinuityInfo": "ستبدأ الدفعة الجديدة من {date} لضمان استمرارية الدفع.",
+    "minimumStartDateInfo": "يجب أن يبدأ الدفع في أو بعد {date} للحفاظ على الاستمرارية."
   },
   "PaymentTimeline": {
     "paymentHistory": "سجل الدفعات",

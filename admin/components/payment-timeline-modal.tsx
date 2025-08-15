@@ -29,13 +29,6 @@ export function PaymentTimelineModal({ open, onOpenChange, payments, isLoading =
     });
   };
 
-  const formatAmount = (amount: number, currency: string) => {
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency,
-    }).format(amount);
-  };
-
   const getPaymentTypeLabel = (type: string) => {
     const labels = {
       MONTH_1: t('month1'),
@@ -60,8 +53,8 @@ export function PaymentTimelineModal({ open, onOpenChange, payments, isLoading =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-[85vh] flex flex-col w-[600px]">
-        <DialogHeader className="mt-4">
+      <DialogContent className="h-[85vh] flex flex-col md:max-w-[700px] w-[90%]">
+        <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Clock className="h-6 w-6" />
             {t('paymentHistory')}
