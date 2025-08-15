@@ -1,16 +1,19 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Calendar, Eye, EyeOff, FileText, Key, Loader2, Users } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { Calendar, CreditCard, Eye, EyeOff, FileText, History, Key, Loader2, Plus, Users } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { startTransition, useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { PasswordUpdateModal } from '../../password-update-modal';
-
 import { LoadingOverlay } from '@/components/loading-overlay';
 import { useRouter } from '@/components/navigation';
+import { PasswordUpdateModal } from '@/components/password-update-modal';
+import { PaymentAlertComponent } from '@/components/payment-alert';
+import { PaymentModal } from '@/components/payment-modal';
+import { PaymentTimelineModal } from '@/components/payment-timeline-modal';
 import DatePicker from '@/components/shared/date-picker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,6 +24,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import api from '@/lib/axios';
+import type { Payment, PaymentAlert } from '@/lib/schemas/payment';
 import {
   useStudentSchemas,
   type StudentCreateData,
@@ -31,18 +35,24 @@ import {
 interface StudentFormProps {
   mode: 'create' | 'update';
   initialData?: Partial<StudentUpdateData>;
-  isLoading?: boolean;
+  queryKey?: (string | number)[]; // For React Query refetching
 }
 
-export function StudentForm({ mode, initialData }: StudentFormProps) {
+export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [paymentTimelineOpen, setPaymentTimelineOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [payments, setPayments] = useState<Payment[]>(initialData?.payments || []);
+  const [paymentAlert, setPaymentAlert] = useState<PaymentAlert | null>(null);
+  const [canAddPayment, setCanAddPayment] = useState(true);
 
   const scopT = useTranslations();
   const t = useTranslations('StudentForm');
   const locale = useLocale();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { studentCreateSchema, studentUpdateSchema } = useStudentSchemas();
 
   const schema = mode === 'create' ? studentCreateSchema : studentUpdateSchema;
@@ -50,14 +60,16 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
   const form = useForm<StudentCreateData | StudentUpdateData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: initialData?.name || '',
-      email: initialData?.email || '',
-      nationality: initialData?.nationality || '',
-      residenceCountry: initialData?.residenceCountry || '',
-      gender: initialData?.gender || 'MALE',
-      birthday: initialData?.birthday && new Date(initialData.birthday),
-      phoneNumber: initialData?.phoneNumber || '',
-      joinedAt: initialData?.joinedAt && new Date(initialData.joinedAt),
+      name: initialData?.name || initialData?.name || '',
+      email: initialData?.email || initialData?.email || '',
+      nationality: initialData?.nationality || initialData?.nationality || '',
+      residenceCountry: initialData?.residenceCountry || initialData?.residenceCountry || '',
+      gender: initialData?.gender || initialData?.gender || 'MALE',
+      birthday:
+        (initialData?.birthday || initialData?.birthday) && new Date(initialData?.birthday || initialData?.birthday),
+      phoneNumber: initialData?.phoneNumber || initialData?.phoneNumber || '',
+      joinedAt:
+        (initialData?.joinedAt || initialData?.joinedAt) && new Date(initialData?.joinedAt || initialData?.joinedAt),
       generalNotes: initialData?.generalNotes || '',
       isHadScholarship: initialData?.isHadScholarship || false,
       ...(mode === 'create' && { password: '' }),
@@ -65,6 +77,73 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
   });
 
   const isEdit = mode === 'update';
+
+  // Update the useEffect to only run when initialData changes and has payments
+  useEffect(() => {
+    if (isEdit && initialData?.payments && initialData.payments.length > 0) {
+      setPayments(initialData.payments);
+      const lastPayment = initialData.payments[0];
+      checkPaymentStatus(lastPayment);
+    }
+    if (isEdit && !initialData?.payments?.length) {
+      setPayments([]);
+
+      if (initialData?.isHadScholarship) {
+        setPaymentAlert({
+          type: 'info',
+          message: t('studentHadScholarship'),
+        });
+
+        return;
+      }
+
+      setPaymentAlert({
+        type: 'info',
+        message: t('noPaymentsFound'),
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit, initialData?.payments, initialData?.isHadScholarship]);
+
+  const checkPaymentStatus = (lastPayment: Payment) => {
+    const now = new Date();
+    const endDate = new Date(lastPayment.endDate);
+    const daysUntilExpiry = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (initialData?.isHadScholarship) {
+      setPaymentAlert({
+        type: 'info',
+        message: t('studentHadScholarship'),
+      });
+
+      return;
+    }
+
+    if (daysUntilExpiry < 0) {
+      setPaymentAlert({
+        type: 'error',
+        message: t('paymentExpired'),
+        nextPaymentDate: lastPayment.endDate,
+      });
+      setCanAddPayment(true);
+    } else if (daysUntilExpiry <= 5) {
+      setPaymentAlert({
+        type: 'warning',
+        message: t('paymentExpiringSoon', { days: daysUntilExpiry }),
+        nextPaymentDate: lastPayment.endDate,
+      });
+      setCanAddPayment(true);
+    } else {
+      // Payment is active
+      setPaymentAlert({
+        type: 'success',
+        message: t('paymentActive'),
+        nextPaymentDate: lastPayment.endDate,
+      });
+      setCanAddPayment(false);
+    }
+  };
 
   const handlePasswordUpdate = (data: StudentPasswordUpdateData) => {
     setIsLoading(true);
@@ -83,6 +162,71 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
     });
   };
 
+  // const handlePaymentSubmit = async (data: PaymentCreateData) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await api.post('/dashboard/student-payments', data);
+  //     toast.success(t('paymentAddedSuccessfully'));
+  //     setPaymentModalOpen(false);
+
+  //     // Note: You'll need to refresh the page or update the parent component
+  //     // to get the updated payment data since we're not fetching it here anymore
+  //   } catch (err: any) {
+  //     toast.error(scopT(err.response?.data?.error?.message) || err.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  const handlePaymentSubmit = async (data: any) => {
+    setIsLoading(true);
+    try {
+      await api.post('/dashboard/student-payments', data);
+      toast.success(t('paymentAddedSuccessfully'));
+      setPaymentModalOpen(false);
+
+      // Refetch student data to get updated payments
+      if (queryKey) {
+        await queryClient.invalidateQueries({ queryKey });
+        // Also refetch the data to update the UI immediately
+        const updatedData = queryClient.getQueryData(queryKey);
+        if (updatedData) {
+          // The data will be automatically updated by React Query
+        }
+      }
+    } catch (err: any) {
+      toast.error(scopT(err.response?.data?.error?.message) || err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // const handleUpdate = (data: StudentCreateData | StudentUpdateData) => {
+  //   setIsLoading(true);
+  //   startTransition(async () => {
+  //     try {
+  //       if (!isEdit) {
+  //         const res = await api.post('/dashboard/student', data);
+  //         toast.success(t('student_created_successfully'));
+
+  //         const student = res.data;
+
+  //         router.push(`/students/${student.documentId}`);
+  //       } else {
+  //         if (!initialData?.documentId) {
+  //           return;
+  //         }
+  //         const res = await api.put(`/dashboard/student/${initialData.documentId}`, data);
+  //         toast.success(t('student_updated_successfully'));
+  //       }
+  //     } catch (err: any) {
+  //       toast.error(scopT(err.response?.data?.error?.message) || err.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   });
+  // };
+
   const handleUpdate = (data: StudentCreateData | StudentUpdateData) => {
     setIsLoading(true);
     startTransition(async () => {
@@ -92,7 +236,6 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
           toast.success(t('student_created_successfully'));
 
           const student = res.data;
-
           router.push(`/students/${student.documentId}`);
         } else {
           if (!initialData?.documentId) {
@@ -100,6 +243,11 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
           }
           await api.put(`/dashboard/student/${initialData.documentId}`, data);
           toast.success(t('student_updated_successfully'));
+
+          // Refetch student data if queryKey is provided
+          if (queryKey) {
+            queryClient.invalidateQueries({ queryKey });
+          }
         }
       } catch (err: any) {
         toast.error(scopT(err.response?.data?.error?.message) || err.message);
@@ -122,6 +270,13 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Payment Alert */}
+          {isEdit && paymentAlert && (
+            <div className="mb-6">
+              <PaymentAlertComponent alert={paymentAlert} />
+            </div>
+          )}
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleUpdate)} className="space-y-6">
               {/* Personal Information */}
@@ -255,7 +410,6 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
                       <FormItem>
                         <FormLabel>{t('joinedDate')}</FormLabel>
                         <FormControl>
-                          {/* <Input size="lg" type="date" {...field} disabled={isLoading} /> */}
                           <DatePicker onDateChange={field.onChange} value={field.value} />
                         </FormControl>
                         <FormMessage />
@@ -312,6 +466,62 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
 
               <Separator />
 
+              {/* Payment Information (Update Mode Only) */}
+              {mode === 'update' && (
+                <>
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <CreditCard className="h-5 w-5" />
+                      {t('paymentInformation')}
+                    </h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center space-x-3 gap-2">
+                          <Plus className="h-5 w-5 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">{t('addPayment')}</p>
+                            <p className="text-sm text-muted-foreground">{t('addNewPaymentDescription')}</p>
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setPaymentModalOpen(true)}
+                          disabled={isLoading || !canAddPayment || initialData?.isHadScholarship}
+                        >
+                          <Plus className="h-4 w-4 ltr:mr-2 rtl:ml-2" />
+                          {t('addPayment')}
+                        </Button>
+                      </div>
+
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center space-x-3 gap-2">
+                          <History className="h-5 w-5 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">{t('paymentHistory')}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {t('totalPayments', { count: payments.length })}
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setPaymentTimelineOpen(true)}
+                          disabled={isLoading}
+                        >
+                          <History className="h-4 w-4 ltr:mr-2 rtl:ml-2" />
+                          {t('viewHistory')}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+                </>
+              )}
+
               {/* Additional Information */}
               <div className="space-y-4">
                 <h3 className="text-lg font-medium flex items-center gap-2">
@@ -327,7 +537,7 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
                       <FormControl>
                         <Textarea
                           placeholder={t('enterGeneralNotes')}
-                          className={`resize-none `}
+                          className="resize-none"
                           rows={4}
                           {...field}
                           disabled={isLoading}
@@ -358,7 +568,7 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
                               {...field}
                               type={showPassword ? 'text' : 'password'}
                               placeholder={t('enterPassword')}
-                              className={'pr-10'}
+                              className="pr-10"
                               disabled={isLoading}
                             />
                           </FormControl>
@@ -427,6 +637,21 @@ export function StudentForm({ mode, initialData }: StudentFormProps) {
         open={passwordModalOpen}
         onOpenChange={setPasswordModalOpen}
         onSubmit={handlePasswordUpdate}
+        isLoading={isLoading}
+      />
+
+      <PaymentModal
+        open={paymentModalOpen}
+        onOpenChange={setPaymentModalOpen}
+        onSubmit={handlePaymentSubmit}
+        studentId={initialData?.documentId || ''}
+        isLoading={isLoading}
+      />
+
+      <PaymentTimelineModal
+        open={paymentTimelineOpen}
+        onOpenChange={setPaymentTimelineOpen}
+        payments={payments}
         isLoading={isLoading}
       />
     </>

@@ -554,6 +554,7 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
       ['MONTH_1', 'MONTH_2', 'MONTH_3', 'MONTH_6', 'YEAR_1']
     >;
     publishedAt: Schema.Attribute.DateTime;
+    startDate: Schema.Attribute.Date;
     student: Schema.Attribute.Relation<'manyToOne', 'api::student.student'>;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
