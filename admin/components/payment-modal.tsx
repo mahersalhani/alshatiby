@@ -240,7 +240,7 @@ export function PaymentModal({
                     <DatePicker
                       onDateChange={field.onChange}
                       value={field.value}
-                      minDate={minimumStartDate}
+                      // minDate={minimumStartDate}
                       disabled={isLoading}
                     />
                   </FormControl>
