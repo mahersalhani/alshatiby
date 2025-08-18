@@ -18,4 +18,13 @@ export default {
 
     return programs;
   },
+  async create(ctx) {
+    const data = ctx.request.body;
+
+    const program = await strapi
+      .documents("api::program.program")
+      .create({ data });
+
+    return program;
+  },
 };
