@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useTeacherClassroomsQuery } from '@/hooks/react-query/classroom';
+import { useTeacherClassrooms } from '@/hooks/resources/classroom';
 
 interface Schedule {
   id: number;
@@ -288,7 +288,7 @@ const Classrooms = () => {
   const t = useTranslations('classrooms');
   const locale = useLocale();
   const isRTL = locale === 'ar';
-  const { data, isLoading, error } = useTeacherClassroomsQuery();
+  const { data, isLoading, error } = useTeacherClassrooms();
 
   const classrooms: Classroom[] = useMemo(() => {
     return data?.results || [];

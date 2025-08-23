@@ -1,6 +1,7 @@
 'use client';
 
 import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 
@@ -43,6 +44,8 @@ export function AuthProvider(props: AuthProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

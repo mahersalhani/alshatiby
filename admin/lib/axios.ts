@@ -42,24 +42,24 @@ class ApiService {
     return this.api;
   }
 
-  public async get(url: string, config = {}) {
+  public async get<T>(url: string, config = {}) {
     await this.setAuthHeader();
-    return this.api.get(url, config);
+    return this.api.get<T>(url, config);
   }
 
-  public async post(url: string, data: any, config = {}) {
+  public async post<T>(url: string, data: any, config = {}) {
     await this.setAuthHeader();
-    return this.api.post(url, data, config);
+    return this.api.post<T>(url, data, config);
   }
 
-  public async put(url: string, data: any, config = {}) {
+  public async put<T>(url: string, data: any, config = {}) {
     await this.setAuthHeader();
-    return this.api.put(url, data, config);
+    return this.api.put<T>(url, data, config);
   }
 
-  public async delete(url: string, config = {}) {
+  public async delete<T>(url: string, config = {}) {
     await this.setAuthHeader();
-    return this.api.delete(url, config);
+    return this.api.delete<T>(url, config);
   }
 }
 
