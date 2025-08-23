@@ -28,11 +28,10 @@ function SearchInput() {
 }
 
 function Pagination({ pageCount }: { pageCount: number }) {
-  const { pageParams, setPage } = usePaginationState();
+  const { pageParams: { page }, setPage } = usePaginationState();
 
-  const pageIndex = pageParams.page + 1;
-  const canGoPrev = pageIndex > 0;
-  const canGoNext = pageIndex < pageCount - 1;
+  const canGoPrev = page > 1;
+  const canGoNext = page < pageCount;
 
   return (
     <div className="flex items-center justify-end py-4 px-10">
@@ -40,7 +39,7 @@ function Pagination({ pageCount }: { pageCount: number }) {
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setPage(pageIndex - 1)}
+          onClick={() => setPage(page - 1)}
           disabled={!canGoPrev}
           className="w-8 h-8 rtl:rotate-180"
         >
@@ -49,10 +48,10 @@ function Pagination({ pageCount }: { pageCount: number }) {
         {Array.from({ length: pageCount }, (_, index) => (
           <Button
             key={`basic-data-table-${index}`}
-            onClick={() => setPage(index)}
+            onClick={() => setPage(index + 1)}
             size="icon"
             className="w-8 h-8"
-            variant={pageIndex === index ? 'default' : 'outline'}
+            variant={page === index + 1 ? 'default' : 'outline'}
           >
             {index + 1}
           </Button>
@@ -60,7 +59,7 @@ function Pagination({ pageCount }: { pageCount: number }) {
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setPage(pageIndex + 1)}
+          onClick={() => setPage(page + 1)}
           disabled={!canGoNext}
           className="w-8 h-8 rtl:rotate-180"
         >

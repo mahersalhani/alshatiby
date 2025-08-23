@@ -28,6 +28,5 @@ export function useTeacherClassrooms() {
   return useQuery({
     queryKey: ['teacher-classrooms'],
     queryFn: () => api.get(`/dashboard/teacher-classrooms`).then((res) => res.data),
-    staleTime: 1000 * 60 * 5,
   });
 }
