@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
-export const EmployeeRoleEnum = z.enum(['TEACHER', 'PROGRAMS_SUPERVISOR', 'CLASSROOM_SUPERVISOR']);
+export const EmployeeRoleEnum = z.enum(['TEACHER', 'PROGRAMS_SUPERVISOR', 'CLASSROOM_SUPERVISOR', 'ADMIN', 'TESTER']);
 export const GenderEnum = z.enum(['MALE', 'FEMALE']);
 
 export function useEmployeeSchemas() {

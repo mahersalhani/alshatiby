@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronDownIcon } from 'lucide-react';
+import moment from 'moment';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -13,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 interface DatePickerProps {
   value?: Date;
-  onDateChange: (date: Date | undefined) => void;
+  onDateChange: (date: Date | string | undefined) => void;
   placeholder?: string;
   minDate?: Date;
   maxDate?: Date;
@@ -53,7 +54,7 @@ export default function DatePicker({
             className={cn('w-full justify-between font-normal border-default-200', className)}
             id="date"
           >
-            {value ? value.toLocaleDateString() : t('selectDate')}
+            {value ? moment(value).format('YYYY-MM-DD') : t('selectDate')}
             <ChevronDownIcon className="ml-2 h-4 w-4 text-default-500" aria-hidden="true" />
           </Button>
         </PopoverTrigger>
@@ -63,7 +64,17 @@ export default function DatePicker({
             selected={value}
             captionLayout="dropdown"
             onSelect={(date) => {
-              onDateChange(date);
+              if (date) {
+                // get local timezone offset in minutes
+                const offsetMinutes = date.getTimezoneOffset();
+
+                // adjust by that offset (reverse it to shift into UTC properly)
+                const normalized = moment(date).add(-offsetMinutes, 'minutes').toDate();
+
+                onDateChange(normalized);
+              } else {
+                onDateChange(undefined);
+              }
               setOpen(false);
             }}
             disabled={(date) => {

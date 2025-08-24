@@ -35,7 +35,7 @@ export function ClassroomsDataTable() {
           header: t('common.actions'),
           cell: ({ row }) => (
             <div className="flex items-center gap-2">
-              <Link href={`/classroom/${row.original.documentId}`}>
+              <Link href={`/classrooms/${row.original.documentId}`}>
                 <Button variant="ghost" size="icon">
                   <SquarePen className="h-4 w-4" />
                 </Button>

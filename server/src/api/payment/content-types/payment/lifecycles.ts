@@ -9,4 +9,12 @@ export default {
       data.endDate = addDuration(now, data.paymentType);
     }
   },
+  beforeUpdate(event) {
+    const { data } = event.params;
+
+    if (data.startDate && data.paymentType) {
+      const startDate = new Date(data.startDate);
+      data.endDate = addDuration(startDate, data.paymentType);
+    }
+  },
 };

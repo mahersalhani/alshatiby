@@ -41,6 +41,9 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "student"
+    },
+    "isActive": {
+      "type": "boolean"
     }
   }
 }

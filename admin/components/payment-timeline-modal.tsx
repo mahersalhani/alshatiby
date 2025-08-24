@@ -1,11 +1,14 @@
 'use client';
 
-import { Calendar, Clock, CreditCard } from 'lucide-react';
+import { Calendar, Clock, CreditCard, Edit, Trash2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 import { AmountDisplay } from './shared/amount-display';
+import { ConfirmationModal } from './shared/confirmation-modal';
 
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { Payment } from '@/lib/schemas/student';
@@ -15,11 +18,41 @@ interface PaymentTimelineModalProps {
   onOpenChange: (open: boolean) => void;
   payments: Payment[];
   isLoading?: boolean;
+  onEditPayment?: (payment: Payment) => void; // Added edit callback
+  onDeletePayment?: (payment: Payment) => void; // Added delete callback
 }
 
-export function PaymentTimelineModal({ open, onOpenChange, payments, isLoading = false }: PaymentTimelineModalProps) {
+export function PaymentTimelineModal({
+  open,
+  onOpenChange,
+  payments,
+  isLoading = false,
+  onEditPayment,
+  onDeletePayment,
+}: PaymentTimelineModalProps) {
   const t = useTranslations('PaymentTimeline');
   const locale = useLocale();
+  const [confirmationModal, setConfirmationModal] = useState<{
+    open: boolean;
+    payment: Payment | null;
+  }>({
+    open: false,
+    payment: null,
+  });
+
+  const handleDeleteClick = (payment: Payment) => {
+    setConfirmationModal({
+      open: true,
+      payment,
+    });
+  };
+
+  const handleConfirmDelete = () => {
+    if (confirmationModal.payment && onDeletePayment) {
+      onDeletePayment(confirmationModal.payment);
+      setConfirmationModal({ open: false, payment: null });
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(locale, {
@@ -62,7 +95,7 @@ export function PaymentTimelineModal({ open, onOpenChange, payments, isLoading =
           <DialogDescription className="text-base">{t('paymentHistoryDescription')}</DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[700px] pr-4 mt-5 ">
+        <ScrollArea className="max-h-[700px] pr-4 mt-5">
           {payments.length === 0 ? (
             <div className="text-center py-16 text-muted-foreground">
               <CreditCard className="h-20 w-20 mx-auto mb-6 opacity-50" />
@@ -114,7 +147,7 @@ export function PaymentTimelineModal({ open, onOpenChange, payments, isLoading =
 
                         {/* Date range */}
                         <p className="text-muted-foreground text-base">
-                          {t('startDate')}: {formatDate(payment.startDate)} - {t('endDate')}:{' '}
+                          {t('startDate')}: {formatDate(payment.startDate || payment.createdAt)} - {t('endDate')}:{' '}
                           {formatDate(payment.endDate)}
                         </p>
 
@@ -129,6 +162,33 @@ export function PaymentTimelineModal({ open, onOpenChange, payments, isLoading =
                             {t('status')}: {t(status)}
                           </span>
                         </div>
+                        {(onEditPayment || onDeletePayment) && (
+                          <div className="flex items-center gap-2 pt-2">
+                            {onEditPayment && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => onEditPayment(payment)}
+                                disabled={isLoading}
+                              >
+                                <Edit className="h-4 w-4 mr-1" />
+                                {t('common.edit')}
+                              </Button>
+                            )}
+                            {onDeletePayment && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDeleteClick(payment)}
+                                disabled={isLoading}
+                                className="text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4 mr-1" />
+                                {t('common.delete')}
+                              </Button>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -137,6 +197,15 @@ export function PaymentTimelineModal({ open, onOpenChange, payments, isLoading =
             </div>
           )}
         </ScrollArea>
+        <ConfirmationModal
+          open={confirmationModal.open}
+          onOpenChange={(open) => setConfirmationModal({ open, payment: null })}
+          onConfirm={handleConfirmDelete}
+          title={t('deletePaymentTitle')}
+          description={t('deletePaymentDescription')}
+          variant="destructive"
+          isLoading={isLoading}
+        />
       </DialogContent>
     </Dialog>
   );

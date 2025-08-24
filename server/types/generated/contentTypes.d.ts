@@ -514,7 +514,13 @@ export interface ApiEmployeeEmployee extends Struct.CollectionTypeSchema {
     programs: Schema.Attribute.Relation<'manyToMany', 'api::program.program'>;
     publishedAt: Schema.Attribute.DateTime;
     role: Schema.Attribute.Enumeration<
-      ['TEACHER', 'PROGRAMS_SUPERVISOR', 'CLASSROOM_SUPERVISOR']
+      [
+        'ADMIN',
+        'TEACHER',
+        'PROGRAMS_SUPERVISOR',
+        'CLASSROOM_SUPERVISOR',
+        'TESTER',
+      ]
     >;
     supervisedClasses: Schema.Attribute.Relation<
       'manyToMany',
@@ -668,6 +674,7 @@ export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     generalNotes: Schema.Attribute.Text;
+    isActive: Schema.Attribute.Boolean;
     isHadScholarship: Schema.Attribute.Boolean;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
