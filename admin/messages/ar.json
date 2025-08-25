@@ -369,7 +369,9 @@
     "employee_updated_successfully": "تم تحديث الموظف بنجاح",
     "programs_supervisor": "مشرف برنامج",
     "classroom_supervisor": "مشرف حلقات",
-    "selectDate": "اختر تاريخ"
+    "selectDate": "اختر تاريخ",
+    "admin": "مدير",
+    "tester": "مختبر"
   },
   "common": {
     "full_name": "الاسم",
@@ -386,7 +388,8 @@
     "male": "ذكر",
     "female": "انثى",
     "classroom_name": "الحلقة",
-    "student_count": "عدد الطلاب"
+    "student_count": "عدد الطلاب",
+    "updating": "جاري التعديل ..."
   },
   "error": {
     "email_already_in_use": "البريد الإلكتروني مستخدم بالفعل"
@@ -482,7 +485,9 @@
     "passwordUpdateDescription": "تحديث كلمة مرور الموظف",
     "employee_created_successfully": "تم الاضافة بنجاح",
     "employee_updated_successfully": "تم التحديث بنجاح",
-    "password_updated_successfully": "تم تحديث كلمة المرور بنجاح"
+    "password_updated_successfully": "تم تحديث كلمة المرور بنجاح",
+    "admin": "مدير",
+    "tester": "مختبر"
   },
   "PasswordModal": {
     "updatePasswordTitle": "تحديث كلمة المرور",
@@ -601,7 +606,11 @@
     "retrying": "جاري إعادة المحاولة...",
     "studentNotFound": "لم يتم العثور على الطالب",
     "studentNotFoundDescription": "لم يتم العثور على الطالب المطلوب.",
-    "studentHadScholarship": "الطالب لديه منحة"
+    "studentHadScholarship": "الطالب لديه منحة",
+    "paymentDeletedSuccessfully": "تم حذف الدفعة بنجاح",
+    "paymentUpdatedSuccessfully": "تم تحديث الدفعة بنجاح",
+    "isActive": "هل الطالب نشط",
+    "isActiveDescription": "في حال كان الطالب غير نشط لن يظهر في الحلقات ولا في الدفعات المستحقة"
   },
   "ClassroomForm": {
     "createClassroom": "إنشاء فصل دراسي",
@@ -689,7 +698,10 @@
     "adding": "جارٍ الإضافة...",
     "amountHint": "أدخل المبلغ الفعلي (سيتم تخزينه كقيمة سنت في قاعدة البيانات)",
     "paymentContinuityInfo": "ستبدأ الدفعة الجديدة من {date} لضمان استمرارية الدفع.",
-    "minimumStartDateInfo": "يجب أن يبدأ الدفع في أو بعد {date} للحفاظ على الاستمرارية."
+    "minimumStartDateInfo": "يجب أن يبدأ الدفع في أو بعد {date} للحفاظ على الاستمرارية.",
+    "editPayment": "تعديل الدفعة",
+    "editPaymentDescription": "يمكنك تعديل معلومات الدفعة",
+    "updatePayment": "تحديث الدفع"
   },
   "PaymentTimeline": {
     "paymentHistory": "سجل الدفعات",
@@ -707,6 +719,21 @@
     "latest": "أحدث",
     "duration": "المدة",
     "status": "الحالة",
-    "noPaymentsDescription": "لا يوجد لدى هذا الطالب أي سجلات دفع حتى الآن."
+    "noPaymentsDescription": "لا يوجد لدى هذا الطالب أي سجلات دفع حتى الآن.",
+    "common": {
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "deletePaymentTitle": "حذف الدفعة",
+    "deletePaymentDescription": "هل انت متاكد من حذف هذه الدفعة ؟"
+  },
+  "ConfirmationModal": {
+    "confirmAction": "تأكيد الإجراء",
+    "confirmDescription": "هل أنت متأكد أنك تريد إكمال هذا الإجراء؟"
+  },
+  "Common": {
+    "cancel": "الغاء",
+    "processing": "جاري المعالجة",
+    "confirm": "تأكيد"
   }
 }

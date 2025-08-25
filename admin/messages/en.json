@@ -370,7 +370,9 @@
     "edit_employee": "Employee data amendment",
     "programs_supervisor": "Program Supervisor",
     "classroom_supervisor": "Classroom supervisor",
-    "selectDate": "select date"
+    "selectDate": "select date",
+    "admin": "Admin",
+    "tester": "Tester"
   },
   "common": {
     "teacher": "teacher",
@@ -385,7 +387,8 @@
     "gender": "gender",
     "male": "male",
     "female": "female",
-    "student_count": "Students count"
+    "student_count": "Students count",
+    "updating": "Updating..."
   },
   "error": {
     "email_already_in_use": "Email is already in use"
@@ -479,7 +482,9 @@
     "updating": "Updating...",
     "updatePassword": "Update Password",
     "passwordUpdateDescription": "Update the employee's password",
-    "password_updated_successfully": "The password has been successfully updated"
+    "password_updated_successfully": "The password has been successfully updated",
+    "admin": "Admin",
+    "tester": "Tester"
   },
   "PasswordModal": {
     "updatePasswordTitle": "Update Password",
@@ -596,7 +601,11 @@
     "retrying": "Retrying...",
     "studentNotFound": "Student Not Found",
     "studentNotFoundDescription": "The requested student could not be found.",
-    "studentHadScholarship": "The student has a scholarship"
+    "studentHadScholarship": "The student has a scholarship",
+    "paymentDeletedSuccessfully": "The payment was successfully deleted.",
+    "paymentUpdatedSuccessfully": "Payment updated successfully",
+    "isActive": "Is the student active?",
+    "isActiveDescription": "If the student is inactive, he will not appear in the classrooms or in the due payments."
   },
   "ClassroomForm": {
     "createClassroom": "Create Classroom",
@@ -684,7 +693,10 @@
     "adding": "Adding...",
     "amountHint": "Enter the actual amount (will be stored as cents in database)",
     "paymentContinuityInfo": "New payment will start from {date} to ensure payment continuity.",
-    "minimumStartDateInfo": "Payment must start on or after {date} to maintain continuity."
+    "minimumStartDateInfo": "Payment must start on or after {date} to maintain continuity.",
+    "editPayment": "Payment Edit",
+    "editPaymentDescription": "You can modify the payment information.",
+    "updatePayment": "Update Payment"
   },
   "PaymentTimeline": {
     "paymentHistory": "Payment History",
@@ -702,6 +714,21 @@
     "latest": "Latest",
     "duration": "Duration",
     "status": "Status",
-    "noPaymentsDescription": "This student has no payment records yet."
+    "noPaymentsDescription": "This student has no payment records yet.",
+    "Common": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "deletePaymentTitle": "Delete payment",
+    "deletePaymentDescription": "Are you sure you want to delete this payment?"
+  },
+  "ConfirmationModal": {
+    "confirmAction": "Confirm the action",
+    "confirmDescription": "Are you sure you want to complete this action?"
+  },
+  "Common": {
+    "cancel": "Cancel",
+    "processing": "Processing",
+    "confirm": "Confirm"
   }
 }

@@ -1,74 +1,99 @@
 'use client';
 
-import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
-import { DatabaseBackup, Loader2 } from 'lucide-react';
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { ChevronLeft, ChevronRight, DatabaseBackup, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import * as React from 'react';
+import { useMemo } from 'react';
 
-import { getColumns } from './columns';
-import TablePagination from './table-pagination';
-
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useEmployeeQuery } from '@/hooks/react-query/employee';
-import { useQueryState } from '@/hooks/use-query-state';
+import { usePaginationState, useSearchState } from '@/hooks/use-query-state';
+import { PaginatedResponse } from '@/lib/type';
 
-const EmployeeDataTable = () => {
+function SearchInput() {
   const t = useTranslations();
-  const { query, setQuery } = useQueryState();
-  const pageIndex = query?.pagination?.page - 1 || 0;
-  const pageSize = query?.pagination?.pageSize || 20;
+  const { searchText, setSearchText } = useSearchState();
 
-  const { data, isLoading } = useEmployeeQuery(query);
+  return (
+    <div className="flex-none">
+      <Input
+        placeholder={t('common.search')}
+        value={searchText}
+        onChange={(event) => setSearchText(event.target.value)}
+        className="max-w-sm"
+      />
+    </div>
+  );
+}
 
-  const columns = React.useMemo(() => getColumns(t), [t]);
+function Pagination({ pageCount }: { pageCount: number }) {
+  const { pageParams: { page }, setPage } = usePaginationState();
+
+  const canGoPrev = page > 1;
+  const canGoNext = page < pageCount;
+
+  return (
+    <div className="flex items-center justify-end py-4 px-10">
+      <div className="flex items-center gap-2 flex-none">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setPage(page - 1)}
+          disabled={!canGoPrev}
+          className="w-8 h-8 rtl:rotate-180"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </Button>
+        {Array.from({ length: pageCount }, (_, index) => (
+          <Button
+            key={`basic-data-table-${index}`}
+            onClick={() => setPage(index + 1)}
+            size="icon"
+            className="w-8 h-8"
+            variant={page === index + 1 ? 'default' : 'outline'}
+          >
+            {index + 1}
+          </Button>
+        ))}
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setPage(page + 1)}
+          disabled={!canGoNext}
+          className="w-8 h-8 rtl:rotate-180"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export function DataTable<TData, TValue>({
+  columns,
+  isLoading,
+  data,
+}: {
+  columns: ColumnDef<TData, TValue>[];
+  isLoading: boolean;
+  data?: PaginatedResponse<TData>;
+}) {
+  const t = useTranslations();
+
+  const rows = useMemo(() => data?.results || [], [data]);
 
   const table = useReactTable({
-    data: data?.results || [],
+    data: rows,
     columns,
-    manualPagination: true,
-    autoResetPageIndex: false,
-    autoResetAll: false,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: (updater: any) => {
-      const nextState = updater({
-        pageIndex: pageIndex,
-        pageSize: pageSize,
-      });
-
-      setQuery({
-        pagination: {
-          page: nextState.pageIndex + 1,
-          pageSize: nextState.pageSize,
-        },
-      });
-    },
-    pageCount: data?.pagination?.pageCount || -1,
-    state: {
-      pagination: {
-        pageIndex,
-        pageSize,
-      },
-    },
   });
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4 px-5">
         <div className="flex-1 text-xl font-medium text-default-900">{t('employee.list_title')}</div>
-        <div className="flex-none">
-          <Input
-            placeholder={t('common.search')}
-            value={query?.search || ''}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setQuery({
-                search: event.target.value,
-              })
-            }
-            className="max-w-sm "
-          />
-        </div>
+        <SearchInput />
       </div>
 
       <Table>
@@ -115,8 +140,7 @@ const EmployeeDataTable = () => {
           )}
         </TableBody>
       </Table>
-      <TablePagination table={table} />
+      <Pagination pageCount={data?.pagination.pageCount ?? 0} />
     </div>
   );
-};
-export default EmployeeDataTable;
+}

@@ -18,12 +18,16 @@ export function usePaymentSchemas() {
     student: z.string().min(1, t('studentRequired')),
   });
 
+  const paymentUpdateSchema = paymentCreateSchema.omit({ student: true });
+
   return {
     paymentCreateSchema,
+    paymentUpdateSchema,
   };
 }
 
 export type PaymentCreateData = z.infer<ReturnType<typeof usePaymentSchemas>['paymentCreateSchema']>;
+export type PaymentUpdateData = Omit<PaymentCreateData, 'student'>;
 
 export interface Payment {
   id: number;

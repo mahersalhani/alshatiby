@@ -12,6 +12,7 @@ import { LoadingOverlay } from '@/components/loading-overlay';
 import { useRouter } from '@/components/navigation';
 import { PasswordUpdateModal } from '@/components/password-update-modal';
 import { PaymentAlertComponent } from '@/components/payment-alert';
+import { PaymentEditModal } from '@/components/payment-edit-modal';
 import { PaymentModal } from '@/components/payment-modal';
 import { PaymentTimelineModal } from '@/components/payment-timeline-modal';
 import DatePicker from '@/components/shared/date-picker';
@@ -47,6 +48,8 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
   const [payments, setPayments] = useState<Payment[]>(initialData?.payments || []);
   const [paymentAlert, setPaymentAlert] = useState<PaymentAlert | null>(null);
   const [canAddPayment, setCanAddPayment] = useState(true);
+  const [paymentEditModalOpen, setPaymentEditModalOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 
   const scopT = useTranslations();
   const t = useTranslations('StudentForm');
@@ -72,6 +75,7 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
         (initialData?.joinedAt || initialData?.joinedAt) && new Date(initialData?.joinedAt || initialData?.joinedAt),
       generalNotes: initialData?.generalNotes || '',
       isHadScholarship: initialData?.isHadScholarship || false,
+      isActive: initialData?.isActive ?? true,
       ...(mode === 'create' && { password: '' }),
     },
   });
@@ -162,6 +166,51 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
     });
   };
 
+  const handleEditPayment = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setPaymentEditModalOpen(true);
+  };
+
+  const handlePaymentDelete = async (payment: Payment) => {
+    setIsLoading(true);
+    try {
+      await api.delete(`/dashboard/student-payments/${payment.documentId}`);
+      toast.success(t('paymentDeletedSuccessfully'));
+
+      if (queryKey) {
+        await queryClient.invalidateQueries({ queryKey });
+      }
+    } catch (err: any) {
+      toast.error(scopT(err.response?.data?.error?.message) || err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePaymentUpdate = async (data: any) => {
+    setIsLoading(true);
+    try {
+      await api.put(`/dashboard/student-payments/${data.id}`, {
+        paymentType: data.paymentType,
+        title: data.title,
+        amount: data.amount,
+        currency: data.currency,
+        startDate: data.startDate,
+      });
+      toast.success(t('paymentUpdatedSuccessfully'));
+      setPaymentEditModalOpen(false);
+      setSelectedPayment(null);
+
+      if (queryKey) {
+        await queryClient.invalidateQueries({ queryKey });
+      }
+    } catch (err: any) {
+      toast.error(scopT(err.response?.data?.error?.message) || err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handlePaymentSubmit = async (data: any) => {
     setIsLoading(true);
     try {
@@ -193,7 +242,7 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
           const res = await api.post('/dashboard/student', data);
           toast.success(t('student_created_successfully'));
 
-          const student = res.data;
+          const student: any = res.data;
           router.push(`/students/${student.documentId}`);
         } else {
           if (!initialData?.documentId) {
@@ -216,6 +265,7 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
   };
 
   const isRTL = locale === 'ar';
+  const isActiveValue = form.watch('isActive');
 
   return (
     <>
@@ -391,6 +441,22 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
                   />
                 </div>
 
+                <FormField
+                  control={form.control}
+                  name="isActive"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 gap-2">
+                      <FormControl>
+                        <Checkbox checked={field.value} onCheckedChange={field.onChange} disabled={isLoading} />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>{t('isActive')}</FormLabel>
+                        <p className="text-sm text-muted-foreground">{t('isActiveDescription')}</p>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
                 {/* Future sections for attendances and classroom */}
                 {mode === 'update' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -446,7 +512,7 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
                           type="button"
                           variant="outline"
                           onClick={() => setPaymentModalOpen(true)}
-                          disabled={isLoading || !canAddPayment || initialData?.isHadScholarship}
+                          disabled={isLoading || !canAddPayment || initialData?.isHadScholarship || !isActiveValue}
                         >
                           <Plus className="h-4 w-4 ltr:mr-2 rtl:ml-2" />
                           {t('addPayment')}
@@ -611,6 +677,16 @@ export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
         open={paymentTimelineOpen}
         onOpenChange={setPaymentTimelineOpen}
         payments={payments}
+        isLoading={isLoading}
+        onEditPayment={handleEditPayment}
+        onDeletePayment={handlePaymentDelete}
+      />
+
+      <PaymentEditModal
+        open={paymentEditModalOpen}
+        onOpenChange={setPaymentEditModalOpen}
+        onSubmit={handlePaymentUpdate}
+        payment={selectedPayment}
         isLoading={isLoading}
       />
     </>

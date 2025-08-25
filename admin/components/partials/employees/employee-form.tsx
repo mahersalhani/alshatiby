@@ -88,7 +88,7 @@ export function EmployeeForm({ mode = 'create', initialData }: EmployeeFormProps
           const res = await api.post('/dashboard/employee', data);
           toast.success(t('employee_created_successfully'));
 
-          const employee = res.data;
+          const employee: any = res.data;
 
           router.push(`/employees/${employee.documentId}`);
         } else {
@@ -262,9 +262,11 @@ export function EmployeeForm({ mode = 'create', initialData }: EmployeeFormProps
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
+                            <SelectItem value="ADMIN">{t('admin')}</SelectItem>
                             <SelectItem value="TEACHER">{t('teacher')}</SelectItem>
                             <SelectItem value="PROGRAMS_SUPERVISOR">{t('programsSupervisor')}</SelectItem>
                             <SelectItem value="CLASSROOM_SUPERVISOR">{t('classroomSupervisor')}</SelectItem>
+                            <SelectItem value="TESTER">{t('tester')}</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />

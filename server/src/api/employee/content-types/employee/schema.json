@@ -15,9 +15,11 @@
     "role": {
       "type": "enumeration",
       "enum": [
+        "ADMIN",
         "TEACHER",
         "PROGRAMS_SUPERVISOR",
-        "CLASSROOM_SUPERVISOR"
+        "CLASSROOM_SUPERVISOR",
+        "TESTER"
       ]
     },
     "user": {

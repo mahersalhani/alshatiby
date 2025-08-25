@@ -51,6 +51,7 @@ export function useStudentSchemas() {
     joinedAt: z.date().min(new Date(1900, 0, 1), t('joinedDateRequired')),
     generalNotes: z.string().max(500, t('generalNotesMaxLength')).optional(),
     isHadScholarship: z.boolean().default(false),
+    isActive: z.boolean().default(true),
   });
 
   const studentUpdateSchema = studentCreateSchema.omit({ password: true });
@@ -83,5 +84,6 @@ export type StudentUpdateData = z.infer<ReturnType<typeof useStudentSchemas>['st
   locale?: string | null;
   user?: User;
   payments?: Payment[];
+  isActive?: boolean;
 };
 export type StudentPasswordUpdateData = z.infer<ReturnType<typeof useStudentSchemas>['passwordUpdateSchema']>;
