@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { Loader2, School, UserCheck } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import qs from 'qs';
-import { startTransition, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -31,7 +31,6 @@ export function ProgramForm({ mode, initialData }: ProgramFormProps) {
 	const t = useTranslations('ProgramForm');
 	const locale = useLocale();
 	const { programCreateSchema, programUpdateSchema } = useProgramSchemas();
-	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 	const schema = mode === 'create' ? programCreateSchema : programUpdateSchema;
 
@@ -88,37 +87,26 @@ export function ProgramForm({ mode, initialData }: ProgramFormProps) {
 	const isRTL = locale === 'ar';
 	const isEdit = mode === 'update';
 
-	const handleSubmit = (data: ProgramCreateData | ProgramUpdateData) => {
-		setIsLoading(true);
-		startTransition(async () => {
-			try {
-				const formattedData: any = {
-					name: data.name,
-					isActive: data.isActive,
-					supervisors: data.supervisorIds,
-				};
-
-				if (!isEdit) {
-					const res = await api.post('/dashboard/program', formattedData);
-					toast.success(t('program_created_successfully'));
-					const program = res.data;
-					router.push(`/programs/${program.documentId}`);
-				} else {
-					if (!initialData?.documentId) return;
-					await api.put(`/dashboard/program/${initialData.documentId}`, formattedData);
-					toast.success(t('program_updated_successfully'));
-				}
-			} catch (err: any) {
-				toast.error(scopT(err.response?.data?.error?.message) || err.message);
-			} finally {
-				setIsLoading(false);
+	const { mutate, isPending } = useMutation({
+		mutationFn: (data: ProgramCreateData | ProgramUpdateData) => isEdit
+			? api.put(`/dashboard/program/${initialData!.documentId}`, data)
+			: api.post('/dashboard/program', data),
+		onSuccess: (data) => {
+			if (isEdit) {
+				return toast.success(t('program_updated_successfully'));
 			}
-		});
-	};
+
+			toast.success(t('program_created_successfully'));
+			router.push(`/programs/${data.data.documentId}`);
+		},
+		onError: (err: any) => {
+			toast.error(scopT(err.response?.data?.error?.message) ?? err.message);
+		},
+	});
 
 	return (
 		<Card className="w-full max-w-3xl mx-auto relative">
-			<LoadingOverlay isLoading={isLoading} message={mode === 'create' ? t('creating') : t('updating')} />
+			<LoadingOverlay isLoading={isPending} message={mode === 'create' ? t('creating') : t('updating')} />
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					<School className="h-6 w-6" />
@@ -130,7 +118,7 @@ export function ProgramForm({ mode, initialData }: ProgramFormProps) {
 			</CardHeader>
 			<CardContent>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+					<form onSubmit={form.handleSubmit((data) => mutate(data))} className="space-y-6">
 						<div className="space-y-4">
 							<h3 className="text-lg font-medium flex items-center gap-2">{t('basicInformation')}</h3>
 							<FormField
@@ -140,7 +128,7 @@ export function ProgramForm({ mode, initialData }: ProgramFormProps) {
 									<FormItem>
 										<FormLabel>{t('programName')}</FormLabel>
 										<FormControl>
-											<Input size={"large"} placeholder={t('enterProgramName')} {...field} className={isRTL ? 'text-right' : ''} disabled={isLoading} />
+											<Input size={"large"} placeholder={t('enterProgramName')} {...field} className={isRTL ? 'text-right' : ''} disabled={isPending} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -155,7 +143,7 @@ export function ProgramForm({ mode, initialData }: ProgramFormProps) {
 											<FormLabel>{t('isActive')}</FormLabel>
 										</div>
 										<FormControl>
-											<Switch checked={field.value as boolean} onCheckedChange={field.onChange} disabled={isLoading} />
+											<Switch checked={field.value as boolean} onCheckedChange={field.onChange} disabled={isPending} />
 										</FormControl>
 									</FormItem>
 								)}
@@ -181,7 +169,7 @@ export function ProgramForm({ mode, initialData }: ProgramFormProps) {
 												value={field.value as any}
 												onChange={field.onChange}
 												placeholder={t('selectSupervisors')}
-												isDisabled={isLoading}
+												isDisabled={isPending}
 												formatOptionLabel={formatSupervisorOption}
 												formatSelectedLabel={formatSelectedSupervisor}
 											/>
@@ -193,11 +181,11 @@ export function ProgramForm({ mode, initialData }: ProgramFormProps) {
 						</div>
 
 						<div className={`flex justify-end space-x-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-							<Button type="button" variant="outline" disabled={isLoading}>
+							<Button type="button" variant="outline" disabled={isPending}>
 								{t('cancel')}
 							</Button>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading ? (
+							<Button type="submit" disabled={isPending}>
+								{isPending ? (
 									<>
 										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 										{mode === 'create' ? t('creating') : t('updating')}
