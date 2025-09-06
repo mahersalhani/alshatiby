@@ -232,7 +232,7 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
           toast.success(t('classroom_updated_successfully'));
         }
       } catch (err: any) {
-        toast.error(scopT(err.response?.data?.error?.message) || err.message);
+        toast.error(scopT(err.response?.data?.error?.message) || err.message || 'error.unknown_error');
       } finally {
         setIsLoading(false);
       }

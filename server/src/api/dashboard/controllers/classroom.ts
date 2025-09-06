@@ -118,4 +118,23 @@ export default {
 
     return data;
   },
+  async findOne(ctx) {
+    const { populate } = ctx.query;
+
+    const classroom = await strapi
+      .documents("api::classroom.classroom")
+      .findOne({ documentId: ctx.params.id, populate });
+
+    return classroom;
+  },
+  async update(ctx) {
+    const { id } = ctx.params;
+    const data = ctx.request.body;
+
+    const classroom = await strapi
+      .documents("api::classroom.classroom")
+      .update({ documentId: id, data });
+
+    return classroom;
+  },
 };
