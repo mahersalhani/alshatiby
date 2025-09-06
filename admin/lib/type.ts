@@ -59,3 +59,9 @@ export type Classroom = {
   phoneNumber: string;
   studentCount: string;
 };
+
+export type Program = {
+  id: string;
+  documentId: string;
+  name: string
+};

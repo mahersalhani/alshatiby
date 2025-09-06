@@ -274,7 +274,12 @@
     "sellers": "Sellers",
     "typography": "Typography",
     "colors": "Colors",
-    "classrooms": "Classrooms"
+    "classrooms": "Classrooms",
+    "create_classroom": "Create Classroom",
+    "classroom_list": "Classroom List",
+    "programs": "Programs",
+    "program_list": "Program List",
+    "create_program": "Create Program"
   },
   "Changelog": {
     "version": "Version's",
@@ -669,6 +674,9 @@
   "student": {
     "list_title": "Students"
   },
+  "programs": {
+    "list_title": "Programs"
+  },
   "PaymentAlert": {
     "nextPaymentDue": "Next payment due"
   },
@@ -730,5 +738,26 @@
     "cancel": "Cancel",
     "processing": "Processing",
     "confirm": "Confirm"
+  },
+  "noPaymentsDescription": "This student has no payment records yet.",
+  "ProgramForm": {
+    "createProgram": "Create Program",
+    "updateProgram": "Update Program",
+    "createProgramDescription": "Fill in the details to create a new program.",
+    "updateProgramDescription": "Update the program information below.",
+    "basicInformation": "Basic Information",
+    "programName": "Program Name",
+    "enterProgramName": "Enter program name",
+    "isActive": "Active",
+    "supervisionInformation": "Supervision Information",
+    "supervisors": "Supervisors",
+    "selectSupervisors": "Select supervisors",
+    "cancel": "Cancel",
+    "createProgramButton": "Create Program",
+    "updateProgramButton": "Update Program",
+    "creating": "Creating...",
+    "updating": "Updating...",
+    "program_created_successfully": "Program created successfully",
+    "program_updated_successfully": "Program updated successfully"
   }
 }

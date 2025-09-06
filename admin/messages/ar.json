@@ -276,7 +276,10 @@
     "colors": "الألوان",
     "classrooms": "الحلقات",
     "create_classroom": "انشاء حلقة",
-    "classroom_list": "قائمة الحلقات"
+    "classroom_list": "قائمة الحلقات",
+    "programs": "البرامج",
+    "program_list": "قائمة البرامج",
+    "create_program": "انشاء برنامج"
   },
   "Form": {
     "saving": "جاري الحفظ...",
@@ -674,6 +677,9 @@
   "student": {
     "list_title": "الطلاب"
   },
+  "programs": {
+    "list_title": "البرامج"
+  },
   "PaymentAlert": {
     "nextPaymentDue": "الدفعة القادمة المستحقة"
   },
@@ -735,5 +741,26 @@
     "cancel": "الغاء",
     "processing": "جاري المعالجة",
     "confirm": "تأكيد"
+  },
+  "noPaymentsDescription": "لا يوجد لدى هذا الطالب أي سجلات دفع حتى الآن.",
+  "ProgramForm": {
+    "createProgram": "إنشاء برنامج",
+    "updateProgram": "تحديث البرنامج",
+    "createProgramDescription": "املأ التفاصيل لإنشاء برنامج جديد.",
+    "updateProgramDescription": "قم بتحديث معلومات البرنامج أدناه.",
+    "basicInformation": "المعلومات الأساسية",
+    "programName": "اسم البرنامج",
+    "enterProgramName": "أدخل اسم البرنامج",
+    "isActive": "نشط",
+    "supervisionInformation": "معلومات الإشراف",
+    "supervisors": "المشرفون",
+    "selectSupervisors": "اختر المشرفين",
+    "cancel": "إلغاء",
+    "createProgramButton": "إنشاء برنامج",
+    "updateProgramButton": "تحديث البرنامج",
+    "creating": "جاري الإنشاء...",
+    "updating": "جاري التحديث...",
+    "program_created_successfully": "تم إنشاء البرنامج بنجاح",
+    "program_updated_successfully": "تم تحديث البرنامج بنجاح"
   }
 }

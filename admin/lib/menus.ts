@@ -111,6 +111,29 @@ export function getMenuList(pathname: string, t: any): Group[] {
             },
           ],
         },
+        {
+          id: 'programs',
+          href: '/programs',
+          label: t('Menu.programs'),
+          active: pathname.includes('/programs'),
+          icon: 'heroicons-outline:academic-cap',
+          submenus: [
+            {
+              icon: 'heroicons-outline:academic-cap',
+              href: '/programs',
+              label: t('Menu.program_list'),
+              active: pathname === '/programs',
+              children: [],
+            },
+            {
+              icon: 'heroicons-outline:academic-cap',
+              href: '/programs/create',
+              label: t('Menu.create_program'),
+              active: pathname === '/programs/create',
+              children: [],
+            },
+          ],
+        },
       ],
     },
   ];
