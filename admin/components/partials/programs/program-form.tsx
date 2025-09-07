@@ -37,9 +37,9 @@ export function ProgramForm({ mode, initialData }: ProgramFormProps) {
 	const form = useForm<ProgramCreateData | ProgramUpdateData>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-			name: initialData?.name || '',
+			name: initialData?.name ?? '',
 			isActive: initialData?.isActive ?? true,
-			supervisorIds: initialData?.supervisorIds || [],
+			supervisorIds: initialData?.supervisors?.map((supervisor) => supervisor.id as string) ?? [],
 		},
 	});
 
@@ -88,9 +88,17 @@ export function ProgramForm({ mode, initialData }: ProgramFormProps) {
 	const isEdit = mode === 'update';
 
 	const { mutate, isPending } = useMutation({
-		mutationFn: (data: ProgramCreateData | ProgramUpdateData) => isEdit
-			? api.put(`/dashboard/program/${initialData!.documentId}`, data)
-			: api.post('/dashboard/program', data),
+		mutationFn: (data: ProgramCreateData | ProgramUpdateData) => {
+			const { supervisorIds, ...rest } = data;
+			const payload = {
+				...rest,
+				supervisors: supervisorIds,
+			};
+
+			return isEdit
+				? api.put(`/dashboard/program/${initialData!.documentId}`, payload)
+				: api.post('/dashboard/program', payload);
+		},
 		onSuccess: (data) => {
 			if (isEdit) {
 				return toast.success(t('program_updated_successfully'));
