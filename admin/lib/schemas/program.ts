@@ -26,7 +26,19 @@ export function useProgramSchemas() {
 export type ProgramCreateData = z.infer<ReturnType<typeof useProgramSchemas>['programCreateSchema']>;
 export type ProgramUpdateData = z.infer<ReturnType<typeof useProgramSchemas>['programUpdateSchema']>;
 
-export interface ProgramData extends ProgramCreateData {
+export type Supervisor = {
+	id: string | number;
+	documentId?: string;
+	role: string;
+	name?: string;
+	email?: string;
+	gender?: string;
+	birthday?: string;
+	phoneNumber?: string;
+}
+
+export type ProgramData = ProgramCreateData & {
 	id?: string | number;
 	documentId?: string;
-} 
+	supervisors?: Supervisor[];
+};
