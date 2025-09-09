@@ -6,47 +6,49 @@ import { useTranslations } from 'next-intl';
 import qs from 'qs';
 
 import { LoadingOverlay } from '@/components/loading-overlay';
-import { StudentForm } from '@/components/partials/students/student-form';
+import { ClassroomForm } from '@/components/partials/classroom/classroom-form';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import api from '@/lib/axios';
 
-interface EditStudentProps {
+interface EditClassroomProps {
   documentId: string;
 }
 
-// Student query function
-const fetchStudent = async (documentId: string) => {
+// Classroom query function
+const fetchClassroom = async (documentId: string) => {
   const query = {
-    populate: {
-      user: {
-        fields: ['email', 'name', 'nationality', 'residenceCountry', 'gender', 'birthday', 'phoneNumber', 'joinedAt'],
-      },
-      payments: {
-        sort: ['createdAt:desc'],
-      },
-    },
+    populate: [
+      'program',
+      'supervisors',
+      'teacher',
+      'schedules',
+      'studentSchedules',
+      'studentSchedules.student',
+      'studentSchedules.program',
+    ],
   };
 
   const queryString = qs.stringify(query, { encodeValuesOnly: true, addQueryPrefix: true });
-  const response = await api.get(`/dashboard/student/${documentId}${queryString}`);
-  return response.data;
+
+  const classroom = await api.get(`/dashboard/classroom/${documentId}${queryString}`).then((res) => res?.data);
+  return classroom;
 };
 
-export default function EditStudentPage({ documentId }: EditStudentProps) {
-  const t = useTranslations('StudentForm');
+export default function EditClassroomPage({ documentId }: EditClassroomProps) {
+  const t = useTranslations('ClassroomForm');
 
   const {
-    data: student,
+    data: classroom,
     isLoading,
     isError,
     error,
     refetch,
     isRefetching,
   } = useQuery({
-    queryKey: ['student', documentId],
-    queryFn: () => fetchStudent(documentId),
+    queryKey: ['classroom', documentId],
+    queryFn: () => fetchClassroom(documentId),
     enabled: !!documentId,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
@@ -59,10 +61,10 @@ export default function EditStudentPage({ documentId }: EditStudentProps) {
     return (
       <div className="container mx-auto py-8">
         <Card className="w-full max-w-4xl mx-auto relative">
-          <LoadingOverlay isLoading={true} message={t('loadingStudent')} />
+          <LoadingOverlay isLoading={true} message={t('loadingClassroom')} />
           <CardHeader>
-            <CardTitle>{t('updateStudent')}</CardTitle>
-            <CardDescription>{t('updateStudentDescription')}</CardDescription>
+            <CardTitle>{t('updateClassroom')}</CardTitle>
+            <CardDescription>{t('updateClassroomDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-96" />
@@ -80,7 +82,7 @@ export default function EditStudentPage({ documentId }: EditStudentProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-destructive">
               <AlertCircle className="h-6 w-6" />
-              {t('errorLoadingStudent')}
+              {t('errorLoadingClassroom')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -101,17 +103,17 @@ export default function EditStudentPage({ documentId }: EditStudentProps) {
   }
 
   // Success state
-  if (!student) {
+  if (!classroom) {
     return (
       <div className="container mx-auto py-8">
         <Card className="w-full max-w-4xl mx-auto">
           <CardHeader>
-            <CardTitle>{t('studentNotFound')}</CardTitle>
+            <CardTitle>{t('classroomNotFound')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Alert>
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{t('studentNotFoundDescription')}</AlertDescription>
+              <AlertDescription>{t('classroomNotFoundDescription')}</AlertDescription>
             </Alert>
           </CardContent>
         </Card>
@@ -119,17 +121,17 @@ export default function EditStudentPage({ documentId }: EditStudentProps) {
     );
   }
 
-  const user = student?.user || {};
+  const user = classroom?.user || {};
 
   return (
     <div className="container mx-auto py-8">
-      <StudentForm
+      <ClassroomForm
         mode="update"
         initialData={{
           ...user,
-          ...student,
+          ...classroom,
         }}
-        queryKey={['student', documentId]}
+        queryKey={['classroom', documentId]}
       />
     </div>
   );

@@ -95,10 +95,44 @@ export interface ClassroomData extends ClassroomCreateData {
   documentId?: string;
   program: string;
   teacher: string;
+  studentSchedules?: StudentSchedule[];
   supervisors: string[];
   studentsCount?: number;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface StudentSchedule {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  locale?: string | null;
+  program: Program;
+  student: {
+    id: number;
+    documentId: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    locale?: string | null;
+    generalNotes: string;
+    isHadScholarship: boolean;
+    isActive?: boolean | null;
+    user?: {
+      id: number;
+      documentId: string;
+      email: string;
+      name: string;
+      nationality: string;
+      residenceCountry: string;
+      gender: 'MALE' | 'FEMALE';
+      birthday: string;
+      phoneNumber: string;
+      joinedAt?: string | null;
+    };
+  };
 }
 
 // Day display names for UI

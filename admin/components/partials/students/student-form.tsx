@@ -36,7 +36,7 @@ import {
 interface StudentFormProps {
   mode: 'create' | 'update';
   initialData?: Partial<StudentUpdateData>;
-  queryKey?: (string | number)[]; // For React Query refetching
+  queryKey?: (string | number)[];
 }
 
 export function StudentForm({ mode, initialData, queryKey }: StudentFormProps) {
