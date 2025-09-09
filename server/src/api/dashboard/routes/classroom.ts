@@ -24,5 +24,15 @@ export default {
       path: "/dashboard/classroom",
       handler: "classroom.find",
     },
+    {
+      method: "GET",
+      path: "/dashboard/classroom/:id",
+      handler: "classroom.findOne",
+    },
+    {
+      method: "PUT",
+      path: "/dashboard/classroom/:id",
+      handler: "classroom.update",
+    },
   ],
 };

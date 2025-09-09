@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { Calendar, GraduationCap, Loader2, School, UserCheck, Users } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import qs from 'qs';
@@ -13,6 +14,7 @@ import { AsyncSelectComponent } from '@/components/async-select';
 import { LoadingOverlay } from '@/components/loading-overlay';
 import { useRouter } from '@/components/navigation';
 import { ScheduleManager } from '@/components/schedule-manager';
+import { StudentSchedulesModal } from '@/components/student-schedules-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -35,10 +37,10 @@ interface ClassroomFormProps {
 interface ClassroomFormProps {
   mode: 'create' | 'update';
   initialData?: Partial<ClassroomData>;
-  // onSubmit: (data: ClassroomCreateData | ClassroomUpdateData) => void;
+  queryKey?: (string | number)[];
 }
 
-export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
+export function ClassroomForm({ mode, initialData, queryKey }: ClassroomFormProps) {
   const scopT = useTranslations();
   const t = useTranslations('ClassroomForm');
   const locale = useLocale();
@@ -46,6 +48,8 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const schema = mode === 'create' ? classroomCreateSchema : classroomUpdateSchema;
+  const [studentSchedulesOpen, setStudentSchedulesOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const form = useForm<ClassroomCreateData | ClassroomUpdateData>({
     resolver: zodResolver(schema),
@@ -230,13 +234,21 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
           }
           await api.put(`/dashboard/classroom/${initialData.documentId}`, formattedData);
           toast.success(t('classroom_updated_successfully'));
+
+          if (queryKey) {
+            await queryClient.invalidateQueries({ queryKey });
+          }
         }
       } catch (err: any) {
-        toast.error(scopT(err.response?.data?.error?.message) || err.message);
+        toast.error(scopT(err.response?.data?.error?.message) || err.message || 'error.unknown_error');
       } finally {
         setIsLoading(false);
       }
     });
+  };
+
+  const handleRefresh = () => {
+    if (isEdit && initialData?.documentId && queryKey) queryClient.refetchQueries({ queryKey });
   };
 
   return (
@@ -410,11 +422,16 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
                       <div>
                         <p className="font-medium">{t('students')}</p>
                         <p className="text-sm text-muted-foreground">
-                          {t('studentsCount', { count: initialData?.studentsCount || 0 })}
+                          {t('studentsCount', { count: initialData?.studentSchedules?.length || 0 })}
                         </p>
                       </div>
                     </div>
-                    <Button type="button" variant="outline" disabled={isLoading}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={isLoading}
+                      onClick={() => setStudentSchedulesOpen(true)}
+                    >
                       {t('viewStudents')}
                     </Button>
                   </div>
@@ -442,6 +459,16 @@ export function ClassroomForm({ mode, initialData }: ClassroomFormProps) {
           </form>
         </Form>
       </CardContent>
+
+      <StudentSchedulesModal
+        open={studentSchedulesOpen}
+        onOpenChange={setStudentSchedulesOpen}
+        studentSchedules={initialData?.studentSchedules || []}
+        classroomName={initialData?.classroomName || ''}
+        classroomId={initialData?.id || ''}
+        isLoading={isLoading}
+        onRefresh={handleRefresh}
+      />
     </Card>
   );
 }

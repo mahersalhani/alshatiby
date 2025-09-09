@@ -16,7 +16,7 @@ import {
 interface ConfirmationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   title?: string;
   description?: string;
   confirmText?: string;

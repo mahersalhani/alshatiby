@@ -1,32 +1,12 @@
-import { ClassroomForm } from '@/components/partials/classroom/classroom-form';
+import EditClassroomPage from './page-content';
 
-interface EditEmployeeProps {
+interface EditClassroomProps {
   params: Promise<{ documentId: string }>;
 }
-const editEmployeePage = async ({ params }: EditEmployeeProps) => {
-  // const query = {
-  //   populate: {
-  //     user: {
-  //       fields: ['email', 'name', 'nationality', 'residenceCountry', 'gender', 'birthday', 'phoneNumber', 'joinedAt'],
-  //     },
-  //   },
-  // };
+const editClassroomPage = async ({ params }: EditClassroomProps) => {
+  const { documentId } = await params;
 
-  // const queryString = qs.stringify(query, { encodeValuesOnly: true, addQueryPrefix: true });
-
-  // const { documentId } = await params;
-  // const employee = await api.get(`/dashboard/employee/${documentId}${queryString}`).then((res) => res?.data);
-  // const user = employee?.user || {};
-
-  return (
-    <ClassroomForm
-      mode="update"
-      // initialData={{
-      //   ...user,
-      //   ...employee,
-      // }}
-    />
-  );
+  return <EditClassroomPage documentId={documentId} />;
 };
 
-export default editEmployeePage;
+export default editClassroomPage;

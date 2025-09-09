@@ -274,7 +274,12 @@
     "sellers": "Sellers",
     "typography": "Typography",
     "colors": "Colors",
-    "classrooms": "Classrooms"
+    "classrooms": "Classrooms",
+    "create_classroom": "Create Classroom",
+    "classroom_list": "Classroom List",
+    "programs": "Programs",
+    "program_list": "Program List",
+    "create_program": "Create Program"
   },
   "Changelog": {
     "version": "Version's",
@@ -607,6 +612,61 @@
     "isActive": "Is the student active?",
     "isActiveDescription": "If the student is inactive, he will not appear in the classrooms or in the due payments."
   },
+  "AddStudent": {
+    "addStudentToClassroom": "Add Student to Classroom",
+    "addStudentToClassroomDescription": "Add a student to {classroom} classroom",
+    "selectStudent": "Select Student",
+    "selectProgram": "Select Program",
+    "searchAndSelectStudent": "Search and select a student...",
+    "searchAndSelectProgram": "Search and select a program...",
+    "cancel": "Cancel",
+    "addStudent": "Add Student",
+    "adding": "Adding..."
+  },
+  "StudentDetails": {
+    "studentDetails": "Student Details",
+    "studentDetailsDescription": "View detailed information about this student",
+    "personalInformation": "Personal Information",
+    "academicInformation": "Academic Information",
+    "generalNotes": "General Notes",
+    "email": "Email",
+    "phone": "Phone",
+    "gender": "Gender",
+    "nationality": "Nationality",
+    "residence": "Residence",
+    "birthday": "Birthday",
+    "joinedDate": "Joined Date",
+    "scholarship": "Scholarship",
+    "notProvided": "Not provided",
+    "male": "Male",
+    "female": "Female",
+    "yes": "Yes",
+    "no": "No",
+    "unknownStudent": "Unknown Student"
+  },
+  "StudentSchedules": {
+    "studentsInClassroom": "Students in Classroom",
+    "studentsInClassroomDescription": "Manage students enrolled in {classroom}",
+    "searchStudents": "Search students by name, email, or program...",
+    "addStudent": "Add Student",
+    "totalStudents": "Showing {count} of {total} students",
+    "noStudentsFound": "No students found",
+    "noStudentsEnrolled": "No students enrolled",
+    "tryDifferentSearch": "Try a different search term",
+    "addStudentsToGetStarted": "Add students to get started",
+    "unknownStudent": "Unknown Student",
+    "scholarship": "Scholarship",
+    "active": "Active",
+    "inactive": "Inactive",
+    "noEmail": "No email provided",
+    "joined": "Joined",
+    "studentRemovedSuccessfully": "Student removed from classroom successfully",
+    "studentAddedSuccessfully": "Student added to classroom successfully",
+    "removeStudentConfirmation": "Remove Student from Classroom",
+    "removeStudentConfirmationDescription": "Are you sure you want to remove {student} from {classroom}? This action cannot be undone.",
+    "removeStudent": "Remove Student",
+    "cancel": "Cancel"
+  },
   "ClassroomForm": {
     "createClassroom": "Create Classroom",
     "updateClassroom": "Update Classroom",
@@ -661,13 +721,23 @@
     "loading": "Loadıng ...",
     "noOptionsFound": "No Options found",
     "classroom_created_successfully": "Classroom created succesfully",
-    "classroom_updated_successfully": "Classroom updated successfully"
+    "classroom_updated_successfully": "Classroom updated successfully",
+    "unknownError": "An unknown error occurred",
+    "retry": "Retry",
+    "retrying": "Retrying...",
+    "loadingClassroom": "Loading classroom information...",
+    "errorLoadingClassroom": "Error Loading Classroom",
+    "classroomNotFound": "Classroom Not Found",
+    "classroomNotFoundDescription": "The requested classroom could not be found."
   },
   "classroom": {
     "list_title": "Classrooms"
   },
   "student": {
     "list_title": "Students"
+  },
+  "programs": {
+    "list_title": "Programs"
   },
   "PaymentAlert": {
     "nextPaymentDue": "Next payment due"
@@ -730,5 +800,26 @@
     "cancel": "Cancel",
     "processing": "Processing",
     "confirm": "Confirm"
+  },
+  "noPaymentsDescription": "This student has no payment records yet.",
+  "ProgramForm": {
+    "createProgram": "Create Program",
+    "updateProgram": "Update Program",
+    "createProgramDescription": "Fill in the details to create a new program.",
+    "updateProgramDescription": "Update the program information below.",
+    "basicInformation": "Basic Information",
+    "programName": "Program Name",
+    "enterProgramName": "Enter program name",
+    "isActive": "Active",
+    "supervisionInformation": "Supervision Information",
+    "supervisors": "Supervisors",
+    "selectSupervisors": "Select supervisors",
+    "cancel": "Cancel",
+    "createProgramButton": "Create Program",
+    "updateProgramButton": "Update Program",
+    "creating": "Creating...",
+    "updating": "Updating...",
+    "program_created_successfully": "Program created successfully",
+    "program_updated_successfully": "Program updated successfully"
   }
 }

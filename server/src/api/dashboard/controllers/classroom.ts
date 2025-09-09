@@ -3,6 +3,7 @@
  */
 
 import { Core } from "@strapi/strapi";
+import { isArray } from "lodash";
 
 declare const strapi: Core.Strapi;
 
@@ -117,5 +118,42 @@ export default {
     });
 
     return data;
+  },
+  async findOne(ctx) {
+    let { populate } = ctx.query;
+
+    if (isArray(populate)) {
+      if (populate.includes("studentSchedules.student")) {
+        populate = [...populate, "studentSchedules.student.user"];
+      }
+    }
+
+    const classroom: any = await strapi
+      .documents("api::classroom.classroom")
+      .findOne({ documentId: ctx.params.id, populate });
+
+    classroom.studentSchedules =
+      classroom?.studentSchedules?.map((ss) => {
+        const user = ss?.student?.user || {};
+        return {
+          ...ss,
+          student: {
+            ...user,
+            ...ss.student,
+          },
+        };
+      }) || [];
+
+    return classroom;
+  },
+  async update(ctx) {
+    const { id } = ctx.params;
+    const data = ctx.request.body;
+
+    const classroom = await strapi
+      .documents("api::classroom.classroom")
+      .update({ documentId: id, data });
+
+    return classroom;
   },
 };

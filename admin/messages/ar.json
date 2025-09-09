@@ -276,7 +276,10 @@
     "colors": "الألوان",
     "classrooms": "الحلقات",
     "create_classroom": "انشاء حلقة",
-    "classroom_list": "قائمة الحلقات"
+    "classroom_list": "قائمة الحلقات",
+    "programs": "البرامج",
+    "program_list": "قائمة البرامج",
+    "create_program": "انشاء برنامج"
   },
   "Form": {
     "saving": "جاري الحفظ...",
@@ -666,13 +669,23 @@
     "loading": "جاري التحميل ...",
     "noOptionsFound": "لا يوجد بيانات",
     "classroom_created_successfully": "تم اضافة حلقة جديدة بنجاح",
-    "classroom_updated_successfully": "تم تحديث معلومات الحلقة"
+    "classroom_updated_successfully": "تم تحديث معلومات الحلقة",
+    "unknownError": "حدث خطأ غير معروف",
+    "retry": "إعادة المحاولة",
+    "retrying": "جاري إعادة المحاولة...",
+    "loadingClassroom": "جاري تحميل معلومات الحلقة...",
+    "errorLoadingClassroom": "خطأ في تحميل معلومات الحلقة",
+    "classroomNotFound": "لم يتم العثور على الحلقة",
+    "classroomNotFoundDescription": "لم يتم العثور على الحلقة المطلوبة."
   },
   "classroom": {
     "list_title": "الحلقات"
   },
   "student": {
     "list_title": "الطلاب"
+  },
+  "programs": {
+    "list_title": "البرامج"
   },
   "PaymentAlert": {
     "nextPaymentDue": "الدفعة القادمة المستحقة"
@@ -735,5 +748,81 @@
     "cancel": "الغاء",
     "processing": "جاري المعالجة",
     "confirm": "تأكيد"
+  },
+  "noPaymentsDescription": "لا يوجد لدى هذا الطالب أي سجلات دفع حتى الآن.",
+  "ProgramForm": {
+    "createProgram": "إنشاء برنامج",
+    "updateProgram": "تحديث البرنامج",
+    "createProgramDescription": "املأ التفاصيل لإنشاء برنامج جديد.",
+    "updateProgramDescription": "قم بتحديث معلومات البرنامج أدناه.",
+    "basicInformation": "المعلومات الأساسية",
+    "programName": "اسم البرنامج",
+    "enterProgramName": "أدخل اسم البرنامج",
+    "isActive": "نشط",
+    "supervisionInformation": "معلومات الإشراف",
+    "supervisors": "المشرفون",
+    "selectSupervisors": "اختر المشرفين",
+    "cancel": "إلغاء",
+    "createProgramButton": "إنشاء برنامج",
+    "updateProgramButton": "تحديث البرنامج",
+    "creating": "جاري الإنشاء...",
+    "updating": "جاري التحديث...",
+    "program_created_successfully": "تم إنشاء البرنامج بنجاح",
+    "program_updated_successfully": "تم تحديث البرنامج بنجاح"
+  },
+  "AddStudent": {
+    "addStudentToClassroom": "إضافة طالب إلى الحلقة",
+    "addStudentToClassroomDescription": "إضافة طالب إلى حلقة {classroom}",
+    "selectStudent": "اختر طالب",
+    "selectProgram": "اختر برنامج",
+    "searchAndSelectStudent": "ابحث واختر طالب...",
+    "searchAndSelectProgram": "ابحث واختر برنامج...",
+    "cancel": "إلغاء",
+    "addStudent": "إضافة طالب",
+    "adding": "جاري الإضافة..."
+  },
+  "StudentDetails": {
+    "studentDetails": "تفاصيل الطالب",
+    "studentDetailsDescription": "عرض معلومات مفصلة عن هذا الطالب",
+    "personalInformation": "المعلومات الشخصية",
+    "academicInformation": "المعلومات الأكاديمية",
+    "generalNotes": "ملاحظات عامة",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "gender": "الجنس",
+    "nationality": "الجنسية",
+    "residence": "مكان الإقامة",
+    "birthday": "تاريخ الميلاد",
+    "joinedDate": "تاريخ الانضمام",
+    "scholarship": "المنحة الدراسية",
+    "notProvided": "غير متوفر",
+    "male": "ذكر",
+    "female": "أنثى",
+    "yes": "نعم",
+    "no": "لا",
+    "unknownStudent": "طالب غير معروف"
+  },
+  "StudentSchedules": {
+    "studentsInClassroom": "الطلاب في الحلقة",
+    "studentsInClassroomDescription": "إدارة الطلاب المسجلين في {classroom}",
+    "searchStudents": "البحث عن الطلاب بالاسم أو البريد الإلكتروني أو البرنامج...",
+    "addStudent": "إضافة طالب",
+    "totalStudents": "عرض {count} من {total} طالب",
+    "noStudentsFound": "لم يتم العثور على طلاب",
+    "noStudentsEnrolled": "لا يوجد طلاب مسجلين",
+    "tryDifferentSearch": "جرب مصطلح بحث مختلف",
+    "addStudentsToGetStarted": "أضف طلابًا للبدء",
+    "unknownStudent": "طالب غير معروف",
+    "scholarship": "المنحة الدراسية",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "noEmail": "لا يوجد بريد إلكتروني",
+    "joined": "تاريخ الانضمام",
+    "studentRemovedSuccessfully": "تمت إزالة الطالب من الحلقة بنجاح",
+    "studentAddedSuccessfully": "تمت إضافة الطالب إلى الحلقة بنجاح",
+    "removeStudentConfirmation": "إزالة الطالب من الحلقة",
+    "removeStudentConfirmationDescription": "هل أنت متأكد أنك تريد إزالة {student} من {classroom}؟ لا يمكن التراجع عن هذا الإجراء.",
+    "removeStudent": "إزالة الطالب",
+    "cancel": "إلغاء"
   }
 }
