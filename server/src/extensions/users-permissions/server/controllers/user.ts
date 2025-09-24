@@ -12,7 +12,7 @@ export default {
       "plugin::users-permissions.user",
       user.id,
       {
-        populate: ["employee"],
+        populate: ["employee", "student"],
       }
     );
 
@@ -32,6 +32,15 @@ export default {
       "role",
       "phoneNumber",
     ]);
+
+    // @ts-ignore
+    if (freshUser.student) {
+      // @ts-ignore
+      sanitizedUser.student = _.pick(freshUser.student, [
+        "id",
+        "documentId"
+      ]);
+    }
 
     ctx.body = sanitizedUser;
   },
