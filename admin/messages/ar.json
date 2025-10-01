@@ -275,11 +275,14 @@
     "typography": "الطباعة",
     "colors": "الألوان",
     "classrooms": "الحلقات",
-    "create_classroom": "انشاء حلقة",
+    "create_classroom": "إنشاء حلقة",
     "classroom_list": "قائمة الحلقات",
     "programs": "البرامج",
     "program_list": "قائمة البرامج",
-    "create_program": "انشاء برنامج"
+    "create_program": "إنشاء برنامج",
+    "payments": "المدفوعات",
+    "payment_list": "قائمة المدفوعات",
+    "create_payment": "إنشاء مدفوعة"
   },
   "Form": {
     "saving": "جاري الحفظ...",
@@ -686,6 +689,34 @@
   },
   "programs": {
     "list_title": "البرامج"
+  },
+  "payment": {
+    "list_title": "سجلات المدفوعات",
+    "add_new_record": "إضافة سجل دفع جديد",
+    "edit_record": "تعديل سجل الدفع",
+    "create_new_record_description": "إنشاء سجل دفع جديد لتتبع الإيرادات والمصروفات",
+    "edit_record_description": "تحديث معلومات سجل الدفع",
+    "description": "الوصف",
+    "description_placeholder": "أدخل وصف معاملة الدفع",
+    "amount": "المبلغ",
+    "type": "النوع",
+    "select_type": "اختر نوع المعاملة",
+    "income": "إيراد",
+    "expense": "مصروف",
+    "date": "التاريخ",
+    "create_record": "إنشاء السجل",
+    "update_record": "تحديث السجل",
+    "currency": "ريال سعودي",
+    "student": "الطالب",
+    "payment_type": "نوع الدفع",
+    "start_date": "تاريخ البداية",
+    "end_date": "تاريخ النهاية",
+    "no_title": "بدون عنوان",
+    "month_1": "شهر واحد",
+    "month_2": "شهران",
+    "month_3": "3 أشهر",
+    "month_6": "6 أشهر",
+    "year_1": "سنة"
   },
   "PaymentAlert": {
     "nextPaymentDue": "الدفعة القادمة المستحقة"

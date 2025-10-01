@@ -134,6 +134,29 @@ export function getMenuList(pathname: string, t: any): Group[] {
             },
           ],
         },
+        {
+          id: 'payments',
+          href: '/payments',
+          label: t('Menu.payments'),
+          active: pathname.includes('/payments'),
+          icon: 'heroicons-outline:credit-card',
+          submenus: [
+            {
+              icon: 'heroicons-outline:credit-card',
+              href: '/payments',
+              label: t('Menu.payment_list'),
+              active: pathname === '/payments',
+              children: [],
+            },
+            {
+              icon: 'heroicons-outline:credit-card',
+              href: '/payments/create',
+              label: t('Menu.create_payment'),
+              active: pathname === '/payments/create',
+              children: [],
+            }
+          ],
+        }
       ],
     },
   ];

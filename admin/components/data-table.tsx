@@ -74,10 +74,12 @@ export function DataTable<TData, TValue>({
   columns,
   isLoading,
   data,
+  title,
 }: {
   columns: ColumnDef<TData, TValue>[];
   isLoading: boolean;
   data?: PaginatedResponse<TData>;
+  title?: string;
 }) {
   const t = useTranslations();
 
@@ -92,7 +94,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full">
       <div className="flex items-center py-4 px-5">
-        <div className="flex-1 text-xl font-medium text-default-900">{t('employee.list_title')}</div>
+        <div className="flex-1 text-xl font-medium text-default-900">{title || t('employee.list_title')}</div>
         <SearchInput />
       </div>
 
