@@ -279,7 +279,10 @@
     "classroom_list": "Classroom List",
     "programs": "Programs",
     "program_list": "Program List",
-    "create_program": "Create Program"
+    "create_program": "Create Program",
+    "payments": "Payments",
+    "payment_list": "Payment List",
+    "create_payment": "Create Payment"
   },
   "Changelog": {
     "version": "Version's",
@@ -738,6 +741,34 @@
   },
   "programs": {
     "list_title": "Programs"
+  },
+  "payment": {
+    "list_title": "Payment Records",
+    "add_new_record": "Add New Payment Record",
+    "edit_record": "Edit Payment Record",
+    "create_new_record_description": "Create a new payment record to track income and expenses",
+    "edit_record_description": "Update the payment record information",
+    "description": "Description",
+    "description_placeholder": "Enter description of the payment transaction",
+    "amount": "Amount",
+    "type": "Type",
+    "select_type": "Select transaction type",
+    "income": "Income",
+    "expense": "Expense",
+    "date": "Date",
+    "create_record": "Create Record",
+    "update_record": "Update Record",
+    "currency": "SAR",
+    "student": "Student",
+    "payment_type": "Payment Type",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "no_title": "No Title",
+    "month_1": "1 Month",
+    "month_2": "2 Months",
+    "month_3": "3 Months",
+    "month_6": "6 Months",
+    "year_1": "1 Year"
   },
   "PaymentAlert": {
     "nextPaymentDue": "Next payment due"

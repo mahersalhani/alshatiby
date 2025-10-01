@@ -65,3 +65,20 @@ export type Program = {
   documentId: string;
   name: string
 };
+
+export type PaymentRecord = {
+  id: number;
+  documentId: string;
+  title?: string | null;
+  amount: number;
+  currency: 'USD' | 'TRY' | 'EUR' | 'SAR';
+  paymentType: 'MONTH_1' | 'MONTH_2' | 'MONTH_3' | 'MONTH_6' | 'YEAR_1';
+  startDate: string;
+  endDate: string;
+  createdAt: string;
+  student?: {
+    id: number;
+    documentId: string;
+    name: string;
+  };
+};
